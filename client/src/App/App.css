@@ -1,0 +1,190 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #073763ff;
+  min-width: 269px;
+}
+
+button:hover{
+  cursor: pointer;
+}
+
+#facebook-btn{
+  background-color: #1877F2;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;  
+  color: white;
+}
+
+.flex-container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#google-btn{
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  background-color: white;
+  color: rgb(80,80,80);
+}
+
+.gray-login-box {
+  background-color: lightgrey;
+  display: flex;
+  flex-direction: column;
+  height: 50vh;
+  width: 50vw;
+  align-items: center;
+  margin: auto;
+  border-radius: 5px;
+}
+
+h1 {
+  font-size: 40px;
+}
+
+.header {
+  display: flex;
+  background-color: #6aa84fff;  
+  justify-content: space-between;
+  color: white;
+  padding: 0px 15px;
+  height: 12vh;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.homeButton{
+  width: 175px;
+  height: 40px;
+  margin-left: 30px;
+  margin-right: 30px;
+  border-radius: 10px;
+  border-width: 0px;
+  font-size: 20px;
+  color:#595959;
+  font-weight: bold;
+  margin-top: 2vh;
+  margin-bottom: 3vh;
+}
+
+#learnMoreLink{
+  color: white;
+  text-align: center;
+}
+
+#learnMoreLinkContainer{
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+li  {
+  color: white;
+  list-style: outside;
+  list-style-type: decimal;  
+  font-size: x-large;
+  margin-top: 20px;
+}
+
+#login-btn{
+  background-color: #ffd966ff;
+}
+
+.login-btn-text {
+  margin-top: 4px;
+  font-size: large;
+}
+
+#login-link{
+  color:#ffd966ff;
+}
+
+.logo {
+  color: #ffd966;
+  word-spacing: -10px;
+}
+
+.logoSpan{
+  color: white;
+}
+
+.mainPageLogo{
+  text-align: center;
+  margin-top: 20vh;
+  font-size: 5vh;
+}
+
+ol {
+  margin-left: 100px;
+  margin-right: 200px;
+}
+
+.pageTitle{
+  color:#ffe599;
+  text-align: right;
+  margin-right: 200px;
+  margin-bottom: 45px;
+  margin-top: 15px;
+}
+
+#signup-btn{
+  background-color: #ffffffff;
+}
+
+#signup-link{
+  color: #ffffffff;
+}
+
+.social-login-btn {
+  position: relative;
+  border: none;
+  width: 85%;
+  height: 12%;
+  margin: 5px 0px;
+}
+
+
+.social-login-btn > img {
+  position: relative;
+  width: 30px;
+  float: left;
+  margin-left: 5px;
+}
+
+.tile{
+  margin-left: 2.5vw;
+  margin-right: 2.5vw;
+  align-self: center; 
+  width: 150px;
+  height: 150px;
+  margin-top: 2.5vh;
+  margin-bottom: 2.5vh;
+}
+
+.tile * {
+  color: white;
+}
+
+.tile > img {
+    border-radius: 15px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-height: 20vh;
+    min-height: 15vh;
+
+}
+
+.tile > p {
+  text-align: center;
+}
+
+.tile-box{
+  background-color: #6aa84fff;
+  margin-top: 5vh;
+  margin-bottom: 4vh;
+}
