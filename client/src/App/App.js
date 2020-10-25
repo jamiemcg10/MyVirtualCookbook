@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Cookbook from "./pages/Cookbook";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import NotFound from "./pages/NotFound";
 
 
 class App extends Component {
@@ -20,6 +21,7 @@ class App extends Component {
           <Route path = '/login' component={ Login } />
           <Route path = '/signup' component={ Signup } />
           <Route path = '/logout' component={ Home } />
+          <Route component={ NotFound } />
         </Switch>
       </div>
     )

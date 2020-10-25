@@ -3,7 +3,8 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
 const { userMdl } = require('../models/User.js');
-
+const { chapterMdl } = require('../models/Chapter.js');
+//console.log(chapterMdl);
 
 
 passport.use(new GoogleStrategy({
@@ -14,28 +15,40 @@ passport.use(new GoogleStrategy({
 async function (accessToken, refreshToken, profile, done) {
         console.log(profile);
         let user_email = profile.emails && profile.emails[0].value; // profile object has the user info
+        let user_id = profile.id;  // get Google's id
         console.log(`user email ${user_email}`);
 
         try {
+            let userWithEmail = await userMdl.findOne({"email": user_email, "googleUserId": user_id}, function(queryErr, results){
+                if (queryErr){
+                    throw queryErr;
+                }
+            });
+
             let user = await userMdl.findOne({"email": user_email}, function(queryErr, results){
                 if(queryErr){
                     throw queryErr;
                 }
-        
             });
 
             console.log(`user: ${user}`);
+            console.log(`userWithEmail: ${userWithEmail}`);
 
-
-            if (!user) {
+            if (user && !userWithEmail){  // user signed up with facebook - add google ID
+                user.googleUserId = user_id;
+                await user.save();
+                userWithEmail = user;
+                console.log(userWithEmail);
+            } else if  (!user && !userWithEmail) {
                 // user doesn't exist - create new user
-                let newUser = userMdl({"googleUserId": profile.id, "email": user_email, "firstName": profile.name.givenName, "lastName": profile.name.familyName});
+                let newUser = userMdl({"googleUserId": profile.id, "facebookUserId":"","email": user_email, "firstName": profile.name.givenName, "lastName": profile.name.familyName});
+                newUser.chapterList.push(chapterMdl({"chapterName": "<Unclassified>"}));
                 newUser.save();
-                user = newUser;
-            }
+                userWithEmail = newUser;
+            } 
 
-            const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {expiresIn: '1h'}); // generating token
-            return done(null, {"user": user, "token": token});
+            const token = jwt.sign(userWithEmail.toJSON(), process.env.JWT_SECRET, {expiresIn: '1h'}); // generating token
+            return done(null, {"user": userWithEmail, "token": token});
         
     } catch (error) {
         done(error);

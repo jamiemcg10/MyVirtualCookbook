@@ -3,6 +3,45 @@
   padding: 0;
 }
 
+.add-bar {
+  background-color: whitesmoke;
+  height: 65px;
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+  color: rgb(80,80,80);
+}
+
+.add-btn {
+  margin: 0px 65px;
+}
+
+.add-btn:hover {
+  cursor: pointer;
+}
+
+#add-chapter-dialog {
+  height: 200px;
+}
+
+.add-recipe-input{
+  height: 20px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border-width: thin;
+  padding: 2px;
+  border-top-color: #b4b4b4;
+  border-left-color: #b4b4b4;
+}
+
+.add-sign{
+  font-size: 35px;
+  margin-top: -10px;
+  margin-bottom: -5px;
+  font-weight: bold;
+  text-align: center;
+}
+
 body {
   background-color: #073763ff;
   min-width: 269px;
@@ -10,6 +49,89 @@ body {
 
 button:hover{
   cursor: pointer;
+}
+
+.chapter-btns {
+  margin-top: 45px;
+}
+
+.chapter-btns > button {
+  width: 40%;
+  height: 5vh;
+  margin: 0px 10px;
+  border-radius: 10px;
+  border-color: rgb(155,155,155);
+  border-bottom-color: rgb(200,200,200);
+  border-right-color: rgb(200,200,200);
+  color: rgb(80,80,80);
+  font-weight: bold;
+  position: relative;
+}
+
+#chapter-name {
+  height: 20px;
+  width: 205px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border-width: thin;
+  padding: 2px;
+  border-top-color: rgb(180,180,180);
+  border-left-color: rgb(180,180,180);
+}
+
+#chapter-name-box {
+  color: rgb(80,80,80);
+  margin-top: 25px;
+  margin-left: 15px;
+}
+
+#chapter-cancel {
+  background-color: white;
+}
+
+#chapter-save {
+  background-color: #ffd966ff;
+}
+
+.dialog {
+  background-color: #d3d3d3;
+  width: 300px;
+  border-radius: 25px;
+  position: fixed;
+  top: 175px;
+  left: 30vw;
+  padding: 25px;
+}
+
+/* .dialog override */
+#add-recipe-dialog{
+  top: 150px;
+}
+
+#dialog-background{
+  background-color: rgba(15,15,15,.5);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  margin-top: -10px;
+  z-index: 1;
+}
+
+.dialog-title {
+  text-align: center;
+  font-size: large;
+  margin-top: 15px;
+  font-weight: bold;
+  color: rgb(80,80,80);
+}
+
+#divider {
+  overflow: hidden;
+}
+
+.error {
+  color: red;
+  position: fixed;
 }
 
 #facebook-btn{
@@ -45,6 +167,11 @@ button:hover{
 
 h1 {
   font-size: 40px;
+}
+
+h3 {
+  color: rgb(80,80,80);
+  margin-top: 10px;
 }
 
 .header {
@@ -103,6 +230,10 @@ li  {
   color:#ffd966ff;
 }
 
+#logout-link{
+  color:#ffd966ff;
+}
+
 .logo {
   color: #ffd966;
   word-spacing: -10px;
@@ -118,6 +249,14 @@ li  {
   font-size: 5vh;
 }
 
+#new-chapter-div{
+  margin-left: 25px;
+}
+
+#new-chapter-div > input {
+  width: 215px;
+}
+
 ol {
   margin-left: 100px;
   margin-right: 200px;
@@ -131,6 +270,51 @@ ol {
   margin-top: 15px;
 }
 
+.recipe-btns > button {
+  width: 40%;
+  height: 5vh;
+  margin: 0px 10px;
+  border-radius: 10px;
+  border-color: rgb(155,155,155);
+  border-bottom-color: rgb(200,200,200);
+  border-right-color: rgb(200,200,200);
+  color: rgb(80,80,80);
+  font-weight: bold;
+  position: relative;
+}
+
+.recipe-btns {
+  margin-top: 45px;
+}
+
+#recipe-cancel {
+  background-color: white;
+}
+
+#recipe-chapter-select {
+  height: 30px;
+  width: 250px;
+  margin-top: 5px;
+  border-radius: 5px;
+  color: rgb(80,80,80);
+  margin-bottom: 5px;
+}
+
+#recipe-name-box {
+  color: rgb(80,80,80);
+  margin-top: 25px;
+  margin-left: 15px;
+}
+
+#recipe-name-box > input {
+  margin-bottom: 15px;
+  width: 250px;
+}
+
+#recipe-save {
+  background-color: #ffd966ff;
+}
+
 #signup-btn{
   background-color: #ffffffff;
 }
@@ -139,11 +323,17 @@ ol {
   color: #ffffffff;
 }
 
+.social-btn-box{
+  margin-block-start: auto;
+  margin-bottom: 20px;
+  max-width: 45vw;
+}
+
 .social-login-btn {
   position: relative;
   border: none;
-  width: 85%;
-  height: 12%;
+  width: 100%;
+  height: 30%;
   margin: 5px 0px;
 }
 

@@ -6,10 +6,10 @@ const Mixed = mongoose.Schema.Types.Mixed;
 let recipeSchema = new Schema({  // add validation later
     name: String,
     source: String,
-    RecipeLink: String,
-    RecipeImg: Mixed,
-    RecipeNotes: String,
-    Chapter: {type: Number, ref: 'Chapter'}
+    recipeLink: String,
+    recipeImg: Mixed,
+    method: String,
+    recipeNotes: String
 });
 
 const recipeMdl = mongoose.model('Recipe', recipeSchema);

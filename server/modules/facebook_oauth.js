@@ -3,7 +3,6 @@ const FacebookStrategy = require('passport-facebook');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
 const { userMdl } = require('../models/User.js');
-//const { query } = require('express');
 
 passport.serializeUser(function(user, done){
     done(null, user._id);
@@ -28,27 +27,43 @@ passport.use(new FacebookStrategy({
         let user_email = (profile.emails && profile.emails[0].value) || "" ;
         let user_id = profile.id;
         console.log(`user_email: ${user_email}`);
-        try {            
-            // look up user using id
-            let user = await userMdl.findOne({"facebookUserId": user_id}, (queryErr, results)=>{
+        try {         
+            // look for account with matching email and id
+            let userWithEmail = await userMdl.findOne({"email": user_email, "facebookUserId": user_id}, function(queryErr, results){
                 if (queryErr){
-                    throw queryErr
+                    throw queryErr;
                 }
             });
 
-            console.log(`user: ${user}`);
-
-            if (!user) {
-                // user doesn't exist - add to db
-                let newUser = userMdl({"facebookUserId": profile.id ,"email": user_email, "firstName": profile.name.givenName, "lastName": profile.name.familyName});
-                newUser.save();
-                user = newUser;
+            // look up user using email 
+            let user;
+            if (user_email !==""){
+                user = await userMdl.findOne({"email": user_email}, (queryErr, results)=>{
+                    if (queryErr){
+                        throw queryErr
+                    }
+                });
             }
 
             console.log(`user: ${user}`);
+            console.log(`userWithEmail: ${userWithEmail}`);
 
-            const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {expiresIn: '1h'}); // generating token
-            return done(null, {"user": user, "token": token});
+            if (user && !userWithEmail){  // user signed up with google - add fb id
+                user.facebookUserId = user_id;
+                await user.save();
+                userWithEmail = user;
+            } else if  (!user && !userWithEmail) {
+                // user doesn't exist - create new user
+                let newUser = userMdl({"googleUserId":"", "facebookUserId": profile.id, "email": user_email, "firstName": profile.name.givenName, "lastName": profile.name.familyName});
+                newUser.chapterList.push(chapterMdl({"chapterName": "<Unclassified>"}));
+                newUser.save();
+                userWithEmail = newUser;
+            } 
+
+            console.log(`userWithEmail: ${userWithEmail}`);
+
+            const token = jwt.sign(userWithEmail.toJSON(), process.env.JWT_SECRET, {expiresIn: '1h'}); // generating token
+            return done(null, {"user": userWithEmail, "token": token});
 
         } catch (error){
             done(error);

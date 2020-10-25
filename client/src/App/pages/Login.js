@@ -19,11 +19,13 @@ class Login extends Component {
                 <Header />
                 <h1 className="pageTitle">Log in</h1>
                 <div className="gray-login-box">
-                    <h3>Sign in to continue</h3>
+                    <h3>Sign in to continue</h3>                    
+                    <div className="social-btn-box">
+                        <h3 id="divider">______________________________________________</h3>
                         <button className="social-login-btn" id="google-btn" onClick={ this.googleLogin.bind(this) }><img src={ googleLogo } alt="Google login"></img><div className="login-btn-text">Sign in with Google</div></button> 
                         <button className="social-login-btn" id="facebook-btn" onClick={ this.facebookLogin.bind(this) }><img src={ facebookLogo } alt="Facebook login"></img><div className="login-btn-text">Login with Facebook</div></button>
+                    </div>
                 </div>
-
             </div>
         );
     }

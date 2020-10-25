@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const { recipeMdl } = require('./Recipe.js');
 
-const ObjectId = mongoose.Schema.Types.ObjectId;
+const Recipe = recipeMdl.schema;
 
 let chapterSchema = new Schema({
     chapterName: String,
-    recipes: [{
-        type: ObjectId,
-        ref: 'Recipe'
-    }]
+    recipes: {
+        type: [Recipe],
+    }
 });
 
 const chapterMdl = mongoose.model('Chapter', chapterSchema);

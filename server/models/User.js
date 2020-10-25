@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Mixed = mongoose.Schema.Types.Mixed;
+const { chapterMdl } = require('./Chapter.js');
+
+const chapter = chapterMdl.schema;
 
 let userSchema = new Schema({
     googleUserId: String, 
@@ -9,8 +11,7 @@ let userSchema = new Schema({
     firstName: String, 
     email: String,
     chapterList: {
-        type: Mixed,
-        default: [],
+        type: [chapter],
     }
 });
 
