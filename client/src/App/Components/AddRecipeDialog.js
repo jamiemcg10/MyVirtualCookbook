@@ -93,15 +93,12 @@ class AddRecipeDialog extends Component {
         requestBody = JSON.stringify(requestBody);
 
         let newRecipeRequest = this.createRequest.createRequestWithBody(`http://localhost:5000/api/recipe/add`, 'POST', requestBody);
-        console.log(newRecipeRequest);
-        // TODO: add a way to add chapter from this dialog box
-
         fetch(newRecipeRequest)
         .then((response) => {
             response.json().then((json) => {
-                console.log(json);
                 if (json.success){
                     this.props.showAddRecipeDialog(false);
+                    this.props.rerenderCookbook();
                 } else {
                     this.setState({
                         errorMsg: json.message

@@ -5,6 +5,7 @@ const Mixed = mongoose.Schema.Types.Mixed;
 
 let recipeSchema = new Schema({  // add validation later
     name: String,
+    nameId: String,
     source: String,
     recipeLink: String,
     recipeImg: Mixed,

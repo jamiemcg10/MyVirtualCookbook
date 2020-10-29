@@ -53,10 +53,8 @@ mongoose.connection.on('disconnected', ()=>{
 });
 
 app.all('*', (req, res, next)=>{
-    //console.log("should be setting the session data here");
     let data = req.session.data || {};
     req.session.data = data;
-    //console.log(req.session.data);
 
     next();
 
@@ -82,6 +80,18 @@ app.get("/main", checkToken, (req,res) => {
     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
 });
 
+app.get("/notes/:chapter/:recipeNameId", checkToken, (req,res) => { 
+    // TODO: make sure link is valid - or send to 404 -- maybe
+    console.log("trying to open notes page");
+    //console.log(`token: ${req.session.data.token}`);
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+});
+
+app.get("/recipe/:chapter/:recipeNameId", checkToken, (req,res) => { 
+    // TODO: make sure link is valid - or send to 404 -- maybe
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+});
+
 app.get("/logout", (req,res) => {  // remove token and send to homepage
     req.session.data.token = null;
     res.redirect("/");
@@ -95,7 +105,7 @@ app.get('/auth/google/redirect', passport.authenticate('google', {session: false
     req.session.data.token = req.user.token;
     req.session.data.userid = req.user.user._id;
     req.session.data.username = req.user.user.firstName;
-    console.log(`id: ${req.session.data.id}`);
+    //console.log(`id: ${req.session.data.id}`);
     res.redirect("/main"); 
 });
 
@@ -106,33 +116,33 @@ app.get('/auth/facebook/redirect', passport.authenticate('facebook', {session: f
     req.session.data.token = req.user.token;
     req.session.data.userid = req.user.user._id;
     req.session.data.username = req.user.user.firstName;
-    console.log(`id: ${req.session.data.userid}`);
+    //console.log(`id: ${req.session.data.userid}`);
     res.redirect("/main");
 });
 
 app.get('/api/chapters', async (req, res)=>{  // get all chapter names
     let token = req.session.data.token;
-    console.log(token);
-    console.log(`isValidToken ${isValidToken(token)}`);
     if (isValidToken(token)){
         console.log("token is valid");
         let chapterNames = [];
-        let userId = req.session.data.userid;
-        let user = await Users.findOne({_id: userId}, (queryErr, result)=>{
-            if (queryErr){
-                // TODO: LOG THIS
-                throw queryErr;
-            }
 
-            console.log(result);
-            return result;
-        });
+        let user = await getUser(req);
+        // let userId = req.session.data.userid;
+        // let user = await Users.findOne({_id: userId}, (queryErr, result)=>{
+        //     if (queryErr){
+        //         // TODO: LOG THIS
+        //         throw queryErr;
+        //     }
+
+        //     //console.log(result);
+        //     return result;
+        // });
         console.log(`user: ${user}`);
         if (user) {  // user returned is valid
-            console.log(user.chapterList);
+            //console.log(user.chapterList);
 
-            user.chapterList.forEach((chapter)=>{  // check for duplicate chapters
-                console.log(chapter.chapterName);
+            user.chapterList.forEach((chapter)=>{  
+                //console.log(chapter.chapterName);
                 chapterNames.push(chapter.chapterName);
             });
             
@@ -158,40 +168,41 @@ app.get('/api/chapters', async (req, res)=>{  // get all chapter names
     }
 });
 
-app.get('/api/chapter/:chapterName', (req, res)=>{});
+
 app.post('/api/chapter/:chapterName', async (req, res)=>{
     let token = req.session.data.token;
-    console.log(token);
-    console.log(`isValidToken ${isValidToken(token)}`);
     if (isValidToken(token)){
         console.log("token is valid");
         let newChapterName = req.params.chapterName;
-        let userId = req.session.data.userid;
-        let user = await Users.findOne({_id: userId}, (queryErr, result)=>{
-            if (queryErr){
-                // TODO: LOG THIS
-                throw queryErr;
-            }
+        
+        
+        let user = await getUser(req);
+        // let userId = req.session.data.userid;
+        // let user = await Users.findOne({_id: userId}, (queryErr, result)=>{
+        //     if (queryErr){
+        //         // TODO: LOG THIS
+        //         throw queryErr;
+        //     }
 
-            console.log(result);
-            return result;
-        });
-        console.log(`user: ${user}`);
+        //     //console.log(result);
+        //     return result;
+        // });
+        //console.log(`user: ${user}`);
         if (user) {  // user returned is valid
             console.log(user.chapterList);
-
-            user.chapterList.forEach((chapter)=>{  // check for duplicate chapters
-                console.log(chapter.chapterName);
+            for (let i=0; i<user.chapterList.length; i++){
+                //console.log(chapter.chapterName);
+                let chapter = user.chapterList[i];
                 if (chapter.chapterName.toLowerCase() === newChapterName.toLowerCase()){
                     return res.json({
                         success: false,
                         message: "A chapter with this name already exists."
                     });
                 }
-            });
+            }
             
             // if here - chapter is not already in cookbook
-            console.log("chapter not in list");
+            //console.log("chapter not in list");
             let newChapter = new Chapter({
                                     "chapterName": newChapterName
                                 });
@@ -223,32 +234,140 @@ app.post('/api/chapter/:chapterName', async (req, res)=>{
 
 });
 
-app.get('/api/recipe/:recipeName', (req, res)=>{});
-app.post('/api/recipe/add', async (req, res)=>{
+app.get('/api/recipe/:chapterName/:recipeNameId', async (req, res)=>{
+    // TODO: add user validation
+    let recipeChapter = req.params.chapterName;
+    let recipeNameId = req.params.recipeNameId;
 
-    // TODO: Check for duplicates
+    console.log(`recipeChapter: ${recipeChapter}`);
+    console.log(`recipeNameId: ${recipeNameId}`)
+
+    let user = await getUser(req);
+    if (user){
+        for (let i=0; i<user.chapterList.length; i++){
+            let chapter = user.chapterList[i];
+            if (chapter.chapterName === recipeChapter){ // this is the right chapter
+                for (let i=0; i<chapter.recipes.length; i++){
+                    let recipe = chapter.recipes[i];
+                    if (recipe.nameId === recipeNameId){  
+                        return res.json(
+                            {
+                                success: true,
+                                recipe: recipe,
+                            }
+                        );
+
+                    }
+                }
+            }
+        }
+
+        return res.json({
+            success: false,
+            message: 'Chapter or recipe not found'
+        });
+
+    } else { // the user was not successfully returned
+        return res.json({
+            success: false,
+            message: 'User not found'
+        });
+    }
+
+});
+
+app.get('/api/recipe/notes/:chapterName/:recipeNameId', async (req, res)=>{
+    // TODO: add user validation
+    let recipeChapter = req.params.chapterName;
+    let recipeNameId = req.params.recipeNameId;
+
+    console.log(`recipeChapter: ${recipeChapter}`);
+    console.log(`recipeNameId: ${recipeNameId}`)
+
+    let user = await getUser(req);
+    if (user){
+        for (let i=0; i<user.chapterList.length; i++){
+            let chapter = user.chapterList[i];
+            if (chapter.chapterName === recipeChapter){ // this is the right chapter
+                for (let i=0; i<chapter.recipes.length; i++){
+                    let recipe = chapter.recipes[i];
+                    if (recipe.nameId === recipeNameId){  
+                        return res.json(
+                            {
+                                success: true,
+                                notes: recipe.recipeNotes,
+                            }
+                        );
+
+                    }
+                }
+            }
+        }
+
+        return res.json({
+            success: false,
+            message: 'Chapter or recipe not found'
+        });
+
+    } else { // the user was not successfully returned
+        return res.json({
+            success: false,
+            message: 'User not found'
+        });
+    }
+
+});
+
+app.get('/api/recipes', async (req, res)=>{  // get all chapters/recipes
     let token = req.session.data.token;
-    console.log(token);
-    console.log(`body ${req.body}`);
-    console.log(`isValidToken ${isValidToken(token)}`);
+    if (isValidToken(token)){
+        console.log("token is valid");
+        
+        let user = await getUser(req);
+        
+        if (user) {  // user returned is valid
+            console.log(user.chapterList);
+
+            return res.json({
+                success: true,
+                message: `Fetched recipes successfully`,
+                recipes: user.chapterList
+            });
+
+        } else {  // problem with retrieving user - return error message
+            return res.json({
+                success: false,
+                message: "There was a problem retrieving your data. Please try again later.",
+                recipes: []
+            });
+        }
+        
+
+    } else {
+        return res.json({
+            success: false,
+            message: "Please log in.",
+            recipes: []
+        });
+    }
+});
+
+app.post('/api/recipe/add', async (req, res)=>{
+    let token = req.session.data.token;
+
     if (isValidToken(token)){
         console.log("token is valid");
         let newRecipeName = req.body.name;
         let newRecipeLink = req.body.link;
         let newRecipeChapter = req.body.chapter;
         let newRecipeSource = req.body.source;
-        let userId = req.session.data.userid;
+        // let userId = req.session.data.userid;
+        let newRecipeNameId = newRecipeName.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
 
-        console.log(`newRecipeName ${newRecipeName}`);
-        console.log(`newRecipeLink ${newRecipeLink}`);
-        console.log(`newRecipeChapter ${newRecipeChapter}`);
-        console.log(`newRecipeSource ${newRecipeSource}`);
-        console.log(newRecipeLink.substring(0,3));
         if (newRecipeLink.substring(0,4) === "www."){
             newRecipeLink = 'http://' + newRecipeLink;
         }
 
-        console.log(`newRecipeLink ${newRecipeLink}`);
 
         // figure out if link can be shown in iframe
         let displayMethod = 'iframe';
@@ -260,23 +379,30 @@ app.post('/api/recipe/add', async (req, res)=>{
                     displayMethod = 'new_window'
                 }
             }
+        ).catch((error)=>{
+            console.log(error);
+        }
+            
         );
 
-        let user = await Users.findOne({_id: userId}, (queryErr, result)=>{
-            if (queryErr){
-                // TODO: LOG THIS and return error message
-                throw queryErr;
-            }
+        let user = await getUser(req);
 
-            console.log(result);
-            return result;
-        });
-        console.log(`user: ${user}`);
+        // let user = await Users.findOne({_id: userId}, (queryErr, result)=>{
+        //     if (queryErr){
+        //         // TODO: LOG THIS and return error message
+        //         throw queryErr;
+        //     }
+
+        //     console.log(result);
+        //     return result;
+        // });
+        //console.log(`user: ${user}`);
         if (user) {  // user returned is valid
             console.log("user is valid and returned");
             
             let newRecipe = new Recipe({
                                 "name": newRecipeName, 
+                                "nameId": newRecipeNameId,
                                 "source": newRecipeSource, 
                                 "recipeLink": newRecipeLink,
                                 "method": displayMethod,
@@ -288,15 +414,24 @@ app.post('/api/recipe/add', async (req, res)=>{
 
             for (let i=0; i<user.chapterList.length; i++) {  // look for chapter
                 let chapter = user.chapterList[i];
-                console.log(chapter.chapterName);
+                //console.log(chapter.chapterName);
                 if (chapter.chapterName.toLowerCase() === newRecipeChapter.toLowerCase()){
                     chapterFound = true;
+                    //loop through recipes to make sure nameID doesn't already exist
+                    for (let i=0; i<chapter.recipes.length; i++) {
+                        let recipe = chapter.recipes[i];
+                        if (recipe.nameId === newRecipeNameId){
+                            return res.json({
+                                success: false,
+                                message: "A recipe with this name already exists in this chapter."
+                            });
+                        }
+                    }
                     chapter.recipes.push(newRecipe);
-                    break;
+                    
                 }
             };
 
-            console.log(`chapterFound: ${chapterFound}`);
             if (!chapterFound){
                 let newChapter = new Chapter({"chapterName": newRecipeChapter});
                 newChapter.recipes.push(newRecipe);
@@ -331,27 +466,91 @@ app.post('/api/recipe/add', async (req, res)=>{
 
 });
 
+app.post('/api/recipes/update_notes/:chapter/:recipe', async (req,res)=>{
+    // TODO: Make sure user is logged in
+
+    let recipeChapter = req.params.chapter;
+    let recipeNameId = req.params.recipe;
+    console.log(req.body);
+    console.log(`recipeNameId: ${recipeNameId}`);
+    let recipeNotes = req.body.notes;
+
+    let user = await getUser(req);
+    console.log(`user: ${user}`);
+    if (user) {
+
+        let chapter;
+        for (let i=0; i<user.chapterList.length; i++){
+            let chap = user.chapterList[i];
+            if (chap.chapterName === recipeChapter){
+                chapter = chap;
+                console.log("chapter found");
+                break;
+            }
+        }
+
+        if (chapter){
+            for (let i=0; i<chapter.recipes.length; i++){
+                let rec = chapter.recipes[i];
+                console.log(`rec: ${rec}`);
+                console.log(`rec: ${rec.nameId}`);
+                console.log(`recipeNameId: ${recipeNameId}`);
+                if (rec.nameId === recipeNameId){  // TODO: do something if the recipe isn't found
+                    rec.recipeNotes = recipeNotes;
+                    break;
+                }
+            }
+        } else {
+            // TODO: Do something - the chapter sent in wasn't found
+        }
+
+        user.save((err)=>{
+            if (err) {
+                throw err;
+            }
+
+            res.end();  // can send something if anything ever depends on it
+        });
+    }
+
+});
+
 app.get('/api/user/checklogin', (req,res)=>{
     let token = req.session.data.token;
     let name = req.session.data.username;
-    res.send({
+    console.log({
         validUser: isValidToken(token),
         name: name || ''  
+    });
+    res.json({
+        "validUser": isValidToken(token),
+        "name": name || ''  
     });
 });
 
 
+async function getUser(req){
+    let userId = req.session.data.userid;
+    let user = await Users.findOne({_id: userId}, (queryErr, result)=>{
+        if (queryErr){
+            // TODO: LOG THIS and return error message
+            throw queryErr;
+        }
+
+        console.log(result);
+        return result;
+    });
+    return user;
+}
+
 function isValidToken(token){ // TODO: find a way to combine these three functions
-    console.log(token);
     let tokenIsValid = false;
     if (token){ // there is a token - check it
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
-            console.log(`decoded: ${decoded}`);
             if (err){
                 return tokenIsValid;
             } 
         });
-        console.log("Now we're here");
         tokenIsValid = true;
     } 
 
@@ -369,7 +568,6 @@ function checkToken(req, res, next){   // this can possibly live in a separate m
 
     if (token){ // there is a token - check it
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
-            //console.log(decoded);
             if (err){
                 return res.json({
                     success: false,

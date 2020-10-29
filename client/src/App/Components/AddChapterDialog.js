@@ -1,4 +1,3 @@
-//import { createRequest } from '../modules/createRequest.js';
 import React, { Component } from "react";
 
 
@@ -35,6 +34,7 @@ class AddChapterDialog extends Component {
                         console.log(json);
                         if (json.success){
                             this.props.showAddChapterDialog(false);
+                            this.props.rerenderCookbook();
                         } else {
                             this.setState({
                                 errorMsg: json.message

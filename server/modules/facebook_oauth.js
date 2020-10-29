@@ -3,6 +3,7 @@ const FacebookStrategy = require('passport-facebook');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
 const { userMdl } = require('../models/User.js');
+const { chapterMdl } = require('../models/Chapter.js');
 
 passport.serializeUser(function(user, done){
     done(null, user._id);
@@ -55,7 +56,7 @@ passport.use(new FacebookStrategy({
             } else if  (!user && !userWithEmail) {
                 // user doesn't exist - create new user
                 let newUser = userMdl({"googleUserId":"", "facebookUserId": profile.id, "email": user_email, "firstName": profile.name.givenName, "lastName": profile.name.familyName});
-                newUser.chapterList.push(chapterMdl({"chapterName": "<Unclassified>"}));
+                newUser.chapterList.push(chapterMdl({"chapterName": "[Unclassified]"}));
                 newUser.save();
                 userWithEmail = newUser;
             } 

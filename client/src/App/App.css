@@ -93,6 +93,24 @@ button:hover{
   background-color: #ffd966ff;
 }
 
+[chapterOpen="true"] {
+  display: inline-block;
+}
+
+[chapterOpen="false"] {
+  display: none;
+}
+
+#cookbook {
+  margin-bottom: 65px;
+}
+
+.cookbook-notes {
+  margin: 0px 0px 0px 55px;
+  width: 80vw;
+  height: 75px;
+}
+
 .dialog {
   background-color: #d3d3d3;
   width: 300px;
@@ -111,7 +129,7 @@ button:hover{
 #dialog-background{
   background-color: rgba(15,15,15,.5);
   width: 100%;
-  height: 100%;
+  height: 88vh;
   position: absolute;
   margin-top: -10px;
   z-index: 1;
@@ -132,6 +150,8 @@ button:hover{
 .error {
   color: red;
   position: fixed;
+  width: 250px;
+  font-size: small;
 }
 
 #facebook-btn{
@@ -183,6 +203,9 @@ h3 {
   height: 12vh;
   align-items: center;
   margin-bottom: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
 }
 
 .homeButton{
@@ -217,6 +240,59 @@ li  {
   margin-top: 20px;
 }
 
+li::marker {
+  font-weight: 900;
+}
+
+[itemType="chapter"] {
+  list-style: inside;
+  list-style-type: "+ ";
+  font-size: larger;
+  margin-left: 20px;
+  font-weight: bold;
+}
+
+/* itemType="chapter" override */
+[chapterExpanded="true"] {
+  list-style-type: "- ";
+}
+
+[chapterExpanded="none"] {
+  list-style-type: none;
+  margin-left: 35px;
+}
+
+iframe {
+  width: 70vw;
+  display: inline;
+  float: left;
+  height: 100%;
+  position: absolute;
+}
+
+[itemType="chapter"]:hover {
+  cursor: pointer;
+}
+
+[itemType="recipe"]:hover {
+  cursor: pointer;
+}
+
+[itemType="recipe"] {
+  list-style: inside;
+  list-style-type: none;
+  font-size: medium;
+  margin-top: 5px;
+  margin-left: 55px;
+  display: inline;
+}
+
+/* [listType="chapter"] {
+  list-style: inside;
+  list-style-type: none;
+  margin-left: 40px;
+} */
+
 #login-btn{
   background-color: #ffd966ff;
 }
@@ -249,6 +325,24 @@ li  {
   font-size: 5vh;
 }
 
+.mini-header {
+  display: flex;
+  background-color: #6aa84fff;
+  justify-content: space-between;
+  color: white;
+  padding: 0px 15px;
+  height: 12vh;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.mini-header h1 {
+  font-size: medium;
+  word-spacing: -4px;
+}
+
 #new-chapter-div{
   margin-left: 25px;
 }
@@ -257,10 +351,44 @@ li  {
   width: 215px;
 }
 
+
+[notesOpen=false] {
+  display:none;
+}
+
+[notesOpen=true] {
+  display: block;
+}
+
+#notes-pane {
+  width: 30vw;
+  position: absolute;
+  right: 0px;
+  height: 100%;
+  background-color: #f3e193;
+}
+
+.notes-popup {
+  width: 100%;
+  height: 79vh;
+}
+
+.notes-title {
+  color: rgb(195, 195, 195);
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.notes-window {
+  overflow-x: hidden;
+}
+
 ol {
   margin-left: 100px;
   margin-right: 200px;
 }
+
+
 
 .pageTitle{
   color:#ffe599;
@@ -300,6 +428,15 @@ ol {
   margin-bottom: 5px;
 }
 
+.recipe-icon {
+  width: 8px;
+  margin-left: 5px;
+}
+
+.recipe-icon:hover {
+  cursor: pointer;
+}
+
 #recipe-name-box {
   color: rgb(80,80,80);
   margin-top: 25px;
@@ -313,6 +450,14 @@ ol {
 
 #recipe-save {
   background-color: #ffd966ff;
+}
+
+[recipeType="iframe"] {
+  color: white;
+}
+
+[recipeType="new_window"] {
+  color:#ffd966ff;
 }
 
 #signup-btn{
@@ -377,4 +522,12 @@ ol {
   background-color: #6aa84fff;
   margin-top: 5vh;
   margin-bottom: 4vh;
+}
+
+ul[display="closed"] {
+  display: none;
+}
+
+ul[display="open"] {
+  display: inline-block;
 }

@@ -8,20 +8,28 @@ class Header extends Component{
         this.state = {
             userLoggedIn: false,
             username: '',
+            type: this.props.type || "header"
         };
+
+        
 
         this.createRequest = require('../modules/createRequest.js');
 
-        let checkLoginRequest = this.createRequest.createRequest("api/user/checklogin", "GET");
+        let checkLoginRequest = this.createRequest.createRequest("/api/user/checklogin", "GET");
         fetch(checkLoginRequest).then(
-            (result)=>{
-                result.json().then(
+            (response)=>{
+                console.log(response);
+                response.json().then(
                     (json)=>{
+                        console.log(json);
                         this.setState({
                             userLoggedIn: json.validUser,
                             username: json.name
                         });
                     })
+                }).catch((err)=>{
+                    console.log(err);
+                    throw err;
                 });
     }
 
@@ -33,9 +41,9 @@ class Header extends Component{
             nav = <div><a href="./signup" id="signup-link">Sign Up</a> | <a href="./login" id="login-link">Log In</a></div>; 
         }
         return (
-            <div className="header">
+            <div className={ this.state.type }>
                 <div><Logo /></div>
-                { nav }
+                { !this.props.type && nav }
             </div>
         );
     }
