@@ -24,6 +24,10 @@ class Cookbook extends Component {
         this.toggleChapter = this.toggleChapter.bind(this);
         
         this.getCookbook();
+
+        if (window.location.hash === '#_=_'){
+            window.location.hash = '';
+        }
     }
 
 

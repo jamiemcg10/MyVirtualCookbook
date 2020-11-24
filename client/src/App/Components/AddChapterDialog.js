@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import $ from 'jquery';
 
 class AddChapterDialog extends Component {
     constructor(props){
@@ -16,6 +16,15 @@ class AddChapterDialog extends Component {
         this.cancelChapterAdd = this.cancelChapterAdd.bind(this);
         this.addChapter = this.addChapter.bind(this);
         this.handleChange = this.handleChange.bind(this);
+    }
+
+    componentDidMount(){
+        console.log($('#chapter-save'));
+        $().on("keyup", (event)=>{
+            if (event.key === "Enter"){
+                $('#chapter-save').trigger("click");
+            }
+        });
     }
 
     addChapter(){
@@ -68,7 +77,7 @@ class AddChapterDialog extends Component {
                     <div id="chapter-name-box">
                         <label for="chapter-name">Chapter name:</label>
                         <br/>
-                        <input type="text" id="chapter-name" value={this.state.value} onChange={this.handleChange}></input>
+                        <input type="text" id="chapter-name" autofocus value={this.state.value} onChange={this.handleChange}></input>
                         <p className="error" id="error">{this.state.errorMsg}</p>
                     </div>
                     <div className="flex-container chapter-btns">

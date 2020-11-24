@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import $ from 'jquery';
 
 class AddRecipeDialog extends Component {
     constructor(props){
@@ -25,6 +26,15 @@ class AddRecipeDialog extends Component {
 
         this.NEW_CHAPTER = "< + New Chapter >";
         this.getChapters();
+    }
+
+    componentDidMount(){
+        // save recipe if Enter key pressed
+        $().on("keyup", (event)=>{
+            if (event.key === "Enter"){
+                $('#recipe-save').trigger("click");
+            }
+        });
     }
 
     getChapters(){
@@ -156,7 +166,7 @@ class AddRecipeDialog extends Component {
                 <div id="recipe-name-box">
                     <label for="recipe-name">Recipe name:</label>
                     <br/>
-                    <input type="text" id="recipe-name" className = "add-recipe-input" value={this.state.recipeNameValue} onChange={this.handleNameChange}></input>
+                    <input type="text" id="recipe-name" autofocus className = "add-recipe-input" value={this.state.recipeNameValue} onChange={this.handleNameChange}></input>
                     <br/>
                     <label for="recipe-link">Recipe link:</label>
                     <br/>

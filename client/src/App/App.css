@@ -14,10 +14,17 @@
 
 .add-btn {
   margin: 0px 65px;
+  padding: 0px 5px;
+}
+
+.add-btn:active {
+  position: relative;
+  top: 1px;
 }
 
 .add-btn:hover {
   cursor: pointer;
+  background-color: rgb(235, 235, 235);
 }
 
 #add-chapter-dialog {
@@ -32,6 +39,13 @@
   padding: 2px;
   border-top-color: #b4b4b4;
   border-left-color: #b4b4b4;
+  outline-color: gray;
+  outline-style: auto;
+}
+
+.add-recipe-input:focus{
+  outline-color: gray;
+  outline-style: auto;
 }
 
 .add-sign{
@@ -66,6 +80,13 @@ button:hover{
   color: rgb(80,80,80);
   font-weight: bold;
   position: relative;
+  outline: none;
+}
+
+.chapter-btns > button:active{
+  position: relative;
+  top: 1px;
+  outline: none;
 }
 
 #chapter-name {
@@ -79,6 +100,11 @@ button:hover{
   border-left-color: rgb(180,180,180);
 }
 
+#chapter-name:focus {
+  outline-color: gray;
+  outline-style: auto;
+}
+
 #chapter-name-box {
   color: rgb(80,80,80);
   margin-top: 25px;
@@ -89,8 +115,16 @@ button:hover{
   background-color: white;
 }
 
+#chapter-cancel:hover {
+  background-color: #dcdcdc;
+}
+
 #chapter-save {
   background-color: #ffd966ff;
+}
+
+#chapter-save:hover {
+  background-color: #e0bf5a;
 }
 
 [chapterOpen="true"] {
@@ -220,6 +254,13 @@ h3 {
   font-weight: bold;
   margin-top: 2vh;
   margin-bottom: 3vh;
+  outline: none;
+}
+
+.homeButton:active {
+  position: relative;
+  top: 1px;
+  outline: none;
 }
 
 #learnMoreLink{
@@ -295,6 +336,10 @@ iframe {
 
 #login-btn{
   background-color: #ffd966ff;
+}
+
+#login-btn:hover {
+  background-color: #e0bf5a;
 }
 
 .login-btn-text {
@@ -413,6 +458,13 @@ ol {
 
 .recipe-btns {
   margin-top: 45px;
+  outline: none;
+}
+
+.recipe-btns > button:active{
+  position: relative;
+  top: 1px;
+  outline: none;
 }
 
 #recipe-cancel {
@@ -426,6 +478,7 @@ ol {
   border-radius: 5px;
   color: rgb(80,80,80);
   margin-bottom: 5px;
+  outline-style: none;
 }
 
 .recipe-icon {
@@ -453,15 +506,20 @@ ol {
 }
 
 [recipeType="iframe"] {
-  color: white;
+  color:#ffd966ff;
 }
 
 [recipeType="new_window"] {
   color:#ffd966ff;
+  text-decoration: underline;
 }
 
 #signup-btn{
   background-color: #ffffffff;
+}
+
+#signup-btn:hover {
+  background-color: #dcdcdc;
 }
 
 #signup-link{
@@ -480,6 +538,14 @@ ol {
   width: 100%;
   height: 30%;
   margin: 5px 0px;
+  outline: none;
+}
+
+.social-login-btn:active {
+  position: relative;
+  top: 1px;
+  outline: inset;
+  outline-width: 2px;
 }
 
 
@@ -488,6 +554,18 @@ ol {
   width: 30px;
   float: left;
   margin-left: 5px;
+}
+
+textarea {
+  padding: 3px;
+  font-family: cursive;
+  background-color: #f3e193;
+}
+
+textarea:focus {
+  outline-color: gray;
+  outline-width: thin;
+  outline-style: solid;
 }
 
 .tile{
