@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken');
 const fetch = require('node-fetch');
 const dotenv = require('dotenv').config(); // for using environment variables
 
+
 const mongoose = require('mongoose');
 const { userMdl } = require('./server/models/User.js');
 const { chapterMdl } = require('./server/models/Chapter.js');
@@ -27,11 +28,18 @@ app.use(passport.initialize());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+const routes = require('./server/routes/routes.js');
+const validation = require('./server/modules/validation.js');  // currently not used
+const { query } = require('express');
+
+
 app.use(session({
     secret: process.env.SESSION_SECRET,  
     resave: false,
     saveUninitialized: true
   }));
+
+app.use(routes);
 
 app.use('/client/build', express.static(__dirname + "/client/build"));  // serve build files from React build folder
 
@@ -43,8 +51,32 @@ mongoose.connect(
 );
 
 
-mongoose.connection.on('connected', ()=>{
+mongoose.connection.on('connected', async ()=>{
     console.log("Connected to database");
+
+    // let user = await Users.findOne({_id: "5f9881a363f3ed3ea897c59d"}, (queryErr, result)=>{
+    //     if (queryErr){
+    //         // TODO: LOG THIS and return error message
+    //         throw queryErr;
+    //     }
+
+    //     console.log(result);
+    //     return result;
+    // });
+
+    // let chapter = user.chapterList.find((chapter) => {
+    //     return chapter.chapterName === "<Unclassified>";
+    // });
+
+    // console.log(chapter);
+    // console.log(chapter.recipes);
+
+    // let recipe = chapter.recipes.find((recipe)=>{
+    //     return recipe.nameId === "amazing-flour-less-brownies";
+    // });
+
+    // console.log(recipe);
+
 
 });
 
@@ -52,50 +84,50 @@ mongoose.connection.on('disconnected', ()=>{
     console.log("Disconnected from database");
 });
 
-app.all('*', (req, res, next)=>{
-    let data = req.session.data || {};
-    req.session.data = data;
+// app.all('*', (req, res, next)=>{
+//     let data = req.session.data || {};
+//     req.session.data = data;
 
-    next();
+//     next();
 
-});
+// });
 // set display paths
-app.get("/", redirectToMain, (req,res) => {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-});
+// app.get("/", redirectToMain, (req,res) => {
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+// });
 
-app.get("/signup", redirectToMain, (req,res) => {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-});
+// app.get("/signup", redirectToMain, (req,res) => {
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+// });
 
-app.get("/login", redirectToMain, (req,res) => {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-});
+// app.get("/login", redirectToMain, (req,res) => {
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+// });
 
-app.get("/about", (req,res) => {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-});
+// app.get("/about", (req,res) => {
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+// });
 
-app.get("/main", checkToken, (req,res) => {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-});
+// app.get("/main", checkToken, (req,res) => {
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+// });
 
-app.get("/notes/:chapter/:recipeNameId", checkToken, (req,res) => { 
-    // TODO: make sure link is valid - or send to 404 -- maybe
-    console.log("trying to open notes page");
-    //console.log(`token: ${req.session.data.token}`);
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-});
+// app.get("/notes/:chapter/:recipeNameId", checkToken, (req,res) => { 
+//     // TODO: make sure link is valid - or send to 404 -- maybe
+//     console.log("trying to open notes page");
+//     //console.log(`token: ${req.session.data.token}`);
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+// });
 
-app.get("/recipe/:chapter/:recipeNameId", checkToken, (req,res) => { 
-    // TODO: make sure link is valid - or send to 404 -- maybe
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-});
+// app.get("/recipe/:chapter/:recipeNameId", checkToken, (req,res) => { 
+//     // TODO: make sure link is valid - or send to 404 -- maybe
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+// });
 
-app.get("/logout", (req,res) => {  // remove token and send to homepage
-    req.session.data.token = null;
-    res.redirect("/");
-});
+// app.get("/logout", (req,res) => {  // remove token and send to homepage
+//     req.session.data.token = null;
+//     res.redirect("/");
+// });
 
 
 // Google routes
@@ -118,6 +150,46 @@ app.get('/auth/facebook/redirect', passport.authenticate('facebook', {session: f
     req.session.data.username = req.user.user.firstName;
     //console.log(`id: ${req.session.data.userid}`);
     res.redirect("/main");
+});
+
+// Local routes
+app.post('/login', passport.authenticate('local', {failureRedirect: '/login'}), (req,res)=>{
+    ;
+});
+
+app.post('/api/signup', async(req, res)=>{
+    // make sure user doesn't already exist
+    let firstName = req.body.firstName;
+    let email = req.body.email;
+    let password = req.body.password;
+
+    let user = await Users.findOne({"email": email}, (queryErr, result)=>{
+        if (queryErr){
+            throw queryErr;
+        }
+
+        return result;
+    });
+
+    if (user !== null){
+        //TODO: this should really just merge accounts
+        res.json({
+            success: false,
+            message: "A user with this email address already exists"
+        });
+    } else {
+        let newUser = userMdl({"email": email, "firstName": firstName});
+        newUser.chapterList.push(chapterMdl({"chapterName": "[Unclassified]"}));
+        newUser.save();
+
+        const token = jwt.sign(newUser.toJSON(), process.env.JWT_SECRET, {expiresIn: '1h'}); // generating token
+        req.session.data.token = token;
+        req.session.data.userid = newUser._id;
+        req.session.data.username = newUser.firstName;
+
+        res.redirect("/main");
+    
+    }
 });
 
 app.get('/api/chapters', async (req, res)=>{  // get all chapter names
@@ -232,6 +304,51 @@ app.post('/api/chapter/:chapterName', async (req, res)=>{
         });
     }
 
+});
+
+// move a recipe from one chapter to another
+app.put('/api/recipe/move/:recipeNameId/:oldChapter/:newChapter', async (req, res)=>{
+    let token = req.session.data.token;
+    if (isValidToken(token)){
+        console.log("token is valid");
+        
+        let user = await getUser(req);
+        if (user){
+            let recipeId = req.params.recipeNameId;
+            let oldChapterName = req.params.oldChapter;
+            let newChapterName = req.params.newChapter;
+
+            let oldChapter = user.chapterList.find((chapter) => {
+                return chapter.chapterName === oldChapterName;
+            });
+
+            let newChapter = user.chapterList.find((chapter) => {
+                return chapter.chapterName === newChapterName;
+            });
+        
+        
+            let recipeIndex = oldChapter.recipes.findIndex((recipe)=>{
+                return recipe.nameId === recipeId;
+            });
+
+            let recipe = oldChapter.recipes[recipeIndex];
+        
+            if (recipe){
+                newChapter.recipes.push(recipe);
+                oldChapter.recipes.splice(recipeIndex, 1);
+                user.save();
+                return res.json({
+                    success: true,
+                });
+            }
+        }
+        
+    
+    }
+
+    return res.json({
+        success: false,
+    });
 });
 
 app.get('/api/recipe/:chapterName/:recipeNameId', async (req, res)=>{
@@ -562,43 +679,45 @@ app.all("*", (req,res) => {
 });
 
 
-function checkToken(req, res, next){   // this can possibly live in a separate module
+// /// move to separate file - copy in routes.js
+// function checkToken(req, res, next){   // this can possibly live in a separate module
 
-    let token = req.session.data.token;
+//     let token = req.session.data.token;
 
-    if (token){ // there is a token - check it
-        jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
-            if (err){
-                return res.json({
-                    success: false,
-                    message: 'Token is not valid'
-                });
-            } else { // token is valid
-                req.decoded = decoded;
-                next();
-            }
-        });
-    } else {  // there is no token
-        //res.redirect("http://localhost:5000/login");
-        res.redirect("/login");
-    }
-}
+//     if (token){ // there is a token - check it
+//         jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
+//             if (err){
+//                 return res.json({
+//                     success: false,
+//                     message: 'Token is not valid'
+//                 });
+//             } else { // token is valid
+//                 req.decoded = decoded;
+//                 next();
+//             }
+//         });
+//     } else {  // there is no token
+//         //res.redirect("http://localhost:5000/login");
+//         res.redirect("/login");
+//     }
+// }
 
-function redirectToMain(req, res, next){  // might also want to move this
-    let token = req.session.data.token;
+// /// move to separate file - copy in routes.js
+// function redirectToMain(req, res, next){  // might also want to move this
+//     let token = req.session.data.token;
 
-    if(token){
-        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-            if (err){
-                next();
-            } else { // has valid token
-                res.redirect("/main");
-            }
-        });
-    } else { // there is no token
-        next();
-    }
-}
+//     if(token){
+//         jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+//             if (err){
+//                 next();
+//             } else { // has valid token
+//                 res.redirect("/main");
+//             }
+//         });
+//     } else { // there is no token
+//         next();
+//     }
+// }
 
 const port = process.env.PORT || 5000;
 app.listen(port);

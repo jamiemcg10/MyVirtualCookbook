@@ -59,6 +59,7 @@
 body {
   background-color: #073763ff;
   min-width: 269px;
+  min-height: 100vh; 
 }
 
 button:hover{
@@ -145,6 +146,26 @@ button:hover{
   height: 75px;
 }
 
+#customContextMenu{
+  font-family: 'Roboto', sans-serif;
+  background-color: lightgray;
+  min-width: 125px;
+  width: fit-content;
+  border: solid 1px gray;
+  padding: 3px 0px;
+  border-radius: 5px;
+  z-index: 49;
+}
+
+#customContextWindow{
+  position: absolute;
+  z-index: 50;
+}
+
+#delete{
+  padding-top: 5px;
+}
+
 .dialog {
   background-color: #d3d3d3;
   width: 300px;
@@ -159,6 +180,8 @@ button:hover{
 #add-recipe-dialog{
   top: 150px;
 }
+
+
 
 #dialog-background{
   background-color: rgba(15,15,15,.5);
@@ -224,6 +247,11 @@ h1 {
 }
 
 h3 {
+  color: rgb(80,80,80);
+  margin-top: 10px;
+}
+
+h4 {
   color: rgb(80,80,80);
   margin-top: 10px;
 }
@@ -334,12 +362,52 @@ iframe {
   margin-left: 40px;
 } */
 
-#login-btn{
+.login-box{  
+  /* display: flex;
+  flex-direction: column; */
+  /* align-self: flex-start; */
+  /* padding-left: 20px; */
+  color: #505050;
+  width: 100%;
+  margin-block-start: auto;
+}
+
+.login-box > input {
+  display: block;
+  height: 25px;
+  margin: auto;
+  margin-bottom: 5px;
+}
+
+.login-box > label {
+  margin: auto;
+}
+
+
+ #login-btn{
   background-color: #ffd966ff;
 }
 
 #login-btn:hover {
   background-color: #e0bf5a;
+}
+
+#log-in-btn {
+  height: 25px;
+  background-color: #ffd966;
+  font-family: "Roboto",sans-serif;
+  text-align: center;
+  margin: 0px auto;
+  padding: 5px 0;
+  max-width: 45vw;
+  position: relative;
+  width: 321px;
+  margin-top: 50px;
+}
+
+#log-in-btn:hover {
+  background-color: #e0bf5a;
+  cursor: pointer;
 }
 
 .login-btn-text {
@@ -368,6 +436,10 @@ iframe {
   text-align: center;
   margin-top: 20vh;
   font-size: 5vh;
+}
+
+.menu-item > span {
+  margin: 5px;
 }
 
 .mini-header {
@@ -443,6 +515,10 @@ ol {
   margin-top: 15px;
 }
 
+.recipe{
+  outline: none;
+}
+
 .recipe-btns > button {
   width: 40%;
   height: 5vh;
@@ -482,8 +558,10 @@ ol {
 }
 
 .recipe-icon {
-  width: 8px;
+  width: 14px;
   margin-left: 5px;
+  filter: invert(1);
+  vertical-align: text-bottom;
 }
 
 .recipe-icon:hover {
@@ -514,12 +592,50 @@ ol {
   text-decoration: underline;
 }
 
+#rename{
+  border-bottom: solid 1px gray;
+  padding-bottom: 5px;
+}
+
+.signup-box{  
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  padding-left: 20px;
+  color: #505050;
+  width: 100%;
+}
+
+.signup-box > input {
+  width: 80%;
+  height: 25px;
+  margin-bottom: 5px;
+}
+
 #signup-btn{
   background-color: #ffffffff;
 }
 
 #signup-btn:hover {
   background-color: #dcdcdc;
+}
+
+#sign-in-btn {
+  height: 25px;
+  background-color: #ffffffff;
+  font-family: "Roboto",sans-serif;
+  text-align: center;
+  margin: 0px auto;
+  padding: 5px 0;
+  max-width: 45vw;
+  position: relative;
+  width: 321px;
+  margin-top: 50px;
+}
+
+#sign-in-btn:hover {
+  background-color: #dcdcdc;
+  cursor: pointer;
 }
 
 #signup-link{
@@ -536,7 +652,7 @@ ol {
   position: relative;
   border: none;
   width: 100%;
-  height: 30%;
+  height: 45%;
   margin: 5px 0px;
   outline: none;
 }

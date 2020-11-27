@@ -1,4 +1,6 @@
 import React, { Component, Fragment } from 'react';
+import { Droppable } from 'react-beautiful-dnd';
+import $ from 'jquery';
 import Recipe from './Recipe.js';
 
 class Chapter extends Component{
@@ -9,6 +11,14 @@ class Chapter extends Component{
 
         //this.createRequest = require('../modules/createRequest.js');
     } // end of constructor
+
+
+    // componentDidMount(){
+    //     $('li').on("click", (event)=>{
+    //         console.log(event);
+    //     });
+        
+    // }
 
     toggleChapter(){
         const recipesNode = this.recipesRef.current;
@@ -34,14 +44,19 @@ class Chapter extends Component{
         console.log(this.props.recipes);
 
         return (
-            <Fragment>
-                <li itemType="chapter" ref={this.chapterRef} chapterExpanded={chapterExpanded} onClick={()=>{this.toggleChapter()}}>{this.props.name}</li>
+            <Droppable droppableId={this.props.name}>
+                {(provided) => (
+            <div  {...provided.droppableProps} ref={provided.innerRef}>
+                <li itemType="chapter" ref={this.chapterRef} chapterExpanded={chapterExpanded} onClick={()=>{this.toggleChapter();}}  onContextMenu={(event)=>{this.props.rightClick(event); event.preventDefault();}} >{this.props.name}</li>
                 <ul ref={this.recipesRef} chapterOpen="false">
-                    {this.props.recipes.map((recipe) => 
-                        <Recipe content={recipe} key={recipe._id} chapter={this.props.name}/>
+                    {this.props.recipes.map((recipe, index) => 
+                        <Recipe content={recipe} key={recipe._id} chapter={this.props.name} index={`${this.props.index}${index}`} sendRightClick={(event)=>{this.props.rightClick(event); event.preventDefault();}}/>
                     )}
+                {provided.placeholder}
                 </ul>
-            </Fragment>
+            </div>
+            )}
+            </Droppable>
         );
     }
 

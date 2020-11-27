@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import notesImg from '../../Images/notes_icon.png';
+import { Draggable } from 'react-beautiful-dnd';
+import notesImg from '../../Images/text-documents-line.png';
 
 class Recipe extends Component{
     constructor(props){
@@ -95,13 +96,17 @@ class Recipe extends Component{
         let recipeId = this.props.content.nameId;
 
         return (
-            <Fragment>
-                <div>
-                    <li recipeType={this.props.content.method} link={this.props.content.recipeLink} itemType="recipe" onClick={()=>{this.displayRecipe()}}>{this.props.content.name}</li>
-                    <img className="recipe-icon" src={notesImg} onClick={()=>{this.showNotes()}}/>
-                </div>
-                <textarea className="cookbook-notes" notesOpen={this.state.notesOpen} disabled={this.state.notesDisabled} value={this.state.notes} onChange={(event)=>{this.accessNotes.updateNotes(event, chapter, recipeId); this.setState({notes: event.target.value});}}></textarea>
-            </Fragment>
+            <Draggable key={recipeId} draggableId={recipeId} index={this.props.index}>
+                {(provided)=>(
+                    <div className='recipe' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                        <div>
+                            <li recipeType={this.props.content.method} link={this.props.content.recipeLink} itemType="recipe" onClick={()=>{this.displayRecipe()}} onContextMenu={(event)=>{this.props.sendRightClick(event)}}>{this.props.content.name}</li>
+                            <img className="recipe-icon" src={notesImg} onClick={()=>{this.showNotes()}}/>
+                        </div>
+                        <textarea className="cookbook-notes" notesOpen={this.state.notesOpen} disabled={this.state.notesDisabled} value={this.state.notes} onChange={(event)=>{this.accessNotes.updateNotes(event, chapter, recipeId); this.setState({notes: event.target.value});}}></textarea>
+                    </div>
+                )}
+            </Draggable>
         );
     }
 
