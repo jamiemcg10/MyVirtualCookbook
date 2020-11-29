@@ -119,11 +119,11 @@ class Cookbook extends Component {
         let cookbookCopy = _.cloneDeep(this.state.cookbook);
         console.log(this.state.cookbook);
         console.log(cookbookCopy);
-        if (filterText = ''){
-            this.setState({
-                filteredCookbook: []
-            });
-        }
+        // if (filterText === ''){
+        //     this.setState({
+        //         filteredCookbook: []
+        //     });
+        // }
         let filteredCookbook = [];
         for (let i=0; i<cookbookCopy.length; i++){
             console.log(`search text: ${searchText}`);

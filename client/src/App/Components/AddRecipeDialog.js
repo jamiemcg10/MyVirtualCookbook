@@ -35,6 +35,7 @@ class AddRecipeDialog extends Component {
                 $('#recipe-save').trigger("click");
             }
         });
+        $('#recipe-name').trigger("focus");
     }
 
     getChapters(){
@@ -166,7 +167,7 @@ class AddRecipeDialog extends Component {
                 <div id="recipe-name-box">
                     <label for="recipe-name">Recipe name:</label>
                     <br/>
-                    <input type="text" id="recipe-name" autofocus className = "add-recipe-input" value={this.state.recipeNameValue} onChange={this.handleNameChange}></input>
+                    <input type="text" id="recipe-name" className = "add-recipe-input" value={this.state.recipeNameValue} onChange={this.handleNameChange}></input>
                     <br/>
                     <label for="recipe-link">Recipe link:</label>
                     <br/>

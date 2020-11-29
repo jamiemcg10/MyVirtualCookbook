@@ -30,6 +30,7 @@ class Signup extends Component {
     }
 
     componentDidMount(){
+        $('#name').trigger("focus");
         $().on("keyup", (event)=>{
             if (event.key === "Enter"){
                 $('#sign-up-btn').trigger("click");
@@ -112,7 +113,7 @@ class Signup extends Component {
                 <div className="gray-signup-box">
                     <h3>Create an account</h3>   
                     <div className="signup-box">      
-                        <label for="name">First name</label><input type="text" id="name" autofocus value={ this.state.firstName } onChange={this.handleFirstNameChange}></input>
+                        <label for="name">First name</label><input type="text" id="name" value={ this.state.firstName } onChange={this.handleFirstNameChange}></input>
                         <label for="email">Email address</label><input type="text" id="email" value={ this.state.email } onChange={this.handleEmailChange}></input>          
                         <label for="password">Choose a password</label><input type="password" id="password" value={ this.state.password } onChange={this.handlePasswordChange}></input>
                         <label for="confirm-password">Confirm password</label><input type="password" id="confirm-password" value={ this.state.confirmPassword } onChange={this.handleConfirmPasswordChange}></input>

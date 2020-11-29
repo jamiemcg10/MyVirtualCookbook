@@ -26,6 +26,7 @@ class RenameChapterRecipeDialog extends Component {
                 $('#chapter-save').trigger("click");
             }
         });
+        $('#chapter-recipe-name').trigger('focus');
     }
 
     changeItem(){
@@ -97,7 +98,7 @@ class RenameChapterRecipeDialog extends Component {
                     <div id="rename-box">
                         <label for="chapter-recipe-name">New name:</label>
                         <br/>
-                        <input type="text" id="chapter-recipe-name" autofocus value={this.state.newNameValue} onChange={this.handleChange}></input>
+                        <input type="text" id="chapter-recipe-name" value={this.state.newNameValue} onChange={this.handleChange}></input>
                         <p className="error" id="error">{this.state.errorMsg}</p>
                     </div>
                     <div className="flex-container chapter-btns">

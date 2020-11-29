@@ -3,10 +3,10 @@ const session = require('express-session');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const passport = require('passport');
-const GAuth = require('./server/modules/google_oauth.js');
-const FAuth = require('./server/modules/facebook_oauth.js');
-const LAuth = require('./server/modules/local_oauth.js');
+// const passport = require('passport');
+// const GAuth = require('./server/modules/google_oauth.js');
+// const FAuth = require('./server/modules/facebook_oauth.js');
+// const LAuth = require('./server/modules/local_oauth.js');
 const jwt = require('jsonwebtoken');
 const fetch = require('node-fetch');
 const dotenv = require('dotenv').config(); // for using environment variables
@@ -31,6 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const routes = require('./server/routes/routes.js');
+const authRoutes = require('./server/routes/auth_routes.js');
 const validation = require('./server/modules/validation.js');  // currently not used
 const { query } = require('express');
 
@@ -42,6 +43,7 @@ app.use(session({
   }));
 
 app.use(routes);
+app.use(authRoutes);
 
 app.use('/client/build', express.static(__dirname + "/client/build"));  // serve build files from React build folder
 
@@ -132,38 +134,38 @@ mongoose.connection.on('disconnected', ()=>{
 // });
 
 
-// Google routes
-app.get('/auth/google', passport.authenticate('google', {scope: ['profile', 'email'], session: true}));
-app.get('/auth/google/redirect', passport.authenticate('google', {session: false, failureRedirect: `http://localhost:3000/login`}), (req, res) => {
-    // Successful authentication
-    req.session.data.token = req.user.token;
-    req.session.data.userid = req.user.user._id;
-    req.session.data.username = req.user.user.firstName;
-    //console.log(`id: ${req.session.data.id}`);
-    res.redirect("/main"); 
-});
+// // Google routes
+// app.get('/auth/google', passport.authenticate('google', {scope: ['profile', 'email'], session: true}));
+// app.get('/auth/google/redirect', passport.authenticate('google', {session: false, failureRedirect: `http://localhost:3000/login`}), (req, res) => {
+//     // Successful authentication
+//     req.session.data.token = req.user.token;
+//     req.session.data.userid = req.user.user._id;
+//     req.session.data.username = req.user.user.firstName;
+//     //console.log(`id: ${req.session.data.id}`);
+//     res.redirect("/main"); 
+// });
 
-// Facebook routes
-app.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email'], session: true}));
-app.get('/auth/facebook/redirect', passport.authenticate('facebook', {session: false, failureRedirect: '/login'}), (req,res) => {
-    // Successful authentication
-    req.session.data.token = req.user.token;
-    req.session.data.userid = req.user.user._id;
-    req.session.data.username = req.user.user.firstName;
-    //console.log(`id: ${req.session.data.userid}`);
-    res.redirect("/main");
-});
+// // Facebook routes
+// app.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email'], session: true}));
+// app.get('/auth/facebook/redirect', passport.authenticate('facebook', {session: false, failureRedirect: '/login'}), (req,res) => {
+//     // Successful authentication
+//     req.session.data.token = req.user.token;
+//     req.session.data.userid = req.user.user._id;
+//     req.session.data.username = req.user.user.firstName;
+//     //console.log(`id: ${req.session.data.userid}`);
+//     res.redirect("/main");
+// });
 
-// Local routes
-app.post('/api/login', passport.authenticate('local', {failureRedirect: '/login'}), (req,res)=>{
-    console.log("authenticated");
-    req.session.data.token = req.user.token;
-    req.session.data.userid = req.user.user._id;
-    req.session.data.username = req.user.user.firstName;
-    res.json({
-        success: true
-    });
-});
+// // Local routes
+// app.post('/auth/login', passport.authenticate('local', {failureRedirect: '/login'}), (req,res)=>{
+//     console.log("authenticated");
+//     req.session.data.token = req.user.token;
+//     req.session.data.userid = req.user.user._id;
+//     req.session.data.username = req.user.user.firstName;
+//     res.json({
+//         success: true
+//     });
+// });
 
 app.post('/api/signup', async(req, res)=>{
     // make sure user doesn't already exist

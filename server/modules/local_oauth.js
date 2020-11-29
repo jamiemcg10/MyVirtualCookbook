@@ -15,6 +15,7 @@ passport.deserializeUser(function(user, done){
 
 passport.use(new LocalStrategy(
     // TODO: match to other accounts
+    // TODO: ignore email case
     function(username, password, done){
         console.log(username);
         console.log(password);

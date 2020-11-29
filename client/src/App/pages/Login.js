@@ -23,6 +23,17 @@ class Login extends Component {
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
     }
+
+    componentDidMount(){
+        $('#email').trigger("focus");
+        $().on("keyup", (event)=>{
+            if (event.key === "Enter"){
+                $('#log-in-btn').trigger("click");
+            }
+        });
+    }
+    
+
     googleLogin(){ // send to path to redirect through Google
         window.location="http://localhost:5000/auth/google";
     }
@@ -38,7 +49,7 @@ class Login extends Component {
             $('#error').text("Please enter your password");
         } else {
             let md5Password = this.md5(this.state.passwordValue);
-            let loginRequest = this.createRequest.createRequestWithBody('/api/login', 'POST', JSON.stringify({"username": this.state.emailValue,
+            let loginRequest = this.createRequest.createRequestWithBody('/auth/login', 'POST', JSON.stringify({"username": this.state.emailValue,
                                                                                                                 "password": md5Password}));
             fetch(loginRequest)
             .then((response)=> {response.json().then((json)=>{
@@ -75,13 +86,10 @@ class Login extends Component {
                 <div className="gray-login-box">
                     <h3>Sign in to continue</h3>    
                     <div className="login-box">  
-                        {/* <form action="/api/login" method="POST">     */}
-                        <label for="email">Email address</label><input type="text" id="email" name="username" value = {this.state.emailValue} onChange={ this.handleEmailChange }></input>          
+                        <label for="email">Email address</label><input type="text" id="email" name="username" value={this.state.emailValue} onChange={ this.handleEmailChange }></input>          
                         <label for="password">Password</label><input type="password" id="password" name="password" value = {this.state.passwordValue} onChange={ this.handlePasswordChange }></input>
                         <p id="error" className="error"></p>
-                        {/* <input id="log-in-btn" type="submit" value="Log in"></input> */}
                         <button id="log-in-btn" onClick={ this.localLogin }>Log in</button>
-                        {/* </form> */}
                     </div>                 
                     <div className="social-btn-box">
                         <hr id="divider"></hr>
