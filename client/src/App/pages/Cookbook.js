@@ -278,13 +278,17 @@ class Cookbook extends Component {
                 <input type="text" id="search-bar" placeholder="Search recipes" value={this.state.searchbarValue} onChange={this.handleSearchBarChange}></input>
                 <div id="cookbook">
                     <DragDropContext onDragEnd={this.handleOnDragEnd}>
-                        <ul>
+                    { cookbook.length > 0 &&
+                       <ul>
                                 { cookbook.map((chapter, index) => 
                                     <Chapter name={chapter.chapterName} recipes={chapter.recipes} rightClick={ (event)=>{this.showMenu(event);} } index={index}/>
                                 )} 
                         
                         </ul>
-                            
+                    }    
+                    { (cookbook.length === 0 && this.state.searchbarValue !== '') &&
+                       <div id="empty-search-results">No recipes found</div>
+                    }         
                      </DragDropContext>  
 
                 </div>

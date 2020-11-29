@@ -20,7 +20,7 @@ passport.use(new LocalStrategy(
         console.log(username);
         console.log(password);
         console.log("in local passport");
-        userMdl.findOne({"email": username}, function(err, user){
+        userMdl.findOne({"email": username.toLowerCase()}, function(err, user){
             if (err){
                 console.log(err);
                 return done(err);

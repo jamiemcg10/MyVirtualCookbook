@@ -3,7 +3,7 @@ const session = require('express-session');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-// const passport = require('passport');
+const passport = require('passport');
 // const GAuth = require('./server/modules/google_oauth.js');
 // const FAuth = require('./server/modules/facebook_oauth.js');
 // const LAuth = require('./server/modules/local_oauth.js');
@@ -30,10 +30,10 @@ app.use(passport.initialize());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const routes = require('./server/routes/routes.js');
-const authRoutes = require('./server/routes/auth_routes.js');
-const validation = require('./server/modules/validation.js');  // currently not used
-const { query } = require('express');
+const displayRoutes = require('./server/routes/displayRoutes.js');
+const authRoutes = require('./server/routes/authRoutes.js');
+//const validation = require('./server/modules/validation.js');  // currently not used
+//const { query } = require('express');
 
 
 app.use(session({
@@ -42,7 +42,7 @@ app.use(session({
     saveUninitialized: true
   }));
 
-app.use(routes);
+app.use(displayRoutes);
 app.use(authRoutes);
 
 app.use('/client/build', express.static(__dirname + "/client/build"));  // serve build files from React build folder
@@ -174,7 +174,7 @@ app.post('/api/signup', async(req, res)=>{
     let unhashedPassword = req.body.password;
     let hashedPassword = bcrypt.hashSync(unhashedPassword, 8);
 
-    let user = await Users.findOne({"email": email}, (queryErr, result)=>{
+    let user = await Users.findOne({"email": email.toLowerCase()}, (queryErr, result)=>{
         if (queryErr){
             throw queryErr;
         }
@@ -189,7 +189,7 @@ app.post('/api/signup', async(req, res)=>{
             message: "A user with this email address already exists"
         });
     } else {
-        let newUser = userMdl({"email": email, "firstName": firstName, "password": hashedPassword});
+        let newUser = userMdl({"email": email.toLowerCase(), "firstName": firstName, "password": hashedPassword});
         newUser.chapterList.push(chapterMdl({"chapterName": "[Unclassified]"}));
         newUser.save();
         console.log(newUser);
@@ -773,9 +773,7 @@ app.post('/api/recipe/add', async (req, res)=>{
             }
         ).catch((error)=>{
             console.log(error);
-        }
-            
-        );
+        });
 
         let user = await getUser(req);
 
@@ -857,6 +855,64 @@ app.post('/api/recipe/add', async (req, res)=>{
     }
 
 });
+
+// check if link can still load in iframe
+app.post('/api/checkIframe', async(req,res)=>{
+    let recipeLink = req.body.link;
+    let result = false;
+    await fetch(recipeLink).then(
+        (response) => {
+            if (response.headers.has('x-frame-options')){ // if this is set, page won't load in iframe - load it in new window
+                displayMethod = 'new_window'
+                res.json({
+                    method: 'new_window'
+                });
+            } else {
+                result = true;
+                res.json({
+                    method: 'iframe'
+                });
+            }            
+        }
+    ).catch((error)=>{
+        console.log(error);
+        res.json({
+            method: 'new_window'
+        });
+    });
+
+
+});
+
+//update recipe opening method
+app.post('/api/updateRecipeMethod', async(req,res)=>{
+  
+    getUser(req).then((user)=>{
+        console.log("user 886: " + user);
+        let recipeNameId = req.body.nameId;
+        let recipeChapter = req.body.chapter;
+
+        let targetChapter = user.chapterList.find((chapter)=>{
+            return chapter.chapterName === recipeChapter;
+        });
+
+        if (targetChapter){
+            let targetRecipe = targetChapter.recipes.find((recipe)=>{
+                return recipe.nameId === recipeNameId;
+            });
+
+            if (targetRecipe){
+                targetRecipe.method = 'new_window';
+                user.save();
+            }
+        }
+
+        res.end();
+    
+    });
+
+});
+
 
 // update notes
 app.post('/api/recipes/update_notes/:chapter/:recipe', async (req,res)=>{

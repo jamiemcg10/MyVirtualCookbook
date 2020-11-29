@@ -5,7 +5,7 @@ class NotFound extends Component {
     render(){
         return (
             <div className="App">
-                Looks like that page is missing!
+                <span id="not-found">Looks like that page is missing!</span>
             </div>
         );
     }

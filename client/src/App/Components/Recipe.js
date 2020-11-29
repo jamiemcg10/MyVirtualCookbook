@@ -38,28 +38,57 @@ class Recipe extends Component{
     }
 
 
-    displayRecipe(){
+    async displayRecipe(){
         // TODO: i think this will do weird things if i close the main cookbook page while a recipe 
         // page is open and then re-open the cookbook page later - check
+        let methodChanged = false;
         this.setState({
             notesDisabled: true,
         });
         if (this.recipe.method === "iframe") {
-            // go to recipe page
-            let recipeWindow = window.open(`/recipe/${this.props.chapter}/${this.props.content.nameId}`);
-            recipeWindow.addEventListener("unload", ()=>{
-                console.log(recipeWindow.location.href);
-                if (recipeWindow.location.href !== "about:blank"){
-                    this.setState({
-                        notesDisabled: false,
-                        // TODO: SET NOTEs
-                        notes: recipeWindow.document.getElementsByTagName("textarea")[0].value
-                    });
-                    
-                    this.notesWindow = null;
+            // make sure page can still be opened in iframe
+            
+            let iframeStillValidRequest = this.createRequest.createRequestWithBody('/api/checkIframe', 'POST', JSON.stringify({"link": this.recipe.recipeLink,
+                                                                                                                                "nameId": this.recipe.nameId,
+                                                                                                                                "chapter": this.props.chapter}));
+            await fetch(iframeStillValidRequest).then(response=>response.json().then(json=>{
+                if (json.method === 'new_window'){
+                    this.recipe.method = json.method;
+                    methodChanged = true;
                 }
+            })).catch(error=>{
+                console.log(error);
             });
-        } else if (this.recipe.method === "new_window") {
+
+            if (methodChanged){
+                let changeOpeningMethodRequest = this.createRequest.createRequestWithBody('/api/updateRecipeMethod', 'POST', JSON.stringify({"link": this.recipe.recipeLink,
+                                                                                                                                    "nameId": this.recipe.nameId,
+                                                                                                                                    "chapter": this.props.chapter}));                                                                                  
+                fetch(changeOpeningMethodRequest).catch((error)=>{
+                    console.log(error);
+                });
+            }
+
+
+            // go to recipe page
+            if (this.recipe.method === "iframe") { // will still open in iframe
+                let recipeWindow = window.open(`/recipe/${this.props.chapter}/${this.props.content.nameId}`);
+                recipeWindow.addEventListener("unload", ()=>{
+                    console.log(recipeWindow.location.href);
+                    if (recipeWindow.location.href !== "about:blank"){
+                        this.setState({
+                            notesDisabled: false,
+                            // TODO: SET NOTEs
+                            notes: recipeWindow.document.getElementsByTagName("textarea")[0].value
+                        });
+                        
+                        this.notesWindow = null;
+                    }
+                });
+            }
+        } 
+
+        if (this.recipe.method === "new_window") {
             console.log(this.notesWindow);
             let recipeWindow = window.open(this.props.content.recipeLink);
             if (this.notesWindow === null){
@@ -100,7 +129,7 @@ class Recipe extends Component{
                 {(provided)=>(
                     <div className='recipe' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                         <div>
-                            <li recipeType={this.props.content.method} chapterName={chapter} link={this.props.content.recipeLink} itemType="recipe" onClick={()=>{this.displayRecipe()}} onContextMenu={(event)=>{this.props.sendRightClick(event)}}>{this.props.content.name}</li>
+                            <li recipeType={this.props.content.method} chapterName={chapter} link={this.recipe.recipeLink} itemType="recipe" onClick={()=>{this.displayRecipe()}} onContextMenu={(event)=>{this.props.sendRightClick(event)}}>{this.recipe.name}</li>
                             <img className="recipe-icon" src={notesImg} onClick={()=>{this.showNotes()}}/>
                         </div>
                         <textarea className="cookbook-notes" notesOpen={this.state.notesOpen} disabled={this.state.notesDisabled} value={this.state.notes} onChange={(event)=>{this.accessNotes.updateNotes(event, chapter, recipeId); this.setState({notes: event.target.value});}}></textarea>

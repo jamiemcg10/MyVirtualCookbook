@@ -218,6 +218,14 @@ button:hover{
   overflow: hidden;
 }
 
+#empty-search-results{
+    color: antiquewhite;
+    margin-left: 50px;
+    margin-top: 50px;
+    font-weight: 500;
+    font-size: large;
+    font-style: italic;
+}
 .error {
   color: red;
   position: fixed;
@@ -528,6 +536,15 @@ iframe {
   width: 215px;
 }
 
+#not-found {
+  font-weight: lighter;
+  width: 100%;
+  display: block;
+  text-align: center;
+  margin-top: 50px;
+  font-size: x-large;
+  color: antiquewhite;
+}
 
 [notesOpen=false] {
   display:none;
@@ -684,10 +701,15 @@ ol {
 #search-bar {
   float: right;
   margin-right: 35px;
-  height: 15px;
+  height: 18px;
   border-radius: 3px;
   border-width: inherit;
   padding: 2px;
+}
+
+#search-bar:focus{
+  outline-color: gray;
+  outline: thin;
 }
 
 .signup-box{  
