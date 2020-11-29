@@ -30,7 +30,13 @@ router.get("/about", (req,res) => {
 });
 
 router.get("/main", validation.checkToken, (req,res) => {
-    res.sendFile(path.join(process.cwd(), 'client', 'build', 'index.html'));
+    console.log("doing some stuff");
+    console.log(process.cwd());
+    res.sendFile(path.join(process.cwd(), 'client', 'build', 'index.html'), function(err){
+        if (err){
+            console.log(err);
+        }
+    });
 });
 
 router.get("/notes/:chapter/:recipeNameId", validation.checkToken, (req,res) => { 

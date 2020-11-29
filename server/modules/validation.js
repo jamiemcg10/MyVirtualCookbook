@@ -2,8 +2,7 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config(); // for using environment variables
 
 
-/// move to separate file - copy in routes.js
-function checkToken(req, res, next){   // this can possibly live in a separate module
+function checkToken(req, res, next){  
     console.log("checking token");
     let token = req.session.data.token;
 
@@ -15,18 +14,17 @@ function checkToken(req, res, next){   // this can possibly live in a separate m
                     message: 'Token is not valid'
                 });
             } else { // token is valid
+                console.log("token is valid");
                 req.decoded = decoded;
                 next();
             }
         });
     } else {  // there is no token
-        //res.redirect("http://localhost:5000/login");
         res.redirect("/login");
     }
 }
 
-/// move to separate file - copy in routes.js
-function redirectToMain(req, res, next){  // might also want to move this
+function redirectToMain(req, res, next){ 
     let token = req.session.data.token;
 
     if(token){

@@ -1,6 +1,5 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
-import $ from 'jquery';
 import Recipe from './Recipe.js';
 
 class Chapter extends Component{
@@ -38,17 +37,17 @@ class Chapter extends Component{
         if (this.props.recipes.length === 0){
             chapterExpanded="none";
         } else {
-            chapterExpanded="false";
+            chapterExpanded="true";
         }
 
-        console.log(this.props.recipes);
+        //console.log(this.props.recipes);
 
         return (
             <Droppable droppableId={this.props.name}>
                 {(provided) => (
             <div  {...provided.droppableProps} ref={provided.innerRef}>
                 <li itemType="chapter" ref={this.chapterRef} chapterExpanded={chapterExpanded} onClick={()=>{this.toggleChapter();}}  onContextMenu={(event)=>{this.props.rightClick(event); event.preventDefault();}} >{this.props.name}</li>
-                <ul ref={this.recipesRef} chapterOpen="false">
+                <ul ref={this.recipesRef} chapterOpen="true">
                     {this.props.recipes.map((recipe, index) => 
                         <Recipe content={recipe} key={recipe._id} chapter={this.props.name} index={`${this.props.index}${index}`} sendRightClick={(event)=>{this.props.rightClick(event); event.preventDefault();}}/>
                     )}

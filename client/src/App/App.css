@@ -3,6 +3,10 @@
   padding: 0;
 }
 
+a {
+  outline: none;
+}
+
 .add-bar {
   background-color: whitesmoke;
   height: 65px;
@@ -120,6 +124,10 @@ button:hover{
   background-color: #dcdcdc;
 }
 
+#chapter-recipe-name {
+  width: 250px;
+}
+
 #chapter-save {
   background-color: #ffd966ff;
 }
@@ -165,6 +173,12 @@ button:hover{
 #delete{
   padding-top: 5px;
 }
+
+#delete-save {
+  background-color: #ffd966ff;
+  border-width: 1px;
+}
+
 
 .dialog {
   background-color: #d3d3d3;
@@ -236,6 +250,17 @@ button:hover{
   display: flex;
   flex-direction: column;
   height: 50vh;
+  width: 50vw;
+  align-items: center;
+  margin: auto;
+  border-radius: 5px;
+}
+
+.gray-signup-box {
+  background-color: lightgrey;
+  display: flex;
+  flex-direction: column;
+  height: 65vh;
   width: 50vw;
   align-items: center;
   margin: auto;
@@ -362,7 +387,7 @@ iframe {
   margin-left: 40px;
 } */
 
-.login-box{  
+.login-box {  
   /* display: flex;
   flex-direction: column; */
   /* align-self: flex-start; */
@@ -372,19 +397,39 @@ iframe {
   margin-block-start: auto;
 }
 
-.login-box > input {
+.login-box #error {
+  position: relative;
   display: block;
+  margin: auto;
+  max-width: 45vw;
+  width: 321px;
+}
+
+.login-box input {
+  /* display: block;
   height: 25px;
-  margin: auto;
+  margin: auto auto;
   margin-bottom: 5px;
+  width: 321px;
+  max-width: 45vw; */
+    width: 80%;
+    height: 25px;
+    margin: 5px auto auto; 
+    width: 321px;
+    max-width: 45vw;
+    display: block;
+    outline-color: gray;
 }
 
-.login-box > label {
-  margin: auto;
+.login-box label {
+  width: 321px;
+  max-width: 45vw;
+  display: block;
+  margin: auto auto;
+  height: 25px;
 }
 
-
- #login-btn{
+#login-btn{  /* on main page */
   background-color: #ffd966ff;
 }
 
@@ -392,8 +437,7 @@ iframe {
   background-color: #e0bf5a;
 }
 
-#log-in-btn {
-  height: 25px;
+#log-in-btn { /* on login page */
   background-color: #ffd966;
   font-family: "Roboto",sans-serif;
   text-align: center;
@@ -402,7 +446,23 @@ iframe {
   max-width: 45vw;
   position: relative;
   width: 321px;
-  margin-top: 50px;
+  border: none;
+  height: 35px;
+  margin: auto;
+  display: block;
+  margin-top: 40px;
+  outline: none;
+  color: #505050;
+  font-size: inherit;
+}
+
+#log-in-btn:active {
+  position: relative;
+  top: 1px;
+  outline: inset;
+  outline-width: 2px;
+  outline-color: white;
+  outline-width: thin;
 }
 
 #log-in-btn:hover {
@@ -581,6 +641,7 @@ ol {
 
 #recipe-save {
   background-color: #ffd966ff;
+  border-width: 1px;
 }
 
 [recipeType="iframe"] {
@@ -597,22 +658,75 @@ ol {
   padding-bottom: 5px;
 }
 
+#rename-box {
+  color: rgb(80,80,80);
+}
+
+#rename-box > input {
+  height: 20px;
+  outline: none;
+}
+
+#rename-box > label {
+  margin-top: 20px;
+  display: inline-block;
+}
+
+#rename-cancel {
+  border-width: 1px;
+}
+
+#rename-save {
+  background-color: #ffd966ff;
+  border-width: 1px;
+}
+
+#search-bar {
+  float: right;
+  margin-right: 35px;
+  height: 15px;
+  border-radius: 3px;
+  border-width: inherit;
+  padding: 2px;
+}
+
 .signup-box{  
-  display: flex;
-  flex-direction: column;
-  align-self: flex-start;
-  padding-left: 20px;
   color: #505050;
   width: 100%;
+  margin-block-start: auto;
+}
+
+.signup-box > #error {
+  position: relative;
+  display: block;
+  margin: auto;
+  max-width: 45vw;
+  width: 321px;
 }
 
 .signup-box > input {
   width: 80%;
   height: 25px;
-  margin-bottom: 5px;
+  margin: 5px auto auto; 
+  width: 321px;
+  max-width: 45vw;
+  display: block;
+  outline-color: gray;
 }
 
-#signup-btn{
+/* .signup-box > input:focus {
+  outline-width: thin;
+} */
+
+.signup-box > label {
+  display: block;
+  height: 25px;
+  margin: auto auto;
+  width: 321px;
+  max-width: 45vw;
+}
+
+#signup-btn {  /* on main page */
   background-color: #ffffffff;
 }
 
@@ -620,22 +734,35 @@ ol {
   background-color: #dcdcdc;
 }
 
-#sign-in-btn {
-  height: 25px;
+#sign-up-btn {  /* on signup page */
   background-color: #ffffffff;
   font-family: "Roboto",sans-serif;
   text-align: center;
-  margin: 0px auto;
   padding: 5px 0;
   max-width: 45vw;
   position: relative;
   width: 321px;
-  margin-top: 50px;
+  border: none;
+  height: 35px;
+  display: block;
+  margin: 15px auto auto;
+  outline: none;
+  color: #505050;
+  font-size: inherit;
 }
 
-#sign-in-btn:hover {
+#sign-up-btn:hover {
   background-color: #dcdcdc;
   cursor: pointer;
+}
+
+#sign-up-btn:active {
+  position: relative;
+  top: 1px;
+  outline: inset;
+  outline-width: 2px;
+  outline-color: white;
+  outline-width: thin;
 }
 
 #signup-link{
@@ -670,6 +797,11 @@ ol {
   width: 30px;
   float: left;
   margin-left: 5px;
+}
+
+.subtext{
+  font-size: small;
+  font-style: italic;
 }
 
 textarea {

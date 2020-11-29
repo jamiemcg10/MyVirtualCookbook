@@ -3,9 +3,6 @@ import $ from 'jquery';
 
 class CustomContextMenu extends Component {
 
-    constructor(props){
-        super(props);
-    }
 
     componentDidMount(){
         $('#rename').on("mouseover", (event)=>{
@@ -26,6 +23,16 @@ class CustomContextMenu extends Component {
         $('#delete').on("mouseout", (event)=>{
             $('#delete').css("backgroundColor","");
           $('#delete').css("color","");
+        });
+
+        $('#rename').on("click", (event)=>{
+            this.props.renameItem(true);
+            console.log(this.props.renameItem);
+        });
+        
+        $('#delete').on("click", (event)=>{
+            this.props.deleteItem(true);
+            console.log(this.props.deleteItem);
         });
     }
 

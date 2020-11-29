@@ -4,12 +4,14 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const passport = require('passport');
-const GAuth = require('./server/modules/google_oauth.js')
-const FAuth = require('./server/modules/facebook_oauth.js')
+const GAuth = require('./server/modules/google_oauth.js');
+const FAuth = require('./server/modules/facebook_oauth.js');
+const LAuth = require('./server/modules/local_oauth.js');
 const jwt = require('jsonwebtoken');
 const fetch = require('node-fetch');
 const dotenv = require('dotenv').config(); // for using environment variables
-
+const md5 = require('md5');
+const bcrypt = require('bcryptjs');
 
 const mongoose = require('mongoose');
 const { userMdl } = require('./server/models/User.js');
@@ -153,15 +155,22 @@ app.get('/auth/facebook/redirect', passport.authenticate('facebook', {session: f
 });
 
 // Local routes
-app.post('/login', passport.authenticate('local', {failureRedirect: '/login'}), (req,res)=>{
-    ;
+app.post('/api/login', passport.authenticate('local', {failureRedirect: '/login'}), (req,res)=>{
+    console.log("authenticated");
+    req.session.data.token = req.user.token;
+    req.session.data.userid = req.user.user._id;
+    req.session.data.username = req.user.user.firstName;
+    res.json({
+        success: true
+    });
 });
 
 app.post('/api/signup', async(req, res)=>{
     // make sure user doesn't already exist
     let firstName = req.body.firstName;
     let email = req.body.email;
-    let password = req.body.password;
+    let unhashedPassword = req.body.password;
+    let hashedPassword = bcrypt.hashSync(unhashedPassword, 8);
 
     let user = await Users.findOne({"email": email}, (queryErr, result)=>{
         if (queryErr){
@@ -171,23 +180,27 @@ app.post('/api/signup', async(req, res)=>{
         return result;
     });
 
-    if (user !== null){
+    if (user){
         //TODO: this should really just merge accounts
         res.json({
             success: false,
             message: "A user with this email address already exists"
         });
     } else {
-        let newUser = userMdl({"email": email, "firstName": firstName});
+        let newUser = userMdl({"email": email, "firstName": firstName, "password": hashedPassword});
         newUser.chapterList.push(chapterMdl({"chapterName": "[Unclassified]"}));
         newUser.save();
-
+        console.log(newUser);
+        console.log(newUser.toJSON());
         const token = jwt.sign(newUser.toJSON(), process.env.JWT_SECRET, {expiresIn: '1h'}); // generating token
         req.session.data.token = token;
         req.session.data.userid = newUser._id;
         req.session.data.username = newUser.firstName;
 
-        res.redirect("/main");
+        //res.redirect("/main");
+        res.json({
+            success: true
+        });
     
     }
 });
@@ -240,7 +253,7 @@ app.get('/api/chapters', async (req, res)=>{  // get all chapter names
     }
 });
 
-
+// add chapter
 app.post('/api/chapter/:chapterName', async (req, res)=>{
     let token = req.session.data.token;
     if (isValidToken(token)){
@@ -306,11 +319,266 @@ app.post('/api/chapter/:chapterName', async (req, res)=>{
 
 });
 
-// move a recipe from one chapter to another
-app.put('/api/recipe/move/:recipeNameId/:oldChapter/:newChapter', async (req, res)=>{
+// rename chapter
+app.put('/api/chapter/rename/:oldChapterName/:newChapterName', async (req, res)=>{
     let token = req.session.data.token;
     if (isValidToken(token)){
-        console.log("token is valid");
+        console.log("token is valid for changing name of chapter");
+        let oldChapterName = req.params.oldChapterName;
+        let newChapterName = req.params.newChapterName;
+        
+        let user = await getUser(req);
+        if (user) {  // user returned is valid
+            console.log(user.chapterList);
+            let newChapter = user.chapterList.find((chapter) => {
+                return chapter.chapterName.toLowerCase() === newChapterName.toLowerCase();
+            });
+            
+            if (newChapter){  // a chapter with the new name already exists
+                return res.json({
+                    success: false,
+                    message: "A chapter with this name already exists"
+                });
+            }
+
+            // if here - chapter name is not already in cookbook
+            let oldChapter = user.chapterList.find((chapter) => {   // find the chapter the recipe is currently in
+                return chapter.chapterName === oldChapterName;
+            });
+            
+            if (oldChapter){  // the old chapter exists
+                oldChapter.chapterName = newChapterName;
+                user.save((err)=>{
+                    if (err){
+                        throw err;
+                    }
+                });
+                return res.json({
+                    success: true,
+                    message: `${oldChapterName} was changed to ${newChapterName}`
+                });
+            } else {  // this shouldn't happen
+                return res.json({
+                    success: false,
+                    message: "An error occured"
+                });
+            }
+            
+        } else {  // problem with retrieving user - return error message
+            return res.json({
+                success: false,
+                message: "There was a problem retrieving your data. Please try again later."
+            });
+        }
+        
+
+    } else {
+        return res.json({
+            success: false,
+            message: "Please log in."
+        });
+    }
+
+});
+
+// rename recipe
+app.put('/api/recipe/rename/:oldRecipeName/:recipeChapter/:newRecipeName', async (req, res)=>{
+    let token = req.session.data.token;
+    if (isValidToken(token)){
+        console.log("token is valid for changing name of recipe");
+        let oldRecipeName = req.params.oldRecipeName;
+        let newRecipeName = req.params.newRecipeName;
+        let recipeChapter = req.params.recipeChapter;
+        let oldRecipeNameId = oldRecipeName.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
+        let newRecipeNameId = newRecipeName.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
+
+        
+        let user = await getUser(req);
+        if (user) {  // user returned is valid
+            console.log(user.chapterList);
+            console.log("recipeChapter: " + recipeChapter);
+            let chapter = user.chapterList.find((chap) => {   // find the chapter the recipe is currently in
+                return chap.chapterName === recipeChapter;
+            });
+            
+            if (chapter){  // the chapter exists
+                let existingRecipe = chapter.recipes.find((recipe) => {
+                    return recipe.nameId === newRecipeNameId;
+                });
+
+                if (!existingRecipe){ 
+                    existingRecipe = chapter.recipes.find((recipe) => {
+                        return recipe.nameId === oldRecipeNameId;
+                    }); 
+                    if (existingRecipe){
+                        existingRecipe.nameId = newRecipeNameId;
+                        existingRecipe.name = newRecipeName;
+
+                        user.save((err)=>{
+                            if (err){
+                                throw err;
+                            }
+                        });
+                        return res.json({
+                            success: true,
+                            message: `${oldRecipeName} was changed to ${newRecipeName}`
+                        });
+                    }
+
+                } else { // recipe is already in chapter
+                    return res.json({
+                        success: false,
+                        message: 'A recipe with this name already exists'
+                    });
+                }
+                
+            } else {  // this shouldn't happen
+                return res.json({
+                    success: false,
+                    message: "An error occured"
+                });
+            }
+            
+        } else {  // problem with retrieving user - return error message
+            return res.json({
+                success: false,
+                message: "There was a problem retrieving your data. Please try again later."
+            });
+        }
+        
+
+    } else {
+        return res.json({
+            success: false,
+            message: "Please log in."
+        });
+    }
+
+});
+
+// delete chapter
+app.delete('/api/chapter/delete/:chapterName', async (req, res)=>{
+    let token = req.session.data.token;
+    if (isValidToken(token)){
+        console.log("token is valid for deleting chapter");
+        let chapterName = req.params.chapterName;
+        
+        let user = await getUser(req);
+        if (user) {  // user returned is valid
+            console.log(user.chapterList);
+            let chapterIndex = user.chapterList.findIndex((chapter) => {
+                return chapter.chapterName === chapterName;
+            });
+            
+            if (chapterIndex === -1){  // this shouldn't happen, but the chapter doesn't exist
+                return res.json({
+                    success: false,
+                    message: "An error has occured"
+                });
+            } else {
+                user.chapterList.splice(chapterIndex,1);
+                user.save();
+                res.json({
+                    success: true,
+                    message: `${chapterName} was deleted`
+                });
+            }
+            
+        } else {  // problem with retrieving user - return error message
+            return res.json({
+                success: false,
+                message: "There was a problem retrieving your data. Please try again later."
+            });
+        }
+        
+
+    } else {
+        return res.json({
+            success: false,
+            message: "Please log in."
+        });
+    }
+
+});
+
+// delete recipe
+app.delete('/api/recipe/delete/:recipeChapter/:recipeName', async (req, res)=>{
+    let token = req.session.data.token;
+    if (isValidToken(token)){
+        console.log("token is valid for deleting recipe");
+        let recipeName = req.params.recipeName;
+        let recipeChapter = req.params.recipeChapter;
+        let recipeNameId = recipeName.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
+        console.log(recipeName);
+        console.log(recipeChapter);
+        console.log(recipeNameId);
+        
+        let user = await getUser(req);
+        if (user) {  // user returned is valid
+            //console.log(user.chapterList);
+            
+            let chapter = user.chapterList.find((chapter) => {   // find the chapter the recipe is currently in
+                return chapter.chapterName === recipeChapter;
+            });
+            
+            if (chapter){  // the chapter exists
+                let recipeIndex = chapter.recipes.findIndex((recipe) => {
+                    return recipe.nameId === recipeNameId;
+                });
+                console.log(`recipeIndex: ${recipeIndex}`);
+
+                if (recipeIndex > -1){ // the recipe exists
+                 
+                        chapter.recipes.splice(recipeIndex, 1);
+
+                        user.save((err)=>{
+                            if (err){
+                                throw err;
+                            }
+                        });
+                        return res.json({
+                            success: true,
+                            message: `${recipeName} was deleted`
+                        });
+                } else { // recipe doesn't exist - shouldn't happen
+                    console.log("recipe doesn't exist");    
+                    return res.json({
+                        success: false,
+                        message: 'An error has occured'
+                    });
+                }
+                
+            } else {  // this shouldn't happen - the chapter doesn't exist
+                console.log("chapter doesn't exist");
+                return res.json({
+                    success: false,
+                    message: "An error occured"
+                });
+            }
+            
+        } else {  // problem with retrieving user - return error message
+            return res.json({
+                success: false,
+                message: "There was a problem retrieving your data. Please try again later."
+            });
+        }
+        
+
+    } else {
+        return res.json({
+            success: false,
+            message: "Please log in."
+        });
+    }
+
+});
+
+// move a recipe from one chapter to another
+app.put('/api/recipe/move/:recipeNameId/:oldChapter/:newChapter', async (req, res)=>{
+    // TODO: this should check for duplicates
+    let token = req.session.data.token;
+    if (isValidToken(token)){
+        console.log("token is valid to move recipe");
         
         let user = await getUser(req);
         if (user){
@@ -318,24 +586,24 @@ app.put('/api/recipe/move/:recipeNameId/:oldChapter/:newChapter', async (req, re
             let oldChapterName = req.params.oldChapter;
             let newChapterName = req.params.newChapter;
 
-            let oldChapter = user.chapterList.find((chapter) => {
+            let oldChapter = user.chapterList.find((chapter) => {   // find the chapter the recipe is currently in
                 return chapter.chapterName === oldChapterName;
             });
 
-            let newChapter = user.chapterList.find((chapter) => {
+            let newChapter = user.chapterList.find((chapter) => {  // find the chapter the recipe should be moved to
                 return chapter.chapterName === newChapterName;
             });
         
         
-            let recipeIndex = oldChapter.recipes.findIndex((recipe)=>{
+            let recipeIndex = oldChapter.recipes.findIndex((recipe)=>{  // find the position of the recipe in the old chapter
                 return recipe.nameId === recipeId;
             });
 
-            let recipe = oldChapter.recipes[recipeIndex];
+            let recipe = oldChapter.recipes[recipeIndex];  // get the recipe to be moved
         
-            if (recipe){
-                newChapter.recipes.push(recipe);
-                oldChapter.recipes.splice(recipeIndex, 1);
+            if (recipe){  // if the recipe exists
+                newChapter.recipes.push(recipe);  // add the recipe to the new chapter
+                oldChapter.recipes.splice(recipeIndex, 1);  // remove the recipe from the old chapter
                 user.save();
                 return res.json({
                     success: true,
@@ -351,6 +619,7 @@ app.put('/api/recipe/move/:recipeNameId/:oldChapter/:newChapter', async (req, re
     });
 });
 
+// get recipe
 app.get('/api/recipe/:chapterName/:recipeNameId', async (req, res)=>{
     // TODO: add user validation
     let recipeChapter = req.params.chapterName;
@@ -393,6 +662,7 @@ app.get('/api/recipe/:chapterName/:recipeNameId', async (req, res)=>{
 
 });
 
+// get recipe notes
 app.get('/api/recipe/notes/:chapterName/:recipeNameId', async (req, res)=>{
     // TODO: add user validation
     let recipeChapter = req.params.chapterName;
@@ -435,7 +705,8 @@ app.get('/api/recipe/notes/:chapterName/:recipeNameId', async (req, res)=>{
 
 });
 
-app.get('/api/recipes', async (req, res)=>{  // get all chapters/recipes
+// get all chapters & recipes
+app.get('/api/recipes', async (req, res)=>{  
     let token = req.session.data.token;
     if (isValidToken(token)){
         console.log("token is valid");
@@ -469,6 +740,8 @@ app.get('/api/recipes', async (req, res)=>{  // get all chapters/recipes
     }
 });
 
+
+// add recipe
 app.post('/api/recipe/add', async (req, res)=>{
     let token = req.session.data.token;
 
@@ -583,6 +856,7 @@ app.post('/api/recipe/add', async (req, res)=>{
 
 });
 
+// update notes
 app.post('/api/recipes/update_notes/:chapter/:recipe', async (req,res)=>{
     // TODO: Make sure user is logged in
 

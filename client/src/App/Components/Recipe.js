@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import notesImg from '../../Images/text-documents-line.png';
 
@@ -100,7 +100,7 @@ class Recipe extends Component{
                 {(provided)=>(
                     <div className='recipe' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                         <div>
-                            <li recipeType={this.props.content.method} link={this.props.content.recipeLink} itemType="recipe" onClick={()=>{this.displayRecipe()}} onContextMenu={(event)=>{this.props.sendRightClick(event)}}>{this.props.content.name}</li>
+                            <li recipeType={this.props.content.method} chapterName={chapter} link={this.props.content.recipeLink} itemType="recipe" onClick={()=>{this.displayRecipe()}} onContextMenu={(event)=>{this.props.sendRightClick(event)}}>{this.props.content.name}</li>
                             <img className="recipe-icon" src={notesImg} onClick={()=>{this.showNotes()}}/>
                         </div>
                         <textarea className="cookbook-notes" notesOpen={this.state.notesOpen} disabled={this.state.notesDisabled} value={this.state.notes} onChange={(event)=>{this.accessNotes.updateNotes(event, chapter, recipeId); this.setState({notes: event.target.value});}}></textarea>
