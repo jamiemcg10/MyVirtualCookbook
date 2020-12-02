@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Logo from './Logo.js';
 
+// display header
 class Header extends Component{
     constructor(props){
         super(props);
@@ -18,10 +19,8 @@ class Header extends Component{
         let checkLoginRequest = this.createRequest.createRequest("/api/user/checklogin", "GET");
         fetch(checkLoginRequest).then(
             (response)=>{
-                console.log(response);
                 response.json().then(
                     (json)=>{
-                        console.log(json);
                         this.setState({
                             userLoggedIn: json.validUser,
                             username: json.name
@@ -29,15 +28,15 @@ class Header extends Component{
                     })
                 }).catch((err)=>{
                     console.log(err);
-                    throw err;
+                    // throw err;
                 });
     }
 
     render(){
         let nav;
-        if (this.state.userLoggedIn) {
+        if (this.state.userLoggedIn) {  // if user is logged in, show greeting and link to log out
             nav = <div>Hi, {this.state.username}! | <a href="./logout" id="logout-link">Log Out</a></div>
-        } else {
+        } else {  // user is not logged in - show options to sign up or login
             nav = <div><a href="./signup" id="signup-link">Sign Up</a> | <a href="./login" id="login-link">Log In</a></div>; 
         }
         return (

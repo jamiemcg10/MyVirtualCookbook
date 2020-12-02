@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import $ from 'jquery';
 
+
+// window for adding a chapter to the cookbook
 class AddChapterDialog extends Component {
     constructor(props){
         super(props);
@@ -11,17 +13,16 @@ class AddChapterDialog extends Component {
         };
 
         this.createRequest = require('../modules/createRequest.js');
-        console.log(`createRequest: ${this.createRequest.createRequest}`);
 
+        // bind methods
         this.cancelChapterAdd = this.cancelChapterAdd.bind(this);
         this.addChapter = this.addChapter.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount(){
-        $('#chapter-name').trigger("focus");
-        console.log($('#chapter-save'));
-        $().on("keyup", (event)=>{
+        $('#chapter-name').trigger("focus");  // put cursor in textbox
+        $().on("keyup", (event)=>{  // save chapter if user clicks enter
             if (event.key === "Enter"){
                 $('#chapter-save').trigger("click");
             }
@@ -34,14 +35,12 @@ class AddChapterDialog extends Component {
             });
 
             let newChapterText = this.state.chapterNameValue;
-            console.log(newChapterText);
-            if (newChapterText === ""){
+            if (newChapterText === ""){  // don't allow blank chapter names
                 return;
             } else {
-                let newChapterRequest =this.createRequest.createRequest(`http://localhost:5000/api/chapter/${newChapterText}`, 'POST');
+                let newChapterRequest =this.createRequest.createRequest(`http://localhost:5000/api/chapter/add/${newChapterText}`, 'POST');
                 fetch(newChapterRequest).then(
                     (response) => {response.json().then((json) => {
-                        console.log(json);
                         if (json.success){
                             this.props.showAddChapterDialog(false);
                             this.props.rerenderCookbook();
@@ -61,10 +60,9 @@ class AddChapterDialog extends Component {
 
     cancelChapterAdd(){
             this.props.showAddChapterDialog(false);
-
     }
 
-    handleChange(event){
+    handleChange(event){  // change value of chapter name textbox
         this.setState({
             chapterNameValue: event.target.value,
         });

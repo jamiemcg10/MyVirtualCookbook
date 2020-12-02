@@ -20,6 +20,7 @@ class Signup extends Component {
         
         this.createRequest = require('../modules/createRequest.js');
 
+        // bind methods
         this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
@@ -30,8 +31,8 @@ class Signup extends Component {
     }
 
     componentDidMount(){
-        $('#name').trigger("focus");
-        $().on("keyup", (event)=>{
+        $('#name').trigger("focus");  // put cursor in name box on page load
+        $().on("keyup", (event)=>{  // trigger sign up click if user hits enter
             if (event.key === "Enter"){
                 $('#sign-up-btn').trigger("click");
             }
@@ -47,7 +48,8 @@ class Signup extends Component {
     }
 
     isValidEmail(email){
-        if (email.indexOf(".") > email.indexOf("@") && (email.indexOf(".") > -1 && email.indexOf("@") >-1)){
+        // checks to make sure there is an @ symbol and a . in that order
+        if ( (email.indexOf(".") > -1 && email.indexOf("@") >-1) && email.lastIndexOf(".") > email.indexOf("@")){
             return true;
         }
 
@@ -61,19 +63,22 @@ class Signup extends Component {
             $('#error').text("Please enter a valid email address");
         } else if (this.state.password === ''){
             $('#error').text("Please enter a password");
+        } else if (this.state.password.length < 6){
+            $('#error').text("Your password must be at least 6 characters");
         } else if (this.state.password !== this.state.confirmPassword){
             $('#error').text("Passwords must match");
         } else if (this.state.firstName !== '' && this.isValidEmail(this.state.email) && this.state.password !== '' && (this.state.password === this.state.confirmPassword)){
-            let md5Password = this.md5(this.state.password);
+            let md5Password = this.md5(this.state.password);  // hash password before sending
             let newUserRequest = this.createRequest.createRequestWithBody('/api/signup', 'POST', JSON.stringify({ "firstName": this.state.firstName,
                                                                                        "email": this.state.email,
                                                                                         "password": md5Password}));
             fetch(newUserRequest).then((response) => response.json().then((json) => {
-                if (json.success){
+                if (json.success){  // signup successful - redirect to main
                     window.location="http://localhost:5000/main";
                 }
             })).catch((error) => {
                 console.log(error);
+                $('#error').text("An error occured");
             });
         } else {
             $('#error').text("An error occured");

@@ -9,28 +9,24 @@ class Notes extends Component {
             notes: ''
         }
 
-        console.log(this.props);
-        console.log(this.props.match);
-
         this.createRequest = require('../modules/createRequest.js');
         this.accessNotes = require('../modules/accessNotes.js');
 
 
+        // bind method
         this.getNotes = this.getNotes.bind(this);
+
+        // get notes from db
         this.getNotes();
 
     }
 
-    getNotes(){
-        console.log(this.props.match.params);
-        
+    getNotes(){ 
         let getNotesRequest = this.createRequest.createRequest(`/api/recipe/notes/${this.props.match.params.chapter}/${this.props.match.params.recipeNameId}`, "GET");
         fetch(getNotesRequest).then(
             async (response) => {
-                console.log(`response: ${response}`);
                 await response.json().then(
                     (json)=>{
-                        console.log(json);
                         this.setState({
                             notes: json.notes,
                         });
@@ -45,13 +41,9 @@ class Notes extends Component {
 
 
     render(){    
-        console.log(this.window);
-        console.log(window);    
-        console.log(this.state.notes);
         let text = this.state.notes;
         let chapter = this.props.match.params.chapter;
         let recipeId = this.props.match.params.recipeNameId;
-        console.log(text);
 
         return (
             <div clasName="notes-window">

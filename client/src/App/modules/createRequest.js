@@ -1,3 +1,4 @@
+// templates to create requests both with and without bodies
 function createRequest(address, method){ 
     return new Request(address, { method: method,
                                     mode: 'cors',

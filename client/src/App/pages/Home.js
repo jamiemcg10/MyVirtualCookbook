@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Logo from '../Components/Logo.js';
 import Tile from '../Components/Tile.js';
 
+// /home
 class Home extends Component {
 
     render(){

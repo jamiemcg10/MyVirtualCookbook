@@ -16,6 +16,7 @@ class AddRecipeDialog extends Component {
 
         this.createRequest = require('../modules/createRequest.js');
 
+        // bind methods
         this.addRecipe = this.addRecipe.bind(this);
         this.cancelRecipeAdd = this.cancelRecipeAdd.bind(this);
         this.handleLinkChange = this.handleLinkChange.bind(this);
@@ -24,8 +25,8 @@ class AddRecipeDialog extends Component {
         this.handleNewChapterChange = this.handleNewChapterChange.bind(this);
         this.getChapters = this.getChapters.bind(this);
 
-        this.NEW_CHAPTER = "< + New Chapter >";
-        this.getChapters();
+        this.NEW_CHAPTER = "< + New Chapter >";  // value for new chapter dropdown item
+        this.getChapters();  // get a list of chapters to display in the dropdown
     }
 
     componentDidMount(){
@@ -35,26 +36,23 @@ class AddRecipeDialog extends Component {
                 $('#recipe-save').trigger("click");
             }
         });
-        $('#recipe-name').trigger("focus");
+        $('#recipe-name').trigger("focus");  // put cursor in recipe name textbox
     }
 
     getChapters(){
+        // get a list of chapters in the cookbook
         let chapters="";
         let getChaptersRequest = this.createRequest.createRequest(`http://localhost:5000/api/chapters`, 'GET');
         fetch(getChaptersRequest).then(
             (response)=>{
                 response.json().then((json)=>{
-                    console.log(json.success);
-                    console.log(json.message);
                     if (json.success){
-                        console.log(json.chapters);
                         chapters = json.chapters;
                         chapters.push(this.NEW_CHAPTER);
                         this.setState({
                             chapterNames: chapters,
                             recipeChapterValue: chapters[0]
                         });
-                        console.log("chapter names have been added");
                         return;
                     } else {
                         // there was a problem getting the chapters - show a message
@@ -69,25 +67,24 @@ class AddRecipeDialog extends Component {
     }
 
     addRecipe(){
-        this.setState({
+        // adds recipe to cookbook
+        this.setState({  // reset error message when called
             errorMsg: '',
         });
 
         let newRecipeName = this.state.recipeNameValue;
         let newRecipeLink = this.state.recipeLinkValue;
-        let newRecipeChapter = this.state.newChapterNameValue || this.state.recipeChapterValue;
+        let newRecipeChapter = this.state.newChapterNameValue || this.state.recipeChapterValue;  // add to new chapter or existing chapter
 
+        // create pattern for valid url
         let validLink = RegExp("^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$");
 
-        console.log(newRecipeLink);
-        console.log(validLink.test(newRecipeLink));
-
-        if (newRecipeName === ""){
+        if (newRecipeName === ""){  // recipe name can't be blank
             this.setState({
                 errorMsg: 'Please enter a valid recipe name',
             });
             return;
-        } else if (newRecipeLink === "" || !validLink.test(newRecipeLink)){
+        } else if (newRecipeLink === "" || !validLink.test(newRecipeLink)){  // recipe link can't be blank and must be valid link
             this.setState({
                 errorMsg: 'Please enter a valid link',
             });
@@ -105,19 +102,19 @@ class AddRecipeDialog extends Component {
 
         let newRecipeRequest = this.createRequest.createRequestWithBody(`http://localhost:5000/api/recipe/add`, 'POST', requestBody);
         fetch(newRecipeRequest)
-        .then((response) => {
-            response.json().then((json) => {
-                if (json.success){
-                    this.props.showAddRecipeDialog(false);
-                    this.props.rerenderCookbook();
-                } else {
-                    this.setState({
-                        errorMsg: json.message
-                    });
+            .then((response) => {
+                response.json().then((json) => {
+                    if (json.success){  // close window and re-render cookbook if adding was successful
+                        this.props.showAddRecipeDialog(false);
+                        this.props.rerenderCookbook();
+                    } else {
+                        this.setState({  // else display the error message
+                            errorMsg: json.message
+                        });
 
-                }
+                    }
+                });
             });
-        });
 
     }
 
@@ -125,19 +122,19 @@ class AddRecipeDialog extends Component {
         this.props.showAddRecipeDialog(false);
     }
 
-    handleNameChange(event){
+    handleNameChange(event){  // holds the value in the recipe name box
         this.setState({
             recipeNameValue: event.target.value,
         })
     }
 
-    handleLinkChange(event){
+    handleLinkChange(event){  // holds the value in the recipe link box
         this.setState({
             recipeLinkValue: event.target.value,
         });
     }
 
-    handleChapterChange(event){
+    handleChapterChange(event){  // holds the value in the chapter dropdown
         if (this.state.newChapterNameValue !== this.NEW_CHAPTER){ // if the chapter recipe is being added to isn't new, set the new chapter name to null
             this.setState({
                 newChapterNameValue: ''
@@ -148,17 +145,15 @@ class AddRecipeDialog extends Component {
         });
     }
 
-    handleNewChapterChange(event){
+    handleNewChapterChange(event){  // holds the value in the new chapter name box
         this.setState({
             newChapterNameValue: event.target.value,
         });
     }
 
 
-    render(){
-        
+    render(){        
         let chapterList = this.state.chapterNames;
-
 
         return(
             <div id="dialog-background">

@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 
+
+// renders right click menu for cookbook
 class CustomContextMenu extends Component {
 
 
     componentDidMount(){
+        // highlight on mouseover, set props on click
         $('#rename').on("mouseover", (event)=>{
             $('#rename').css("backgroundColor","blue");
           $('#rename').css("color","antiquewhite");

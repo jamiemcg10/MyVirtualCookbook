@@ -11,6 +11,7 @@ let userSchema = new Schema({
     firstName: String, 
     email: String,
     password: String,
+    cookiesAccepted: Boolean,
     chapterList: {
         type: [chapter],
     }

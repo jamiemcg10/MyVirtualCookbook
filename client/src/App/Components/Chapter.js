@@ -5,21 +5,15 @@ import Recipe from './Recipe.js';
 class Chapter extends Component{
     constructor(props){
         super(props);
+
+        // create refs for manipulation
         this.chapterRef = React.createRef();
         this.recipesRef = React.createRef();
 
-        //this.createRequest = require('../modules/createRequest.js');
     } // end of constructor
 
 
-    // componentDidMount(){
-    //     $('li').on("click", (event)=>{
-    //         console.log(event);
-    //     });
-        
-    // }
-
-    toggleChapter(){
+    toggleChapter(){  // sets chapter open or closed
         const recipesNode = this.recipesRef.current;
         const chapterNode = this.chapterRef.current;
 
@@ -32,24 +26,23 @@ class Chapter extends Component{
         }
     }
 
+    // returns Droppable chapter with recipes mapped to Recipe components
     render(){
         let chapterExpanded;
-        if (this.props.recipes.length === 0){
+        if (this.props.recipes.length === 0){  // if no recipes, don't show toggle 
             chapterExpanded="none";
-        } else {
+        } else {  // otherwise expand chapter
             chapterExpanded="true";
         }
-
-        //console.log(this.props.recipes);
 
         return (
             <Droppable droppableId={this.props.name}>
                 {(provided) => (
-            <div  {...provided.droppableProps} ref={provided.innerRef}>
+            <div className="droppable-div" {...provided.droppableProps} ref={provided.innerRef}>
                 <li itemType="chapter" ref={this.chapterRef} chapterExpanded={chapterExpanded} onClick={()=>{this.toggleChapter();}}  onContextMenu={(event)=>{this.props.rightClick(event); event.preventDefault();}} >{this.props.name}</li>
                 <ul ref={this.recipesRef} chapterOpen="true">
                     {this.props.recipes.map((recipe, index) => 
-                        <Recipe content={recipe} key={recipe._id} chapter={this.props.name} index={`${this.props.index}${index}`} sendRightClick={(event)=>{this.props.rightClick(event); event.preventDefault();}}/>
+                        <Recipe content={recipe} key={recipe._id} chapter={this.props.name} index={`${index}`} sendRightClick={(event)=>{this.props.rightClick(event); event.preventDefault();}}/>
                     )}
                 {provided.placeholder}
                 </ul>

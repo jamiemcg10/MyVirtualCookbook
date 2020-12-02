@@ -15,7 +15,6 @@ router.get('/auth/google/redirect', passport.authenticate('google', {session: fa
     req.session.data.token = req.user.token;
     req.session.data.userid = req.user.user._id;
     req.session.data.username = req.user.user.firstName;
-    //console.log(`id: ${req.session.data.id}`);
     res.redirect("/main"); 
 });
 
@@ -26,13 +25,12 @@ router.get('/auth/facebook/redirect', passport.authenticate('facebook', {session
     req.session.data.token = req.user.token;
     req.session.data.userid = req.user.user._id;
     req.session.data.username = req.user.user.firstName;
-    //console.log(`id: ${req.session.data.userid}`);
     res.redirect("/main");
 });
 
 // Local routes
 router.post('/auth/login', passport.authenticate('local', {session: false, failureRedirect: '/login'}), (req,res)=>{
-    console.log("authenticated");
+    // successful authentication
     req.session.data.token = req.user.token;
     req.session.data.userid = req.user.user._id;
     req.session.data.username = req.user.user.firstName;

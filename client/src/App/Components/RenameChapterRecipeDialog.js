@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import $ from 'jquery';
 
+// dialog window to rename an existing chapter
 class RenameChapterRecipeDialog extends Component {
     constructor(props){
         super(props);
@@ -10,45 +11,44 @@ class RenameChapterRecipeDialog extends Component {
             errorMsg: ''
         };
 
-        console.log(this.props.itemTypeToModify);
-        console.log(this.props.textToModify);
 
         this.createRequest = require('../modules/createRequest.js');
 
+        // bind methods
         this.cancelRename = this.cancelRename.bind(this);
         this.changeItem = this.changeItem.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount(){
-        $().on("keyup", (event)=>{
+        $().on("keyup", (event)=>{  // click rename button if user hits enter
             if (event.key === "Enter"){
-                $('#chapter-save').trigger("click");
+                $('#rename-save').trigger("click");
             }
         });
-        $('#chapter-recipe-name').trigger('focus');
+        $('#chapter-recipe-name').trigger('focus');  // put cursor in chapter name box when component loads
     }
 
     changeItem(){
-        console.log(this.newNameValue);
-        if (this.newNameValue === ''){
-            // TODO: show message that name can't be blank
+        $('#error').text('');  // reset error text
+        if (this.newNameValue === ''){  // chapter can't be blank
+            $('#error').text('The chapter name can\'t be blank');
             return;
         }
 
         if (this.newNameValue === this.props.textToModify){  // text is the same
             this.props.showRenameChapterRecipeDialog(false);
             // no need to rerender
+            return;
         }
 
-        if (this.props.itemTypeToModify === 'chapter'){
+        if (this.props.itemTypeToModify === 'chapter'){  // rename chapter
             let changeChapterRequest = this.createRequest.createRequest(`/api/chapter/rename/${this.props.textToModify}/${this.state.newNameValue}`, 'PUT');
             fetch(changeChapterRequest).then((response)=>{response.json().then(json => {
-                console.log(json);
-                if (json.success === true){
+                if (json.success === true){  // rename was successful - close dialog and redisplay cookbook
                     this.props.showRenameChapterRecipeDialog(false);
                     this.props.rerenderCookbook();
-                } else {
+                } else {  // show error
                     $('#error').text(json.message);
                 }
             })})
@@ -56,26 +56,23 @@ class RenameChapterRecipeDialog extends Component {
                 console.log(error);
             });
         
-        } else if (this.props.itemTypeToModify === 'recipe'){
+        } else if (this.props.itemTypeToModify === 'recipe'){  // rename recipe
             let changeRecipeRequest = this.createRequest.createRequest(`/api/recipe/rename/${this.props.textToModify}/${this.props.recipeChapter}/${this.state.newNameValue}`, 'PUT');
-            console.log(changeRecipeRequest);
-            console.log(this.props.textToModify);
-            console.log(this.props.recipeChapter);
-            console.log(this.state.newNameValue);
             fetch(changeRecipeRequest).then((response)=>{response.json().then(json => {
-                console.log(json);
-                if (json.success === true){
+                if (json.success === true){  // rename was successful - close dialog and redisplay cookbook
                     this.props.showRenameChapterRecipeDialog(false);
                     this.props.rerenderCookbook();
-                } else {
+                } else {  // show error
                     $('#error').text(json.message);
                 }
             })})
             .catch(error=>{
+                $('#error').text('Sorry, something went wrong. Please try again later.');
                 console.log(error);
             });
         } else{
-            // there's an error
+            // there's an error - either a chapter or recipe should have been selected
+            $('#error').text('Sorry, something went wrong. Please try again later.');
         }
     }
 

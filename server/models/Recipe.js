@@ -8,7 +8,7 @@ let recipeSchema = new Schema({  // add validation later
     nameId: String,
     source: String,
     recipeLink: String,
-    recipeImg: Mixed,
+    recipeImg: Mixed,  // if recipe image uploads are ever allowed
     method: String,
     recipeNotes: String
 });

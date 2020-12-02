@@ -7,37 +7,33 @@ const { chapterMdl } = require('../models/Chapter.js');
 
 
 passport.use(new GoogleStrategy({
-    callbackURL: `http://localhost:5000/auth/google/redirect`, // same URI as registered in Google console portal
+    callbackURL: process.env.GOOGLE_CALLBACK_URL, // same URI as registered in Google console portal
     clientID: process.env.GOOGLE_CLIENT_ID, 
     clientSecret: process.env.GOOGLE_CLIENT_SECRET
 },
 async function (accessToken, refreshToken, profile, done) {
-        console.log(profile);
         let user_email = profile.emails && profile.emails[0].value; // profile object has the user info
         let user_id = profile.id;  // get Google's id
-        console.log(`user email ${user_email}`);
 
         try {
+            // lookup user by email address and id
             let userWithEmail = await userMdl.findOne({"email": user_email, "googleUserId": user_id}, function(queryErr, results){
                 if (queryErr){
                     throw queryErr;
                 }
             });
 
+            // lookup user by email address
             let user = await userMdl.findOne({"email": user_email}, function(queryErr, results){
                 if(queryErr){
                     throw queryErr;
                 }
             });
 
-            console.log(`user: ${user}`);
-            console.log(`userWithEmail: ${userWithEmail}`);
-
             if (user && !userWithEmail){  // user signed up with facebook - add google ID
                 user.googleUserId = user_id;
                 await user.save();
                 userWithEmail = user;
-                console.log(userWithEmail);
             } else if  (!user && !userWithEmail) {
                 // user doesn't exist - create new user
                 let newUser = userMdl({"googleUserId": profile.id, "facebookUserId":"","email": user_email, "firstName": profile.name.givenName, "lastName": profile.name.familyName});

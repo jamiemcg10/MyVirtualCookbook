@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+// show for invalid route
 class NotFound extends Component {
 
     render(){

@@ -8,6 +8,8 @@ class Recipe extends Component{
 
         this.recipe = this.props.content;
         this.chapter = this.props.chapter;
+        this.notesWindow = null;
+
         this.createRequest = require('../modules/createRequest.js');
         this.accessNotes = require('../modules/accessNotes.js');
 
@@ -17,15 +19,14 @@ class Recipe extends Component{
             notes: this.props.content.recipeNotes,
         }
 
+        // bind methods
         this.showNotes = this.showNotes.bind(this);
         this.displayRecipe = this.displayRecipe.bind(this);
-
-        this.notesWindow = null;
-
-
+      
     } // end constructor
 
-    showNotes(){
+
+    showNotes(){  // toggle state of notes textarea
         if (this.state.notesOpen === "false"){
             this.setState({
                 notesOpen: "true"
@@ -39,13 +40,16 @@ class Recipe extends Component{
 
 
     async displayRecipe(){
+        // displays recipe either in new window or iframe in new page
+        // check whether page can be opened in iframe before opening in iframe
+
         // TODO: i think this will do weird things if i close the main cookbook page while a recipe 
         // page is open and then re-open the cookbook page later - check
         let methodChanged = false;
         this.setState({
             notesDisabled: true,
         });
-        if (this.recipe.method === "iframe") {
+        if (this.recipe.method === "iframe") {  // open in iframe
             // make sure page can still be opened in iframe
             
             let iframeStillValidRequest = this.createRequest.createRequestWithBody('/api/checkIframe', 'POST', JSON.stringify({"link": this.recipe.recipeLink,
@@ -60,7 +64,7 @@ class Recipe extends Component{
                 console.log(error);
             });
 
-            if (methodChanged){
+            if (methodChanged){  // can no longer open in iframe - send request to server to update asynchronously
                 let changeOpeningMethodRequest = this.createRequest.createRequestWithBody('/api/updateRecipeMethod', 'POST', JSON.stringify({"link": this.recipe.recipeLink,
                                                                                                                                     "nameId": this.recipe.nameId,
                                                                                                                                     "chapter": this.props.chapter}));                                                                                  
@@ -74,11 +78,9 @@ class Recipe extends Component{
             if (this.recipe.method === "iframe") { // will still open in iframe
                 let recipeWindow = window.open(`/recipe/${this.props.chapter}/${this.props.content.nameId}`);
                 recipeWindow.addEventListener("unload", ()=>{
-                    console.log(recipeWindow.location.href);
                     if (recipeWindow.location.href !== "about:blank"){
                         this.setState({
                             notesDisabled: false,
-                            // TODO: SET NOTEs
                             notes: recipeWindow.document.getElementsByTagName("textarea")[0].value
                         });
                         
@@ -88,14 +90,15 @@ class Recipe extends Component{
             }
         } 
 
-        if (this.recipe.method === "new_window") {
+        if (this.recipe.method === "new_window") {  // open in new window
             console.log(this.notesWindow);
             let recipeWindow = window.open(this.props.content.recipeLink);
-            if (this.notesWindow === null){
+            if (this.notesWindow === null){  // only open notes window once
                 this.notesWindow = window.open(`/notes/${this.props.chapter}/${this.props.content.nameId}`, "_blank", "height=300,width=300,location=0");
             }
 
             // is there a better way to do this?
+            // listen for new window unload event to try to close notes window
             recipeWindow.addEventListener("unload", (event)=>{  // TODO: try to get this to work
                 console.log(event);
                 console.log(recipeWindow);
@@ -104,7 +107,8 @@ class Recipe extends Component{
             });
 
 
-            this.notesWindow.addEventListener("unload", ()=>{
+            // add event listner to re-enable notes on main cookbook when notes window closes
+            this.notesWindow.addEventListener("unload", ()=>{  
                 if (this.notesWindow.location.href !== "about:blank"){
                     this.setState({
                         notesDisabled: false,
@@ -119,6 +123,7 @@ class Recipe extends Component{
     }
 
 
+    // return Draggable recipe that can be toggled to show notes
     render(){
 
         let chapter = this.props.chapter;

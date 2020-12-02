@@ -14,9 +14,10 @@ class Login extends Component {
             passwordValue: ''
         }
 
-        this.md5 = require('md5');
+        this.md5 = require('md5');  // for hashing password before it is sent to the server
         this.createRequest = require('../modules/createRequest.js');
         
+        // bind methods
         this.googleLogin = this.googleLogin.bind(this);
         this.facebookLogin = this.facebookLogin.bind(this);
         this.localLogin = this.localLogin.bind(this);
@@ -25,8 +26,8 @@ class Login extends Component {
     }
 
     componentDidMount(){
-        $('#email').trigger("focus");
-        $().on("keyup", (event)=>{
+        $('#email').trigger("focus");  // put cursor in email box when page loads
+        $().on("keyup", (event)=>{  // trigger login button if user hits enter
             if (event.key === "Enter"){
                 $('#log-in-btn').trigger("click");
             }
@@ -42,6 +43,7 @@ class Login extends Component {
         window.location="http://localhost:5000/auth/facebook";
     }
 
+    // for username/password
     localLogin(){
         if (this.state.emailValue === ''){
             $('#error').text("Please enter your email address");
@@ -53,11 +55,10 @@ class Login extends Component {
                                                                                                                 "password": md5Password}));
             fetch(loginRequest)
             .then((response)=> {response.json().then((json)=>{
-                console.log(json);
-                if (json.success){
+                if (json.success){  // login was successful, redirect to main
                     window.location = 'http://localhost:5000/main';
                 }
-            })}).catch((error)=>{
+            })}).catch((error)=>{  // login was not successful
                 console.log(error);
                 $('#error').text("An error occured");
             });   

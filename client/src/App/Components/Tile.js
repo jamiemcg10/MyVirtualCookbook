@@ -3,6 +3,7 @@ import addImg from '../../Images/Add.png';
 import organizeImg from '../../Images/Organize.png';
 import notesImg from '../../Images/Take Notes.png';
 
+// used for homepage tiles
 class Tile extends Component {
     constructor(props){
         super(props);

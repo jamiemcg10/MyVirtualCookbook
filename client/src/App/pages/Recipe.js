@@ -2,6 +2,7 @@ import fetch from "node-fetch";
 import React, { Component, Fragment } from "react";
 import Header from '../Components/Header.js';
 
+// page that displays recipe and notes
 class Recipe extends Component {
     constructor(props){
         super(props);
@@ -14,25 +15,25 @@ class Recipe extends Component {
             recipeId: this.props.match.params.recipeNameId,
         };
 
+        
         this.createRequest = require('../modules/createRequest.js');
         this.accessNotes = require('../modules/accessNotes.js');
+        
+        // bind method
         this.getRecipe = this.getRecipe.bind(this);
 
+        // get recipe link and name and notes from db
         this.getRecipe();
 
     }
 
     getRecipe(){
-        console.log(this.props.match.params);
-        
         let getNotesRequest = this.createRequest.createRequest(`/api/recipe/${this.state.chapter}/${this.state.recipeId}`, "GET");
         fetch(getNotesRequest).then(
             async (response) => {
-                console.log(`response: ${response}`);
                 await response.json().then(
                     (json)=>{
-                        console.log(json);
-                        if (json.success){
+                        if (json.success){  // request for recipe successful, set state to reload
                             this.setState({
                                 notes: json.recipe.recipeNotes,
                                 url: json.recipe.recipeLink,
@@ -51,7 +52,6 @@ class Recipe extends Component {
  
 
     render(){
-
         return (
             <Fragment >
                 <Header />

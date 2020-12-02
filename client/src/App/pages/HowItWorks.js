@@ -9,10 +9,11 @@ class HowItWorks extends Component{
                 <Header />
                 <h1 className="pageTitle">How it works</h1>
                 <ol>
-                    <li>Sign up for an account using your Gmail or Facebook account</li>
-                    <li>Add recipes to your virtual cookbook. You can do this by adding links to webpages or by uploading pictures or recipes</li>
-                    <li>You can organize your recipes into different chapters. We have some suggested chapters for you, but it’s your cookbook! You can decide how your recipes will be organized</li>
-                    <li>Each page of your cookbook will have a section for you to add notes on what works, what doesn’t work, what you changed, or whatever you want!</li>
+                    <li>Sign up for an account. You can create an account using your email address and a password you create or using your Gmail or Facebook account</li>
+                    <li>Add recipes to your chapters in your virtual cookbook. You can create as many chapters as you need and re-name them whenever you want.</li>
+                    <li>You can drag and drop recipes from one chapter to another. It’s your cookbook! You can decide how your recipes will be organized</li>
+                    <li>There are notes attached to each recipe. You can access them from the table of contents or from each recipe page. You can add notes on what works, what doesn’t work, what you changed, or whatever you want!</li>
+                    <li>Some recipes will automatically open in a new tab. When this happens, a separate window will pop-up for your notes</li>
                 </ol>
             </div>
         );
