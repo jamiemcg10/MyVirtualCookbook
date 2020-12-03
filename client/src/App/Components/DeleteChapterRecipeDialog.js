@@ -38,7 +38,8 @@ class DeleteChapterRecipeDialog extends Component {
                 }
             })})
             .catch(error=>{  // fetch error
-                console.log(error);
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                fetch(logErrorRequest);
             });
         
         } else if (this.props.itemTypeToDelete === 'recipe'){  // delete recipe
@@ -52,7 +53,8 @@ class DeleteChapterRecipeDialog extends Component {
                 }
             })})
             .catch(error=>{  // fetch error
-                console.log(error);
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                fetch(logErrorRequest);
             });
         } else{
             // there's an error - either a chapter or recipe should have been selected

@@ -40,11 +40,11 @@ class Signup extends Component {
     }
 
     googleLogin(){ // send to path to redirect through Google
-        window.location="http://localhost:5000/auth/google";
+        window.location=`${process.env.REACT_APP_SITE_ADDRESS}/auth/google`;
     }
 
     facebookLogin(){  // send to path to redirect through Facebook
-        window.location="http://localhost:5000/auth/facebook";
+        window.location=`${process.env.REACT_APP_SITE_ADDRESS}/auth/facebook`;
     }
 
     isValidEmail(email){
@@ -74,10 +74,11 @@ class Signup extends Component {
                                                                                         "password": md5Password}));
             fetch(newUserRequest).then((response) => response.json().then((json) => {
                 if (json.success){  // signup successful - redirect to main
-                    window.location="http://localhost:5000/main";
+                    window.location=`${process.env.REACT_APP_SITE_ADDRESS}/main`;
                 }
             })).catch((error) => {
-                console.log(error);
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                fetch(logErrorRequest);
                 $('#error').text("An error occured");
             });
         } else {

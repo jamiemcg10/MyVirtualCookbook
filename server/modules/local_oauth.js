@@ -21,6 +21,8 @@ passport.use(new LocalStrategy(
         userMdl.findOne({"email": username.toLowerCase()}, function(err, user){
             if (err){
                 console.log(err);
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
+                fetch(logErrorRequest);
                 return done(err);
             }
 

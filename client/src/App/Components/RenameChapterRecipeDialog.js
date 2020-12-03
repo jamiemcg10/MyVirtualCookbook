@@ -53,7 +53,8 @@ class RenameChapterRecipeDialog extends Component {
                 }
             })})
             .catch(error=>{
-                console.log(error);
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                fetch(logErrorRequest);
             });
         
         } else if (this.props.itemTypeToModify === 'recipe'){  // rename recipe
@@ -68,7 +69,8 @@ class RenameChapterRecipeDialog extends Component {
             })})
             .catch(error=>{
                 $('#error').text('Sorry, something went wrong. Please try again later.');
-                console.log(error);
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                fetch(logErrorRequest);
             });
         } else{
             // there's an error - either a chapter or recipe should have been selected

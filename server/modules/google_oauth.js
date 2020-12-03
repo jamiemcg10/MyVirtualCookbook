@@ -17,16 +17,18 @@ async function (accessToken, refreshToken, profile, done) {
 
         try {
             // lookup user by email address and id
-            let userWithEmail = await userMdl.findOne({"email": user_email, "googleUserId": user_id}, function(queryErr, results){
-                if (queryErr){
-                    throw queryErr;
+            let userWithEmail = await userMdl.findOne({"email": user_email, "googleUserId": user_id}, function(err, results){
+                if (err){
+                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
+                    fetch(logErrorRequest);
                 }
             });
 
             // lookup user by email address
-            let user = await userMdl.findOne({"email": user_email}, function(queryErr, results){
-                if(queryErr){
-                    throw queryErr;
+            let user = await userMdl.findOne({"email": user_email}, function(err, results){
+                if(err){
+                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
+                    fetch(logErrorRequest);
                 }
             });
 
@@ -38,7 +40,10 @@ async function (accessToken, refreshToken, profile, done) {
                 // user doesn't exist - create new user
                 let newUser = userMdl({"googleUserId": profile.id, "facebookUserId":"","email": user_email, "firstName": profile.name.givenName, "lastName": profile.name.familyName});
                 newUser.chapterList.push(chapterMdl({"chapterName": "[Unclassified]"}));
-                newUser.save();
+                newUser.save((err)=>{
+                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
+                    fetch(logErrorRequest);
+                });
                 userWithEmail = newUser;
             } 
 
@@ -46,6 +51,8 @@ async function (accessToken, refreshToken, profile, done) {
             return done(null, {"user": userWithEmail, "token": token});
         
     } catch (error) {
+        let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+        fetch(logErrorRequest);
         done(error);
     }
 }));

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config(); // for using environment variables
+const createRequest = require('../../client/src/App/modules/createRequest');
 
 // check token for routes
 function checkToken(req, res, next){  
@@ -9,7 +10,9 @@ function checkToken(req, res, next){
     if (token){ // there is a token - check it
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
             if (err){
-                console.log(err);
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
+                fetch(logErrorRequest);
+                //console.log(err);
                 res.redirect("/login");
             } else { // token is valid
                 console.log("token is valid");
@@ -29,6 +32,8 @@ function redirectToMain(req, res, next){
     if(token){  // there is a token
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
             if (err){
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
+                fetch(logErrorRequest);
                 next();  // continue
             } else { // has valid token
                 res.redirect("/main");

@@ -6,7 +6,8 @@ import HowItWorks from "./pages/HowItWorks";
 import Home from "./pages/Home";
 import Cookbook from "./pages/Cookbook";
 import Notes from "./pages/Notes";
-import Recipe from "./pages/Recipe";
+//import Recipe from "./pages/Recipe";
+import Page from "./pages/Page";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
@@ -21,7 +22,7 @@ class App extends Component {
           <Route path = '/about' component={ HowItWorks } />
           <Route path = '/main' component={ Cookbook } />
           <Route path = '/notes/:chapter/:recipeNameId' component={ Notes } />
-          <Route path = '/recipe/:chapter/:recipeNameId' component={ Recipe } />
+          <Route path = '/recipe/:chapter/:recipeNameId' component={ Page } />
           <Route path = '/login' component={ Login } />
           <Route path = '/signup' component={ Signup } />
           <Route path = '/logout' component={ Home } />

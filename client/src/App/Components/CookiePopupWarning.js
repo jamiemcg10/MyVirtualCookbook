@@ -18,7 +18,11 @@ class CookiePopupWarning extends Component {
 
     acceptWarning(){
             let acceptCookieRequest = this.createRequest.createRequest(`/api/acceptCookies`, "POST");
-            fetch(acceptCookieRequest);
+            fetch(acceptCookieRequest)
+                .catch(error=>{
+                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                        fetch(logErrorRequest);
+                });
             this.props.showCookiePopupWarning(false);
             this.props.accepted = true;
     }

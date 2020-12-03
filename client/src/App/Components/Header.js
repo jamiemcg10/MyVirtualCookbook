@@ -26,9 +26,9 @@ class Header extends Component{
                             username: json.name
                         });
                     })
-                }).catch((err)=>{
-                    console.log(err);
-                    // throw err;
+                }).catch((error)=>{
+                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                    fetch(logErrorRequest);
                 });
     }
 

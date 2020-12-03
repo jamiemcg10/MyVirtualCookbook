@@ -38,7 +38,7 @@ class Chapter extends Component{
         return (
             <Droppable droppableId={this.props.name}>
                 {(provided) => (
-            <div className="droppable-div" {...provided.droppableProps} ref={provided.innerRef}>
+            <div {...provided.droppableProps} ref={provided.innerRef} className="droppable-div" >
                 <li itemType="chapter" ref={this.chapterRef} chapterExpanded={chapterExpanded} onClick={()=>{this.toggleChapter();}}  onContextMenu={(event)=>{this.props.rightClick(event); event.preventDefault();}} >{this.props.name}</li>
                 <ul ref={this.recipesRef} chapterOpen="true">
                     {this.props.recipes.map((recipe, index) => 

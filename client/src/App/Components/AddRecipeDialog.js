@@ -62,6 +62,9 @@ class AddRecipeDialog extends Component {
                         return;
                     }
                 })
+            }).catch(error=>{
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                    fetch(logErrorRequest);
             });
 
     }
@@ -113,6 +116,9 @@ class AddRecipeDialog extends Component {
                         });
 
                     }
+                }).catch(error=>{
+                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                    fetch(logErrorRequest);
                 });
             });
 

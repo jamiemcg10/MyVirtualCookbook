@@ -41,7 +41,6 @@ class Cookbook extends Component {
         this.getCookbook = this.getCookbook.bind(this);
         this.toggleChapter = this.toggleChapter.bind(this);
         this.handleOnDragEnd = this.handleOnDragEnd.bind(this);
-        this.handleOnDragUpdate = this.handleOnDragUpdate.bind(this);
         this.displayContextMenu = this.displayContextMenu.bind(this);
         this.showMenu = this.showMenu.bind(this);
         this.displayRenameDialog = this.displayRenameDialog.bind(this);
@@ -108,7 +107,10 @@ class Cookbook extends Component {
                     cookbook: json.recipes,
                 });
                })
-           })
+           }).catch(error=>{
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                fetch(logErrorRequest);
+            });
    }
     
    
@@ -145,7 +147,6 @@ class Cookbook extends Component {
             }
         }
 
-        console.log(filteredCookbook);
         this.setState({
             filteredCookbook: filteredCookbook
         });
@@ -202,9 +203,6 @@ class Cookbook extends Component {
         this.filterCookbook(event.target.value);
     }
 
-    handleOnDragUpdate(update){
-        console.log(update.destination);
-    }
     async handleOnDragEnd(result){
         console.log(result);  // leaving this in for now until I figure out how to enhance dropping
         console.log(result.destination.index);
@@ -256,7 +254,8 @@ class Cookbook extends Component {
             response.json().then((json) => {
                 ;
             }).catch((error)=>{
-                console.log(error);
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                fetch(logErrorRequest);
             });
         });
         
@@ -316,7 +315,7 @@ class Cookbook extends Component {
                 </div>
                 <input type="text" id="search-bar" placeholder="Search recipes" value={this.state.searchbarValue} onChange={this.handleSearchBarChange}></input>
                 <div id="cookbook">
-                    <DragDropContext onDragEnd={this.handleOnDragEnd} onDragUpdate={this.handleOnDragUpdate}>
+                    <DragDropContext onDragEnd={this.handleOnDragEnd}x>
                     { cookbook.length > 0 &&
                        <ul>
                                 { cookbook.map((chapter, index) => 

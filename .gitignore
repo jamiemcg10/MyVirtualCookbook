@@ -1,4 +1,6 @@
 .env
+access.log
+log.txt
 /client/build
 /node_modules/
 /client/node_modules

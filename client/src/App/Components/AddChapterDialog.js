@@ -52,7 +52,10 @@ class AddChapterDialog extends Component {
                         }
 
                     })}
-                );
+                ).catch(error=>{
+                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                    fetch(logErrorRequest);
+                });
 
             }
    

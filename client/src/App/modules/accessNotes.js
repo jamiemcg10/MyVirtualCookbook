@@ -6,10 +6,10 @@ function updateNotes(event, chapter, recipe){
         notes: event.target.value,
     });
     let updateNotesRequest = createRequest.createRequestWithBody(`/api/recipes/update_notes/${chapter}/${recipe}`, "POST", body);
-    fetch(updateNotesRequest).then(
-        (response)=>{
-            // the response doesn't need to be handled
-            ;
+    fetch(updateNotesRequest)
+        .catch(error=>{
+            let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+            fetch(logErrorRequest);
         });
 }
 

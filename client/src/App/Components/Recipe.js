@@ -61,7 +61,8 @@ class Recipe extends Component{
                     methodChanged = true;
                 }
             })).catch(error=>{
-                console.log(error);
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                fetch(logErrorRequest);
             });
 
             if (methodChanged){  // can no longer open in iframe - send request to server to update asynchronously
@@ -69,7 +70,8 @@ class Recipe extends Component{
                                                                                                                                     "nameId": this.recipe.nameId,
                                                                                                                                     "chapter": this.props.chapter}));                                                                                  
                 fetch(changeOpeningMethodRequest).catch((error)=>{
-                    console.log(error);
+                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                    fetch(logErrorRequest);
                 });
             }
 

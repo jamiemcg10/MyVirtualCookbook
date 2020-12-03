@@ -31,9 +31,9 @@ class Notes extends Component {
                             notes: json.notes,
                         });
                     });
-        }).catch((err)=>{
-            console.log(err);
-            throw err;
+        }).catch((error)=>{
+            let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+            fetch(logErrorRequest);
         });
 
     }

@@ -3,7 +3,8 @@ import React, { Component, Fragment } from "react";
 import Header from '../Components/Header.js';
 
 // page that displays recipe and notes
-class Recipe extends Component {
+//to replace recipe page
+class Page extends Component {
     constructor(props){
         super(props);
 
@@ -67,4 +68,4 @@ class Recipe extends Component {
 
 }
 
-export default Recipe;
+export default Page;
