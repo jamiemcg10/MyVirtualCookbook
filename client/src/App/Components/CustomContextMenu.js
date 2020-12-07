@@ -9,7 +9,7 @@ class CustomContextMenu extends Component {
     componentDidMount(){
         // highlight on mouseover, set props on click
         $('#rename').on("mouseover", (event)=>{
-            $('#rename').css("backgroundColor","blue");
+            $('#rename').css("backgroundColor","rgb(0, 95, 255)");
           $('#rename').css("color","antiquewhite");
         });
         
@@ -19,7 +19,7 @@ class CustomContextMenu extends Component {
         });
         
         $('#delete').on("mouseover", (event)=>{
-            $('#delete').css("backgroundColor","blue");
+            $('#delete').css("backgroundColor","rgb(0, 95, 255)");
           $('#delete').css("color","antiquewhite");
         });
         
@@ -30,12 +30,10 @@ class CustomContextMenu extends Component {
 
         $('#rename').on("click", (event)=>{
             this.props.renameItem(true);
-            console.log(this.props.renameItem);
         });
         
         $('#delete').on("click", (event)=>{
             this.props.deleteItem(true);
-            console.log(this.props.deleteItem);
         });
     }
 

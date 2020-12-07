@@ -1,5 +1,4 @@
 let express = require('express');
-let path = require('path');
 let router = express.Router();
 
 const passport = require('passport');
@@ -29,14 +28,20 @@ router.get('/auth/facebook/redirect', passport.authenticate('facebook', {session
 });
 
 // Local routes
-router.post('/auth/login', passport.authenticate('local', {session: false, failureRedirect: '/login'}), (req,res)=>{
+router.post('/auth/login', passport.authenticate('local', {session: false}), (req,res)=>{
     // successful authentication
-    req.session.data.token = req.user.token;
-    req.session.data.userid = req.user.user._id;
-    req.session.data.username = req.user.user.firstName;
-    res.json({
-        success: true
-    });
+    if (req.user.valid) {
+        req.session.data.token = req.user.token;
+        req.session.data.userid = req.user.user._id;
+        req.session.data.username = req.user.user.firstName;
+        return res.json({
+            success: true
+        });
+    } else {
+        return res.json({
+            success: false
+        });
+    }
 });
 
 

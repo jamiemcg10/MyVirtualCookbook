@@ -4,3 +4,6 @@ log.txt
 /client/build
 /node_modules/
 /client/node_modules
+/client/public/_old
+
+!/client/.env

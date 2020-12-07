@@ -12,6 +12,8 @@ class AddChapterDialog extends Component {
             errorMsg: ''
         };
 
+        // import modules
+        this.checkInput = require('../modules/checkInput.js');
         this.createRequest = require('../modules/createRequest.js');
 
         // bind methods
@@ -22,7 +24,7 @@ class AddChapterDialog extends Component {
 
     componentDidMount(){
         $('#chapter-name').trigger("focus");  // put cursor in textbox
-        $().on("keyup", (event)=>{  // save chapter if user clicks enter
+        $(document).on("keyup", (event)=>{  // save chapter if user clicks enter
             if (event.key === "Enter"){
                 $('#chapter-save').trigger("click");
             }
@@ -35,10 +37,13 @@ class AddChapterDialog extends Component {
             });
 
             let newChapterText = this.state.chapterNameValue;
-            if (newChapterText === ""){  // don't allow blank chapter names
+            if (!this.checkInput.isValidItemName(newChapterText)){  // don't allow invalid chapter names
+                this.setState({
+                    errorMsg: "That chapter name is invalid"
+                });
                 return;
             } else {
-                let newChapterRequest =this.createRequest.createRequest(`http://localhost:5000/api/chapter/add/${newChapterText}`, 'POST');
+                let newChapterRequest =this.createRequest.createRequest(`${process.env.REACT_APP_SITE_ADDRESS}/api/chapter/add/${newChapterText}`, 'POST');
                 fetch(newChapterRequest).then(
                     (response) => {response.json().then((json) => {
                         if (json.success){
@@ -53,7 +58,7 @@ class AddChapterDialog extends Component {
 
                     })}
                 ).catch(error=>{
-                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                     fetch(logErrorRequest);
                 });
 

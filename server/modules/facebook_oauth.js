@@ -1,6 +1,7 @@
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook');
 const jwt = require('jsonwebtoken');
+const fetch = require('node-fetch');
 const dotenv = require('dotenv').config();
 const { userMdl } = require('../models/User.js');
 const { chapterMdl } = require('../models/Chapter.js');
@@ -32,9 +33,9 @@ passport.use(new FacebookStrategy({
             // look for account with matching email and id
             let userWithEmail = await userMdl.findOne({"email": user_email, "facebookUserId": user_id}, function(err, results){
                 if (err){
-                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
-                    fetch(logErrorRequest);
-                    //throw queryErr;
+                    fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
+                        body: JSON.stringify({"text": err}),
+                        headers: { 'Content-type': 'application/json', }});
                 }
             });
 
@@ -43,8 +44,9 @@ passport.use(new FacebookStrategy({
             if (user_email !==""){
                 user = await userMdl.findOne({"email": user_email}, (err, results)=>{
                     if (err){
-                        let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
-                        fetch(logErrorRequest);
+                        fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
+                            body: JSON.stringify({"text": err}),
+                            headers: { 'Content-type': 'application/json', }});
                     }
                 });
             }
@@ -53,8 +55,9 @@ passport.use(new FacebookStrategy({
                 user.facebookUserId = user_id;
                 await user.save((err)=>{
                     if (err){
-                        let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
-                        fetch(logErrorRequest);
+                        fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
+                            body: JSON.stringify({"text": err}),
+                            headers: { 'Content-type': 'application/json', }});
                     }
                 });
                 userWithEmail = user;
@@ -63,8 +66,11 @@ passport.use(new FacebookStrategy({
                 let newUser = userMdl({"googleUserId":"", "facebookUserId": profile.id, "email": user_email, "firstName": profile.name.givenName, "lastName": profile.name.familyName});
                 newUser.chapterList.push(chapterMdl({"chapterName": "[Unclassified]"}));
                 newUser.save((err)=>{
-                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
-                    fetch(logErrorRequest);
+                    if (err){
+                        fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
+                        body: JSON.stringify({"text": err}),
+                        headers: { 'Content-type': 'application/json', }});
+                    }
                 });
                 userWithEmail = newUser;
             } 
@@ -73,8 +79,9 @@ passport.use(new FacebookStrategy({
             return done(null, {"user": userWithEmail, "token": token});
 
         } catch (error){
-            let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
-            fetch(logErrorRequest);
+            fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
+                body: JSON.stringify({"text": error}),
+                headers: { 'Content-type': 'application/json', }});
             done(error);
         }
 

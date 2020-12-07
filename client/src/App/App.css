@@ -64,14 +64,7 @@ body {
   background-color: #073763ff;
   min-width: 330px;
   min-height: 100vh; 
-  width: fit-content;
 }
-
-/* @media only screen & (min-width: 500px){
-  body {
-
-  }
-} */
 
 button:hover{
   cursor: pointer;
@@ -83,7 +76,7 @@ button:hover{
 
 .chapter-btns > button {
   width: 40%;
-  height: 5vh;
+  height: 35px;
   margin: 0px 10px;
   border-radius: 10px;
   color: rgb(80,80,80);
@@ -189,14 +182,15 @@ button:hover{
 }
 
 #customContextMenu{
-  font-family: 'Roboto', sans-serif;
-  background-color: lightgray;
-  min-width: 125px;
+  background-color: #ececec;
+  min-width: 110px;
   width: fit-content;
   border: solid 1px gray;
   padding: 3px 0px;
-  border-radius: 5px;
+  border-radius: 3px;
   z-index: 49;
+  color: #3a3939;
+  font: -webkit-control;
 }
 
 #customContextWindow{
@@ -407,11 +401,7 @@ li::marker {
 }
 
 iframe {
-  width: 67vw;
-  display: inline;
-  float: left;
-  height: 100%;
-  position: absolute;
+  width: 67.75vw;
 }
 
 [itemType="chapter"]:hover {
@@ -431,17 +421,7 @@ iframe {
   display: inline;
 }
 
-/* [listType="chapter"] {
-  list-style: inside;
-  list-style-type: none;
-  margin-left: 40px;
-} */
-
 .login-box {  
-  /* display: flex;
-  flex-direction: column; */
-  /* align-self: flex-start; */
-  /* padding-left: 20px; */
   color: #505050;
   width: 100%;
   margin-block-start: auto;
@@ -456,17 +436,17 @@ iframe {
 }
 
 .login-box input {
-    width: 80%;
-    height: 25px;
-    margin: 5px auto auto; 
-    width: 321px;
-    max-width: 45vw;
-    display: block;
-    outline-color: gray;
-    padding-left: 5px;
-    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
-    box-sizing: border-box;         /* Opera/IE 8+ */ 
+  width: 80%;
+  height: 25px;
+  margin: 5px auto auto; 
+  width: 321px;
+  max-width: 45vw;
+  display: block;
+  outline-color: gray;
+  padding-left: 5px;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */ 
 }
 
 .login-box label {
@@ -537,6 +517,9 @@ iframe {
   word-spacing: -10px;
 }
 
+#logo-link {
+  text-decoration: none;
+}
 .logoSpan{
   color: white;
 }
@@ -562,6 +545,7 @@ iframe {
   position: sticky;
   top: 0;
   z-index: 999;
+  font-size: small;
 }
 
 .mini-header h1 {
@@ -596,16 +580,14 @@ iframe {
 }
 
 #notes-pane {
-  width: 30vw;
-  position: absolute;
-  right: 0px;
-  height: 100%;
+  width: 32vw;
   background-color: #f3e193;
 }
 
 .notes-popup {
-  width: 100%;
-  height: 79vh;
+  width: 98%;
+  position: fixed;
+  height: 78%;
 }
 
 .notes-title {
@@ -700,6 +682,13 @@ ol {
   margin-bottom: 15px;
   width: 250px;
   padding-left: 5px;
+}
+
+#recipe-page-content{
+  display: flex;
+  flex-direction: row;
+  height: 87vh;
+  align-items: stretch;
 }
 
 #recipe-save {
@@ -930,4 +919,70 @@ ul[display="closed"] {
 
 ul[display="open"] {
   display: inline-block;
+}
+
+
+
+/* mobile styles */
+@media only screen and (max-width: 500px){
+
+  #cookbook {
+    padding-bottom: 60px;
+  }
+
+  .gray-login-box {
+    width: 75vw;
+  }
+
+  iframe{
+    width: 100vw;
+    height: 60vh;
+  }
+
+  .login-box {
+    margin-top: 15px;
+  }
+
+  .login-box #error {
+    max-width: 60vw; 
+  }
+
+  .login-box input {
+    max-width: 60vw;
+  }
+
+  .login-box label {
+    max-width: 60vw;
+  }
+
+  #log-in-btn {
+    margin: 30px auto 10px;
+    max-width: 60vw;
+  }
+
+  .login-btn-text {
+    margin-top: 2px;
+  }
+
+  #notes-pane{
+    width: 100vw;
+    height: 13.8vh;
+  }
+
+  #recipe-page-content {
+    flex-direction: column;
+    overflow: hidden;
+    background-color: white;
+  }
+
+  .social-btn-box {
+    max-width: 60vw;
+  }
+  .social-login-btn {
+    height: 35px;
+  }
+
+  .social-login-btn>img {
+    width: 25px;
+  }
 }

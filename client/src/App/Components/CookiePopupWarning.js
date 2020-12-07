@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import $ from 'jquery';
 
 class CookiePopupWarning extends Component {
     constructor(props){
@@ -9,6 +8,7 @@ class CookiePopupWarning extends Component {
             warningAccepted: false,
         };
 
+        // import module
         this.createRequest = require('../modules/createRequest.js');
 
         // bind method
@@ -20,7 +20,7 @@ class CookiePopupWarning extends Component {
             let acceptCookieRequest = this.createRequest.createRequest(`/api/acceptCookies`, "POST");
             fetch(acceptCookieRequest)
                 .catch(error=>{
-                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                         fetch(logErrorRequest);
                 });
             this.props.showCookiePopupWarning(false);

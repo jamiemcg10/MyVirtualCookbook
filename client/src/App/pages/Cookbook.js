@@ -83,14 +83,12 @@ class Cookbook extends Component {
     }
 
     displayRenameDialog(bool){
-        console.log(bool);
         this.setState({
             showRename: bool,
         });
     }
 
     displayDeleteDialog(bool){
-        console.log(bool);
         this.setState({
             showDelete: bool,
         });
@@ -108,7 +106,7 @@ class Cookbook extends Component {
                 });
                })
            }).catch(error=>{
-                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                 fetch(logErrorRequest);
             });
    }
@@ -167,7 +165,6 @@ class Cookbook extends Component {
 
     showMenu(event){
         this.displayContextMenu(false);  // hide menu before it's shown again
-        //$(event.target).attr('itemType');  // I don't know what this does
         let x = event.clientX;
         let y = event.clientY;
 
@@ -182,16 +179,12 @@ class Cookbook extends Component {
             });
         }
         
-        // better for performance if this can stay here, but might need to move again
         // set position of context menu to be where user clicked
         $('#customContextWindow').css('left', x);
         $('#customContextWindow').css('top', y);
 
 
         this.displayContextMenu(true);
-
-        // $('#customContextWindow').css('left', x);
-        // $('#customContextWindow').css('top', y);
 
     }
 
@@ -204,22 +197,16 @@ class Cookbook extends Component {
     }
 
     async handleOnDragEnd(result){
-        console.log(result);  // leaving this in for now until I figure out how to enhance dropping
-        console.log(result.destination.index);
-
         if (!result.destination){
             return;
         }
 
-        let cookbookCopy = this.state.cookbook;
+        let cookbookCopy = _.cloneDeep(this.state.cookbook);
 
         let oldChapter = cookbookCopy.find((chapter) => {  // find chapter where recipe started
             return chapter.chapterName === result.source.droppableId;
         });
 
-        // let recipeIndex = oldChapter.recipes.findIndex((recipe)=>{  // find index of recipe in original chapter
-        //     return recipe.nameId === result.draggableId;
-        // });
         let recipeIndex = result.source.index;
         let newRecipeIndex = result.destination.index;
         
@@ -229,6 +216,13 @@ class Cookbook extends Component {
             return chapter.chapterName === result.destination.droppableId;
         });
 
+        // make sure the moved recipe is not already in the new chapter (same nameid)
+        let duplicateRecipe = newChapter.recipes.find((nRecipe)=>{
+            return recipe.name === nRecipe.name;
+        });
+        if (duplicateRecipe){
+            return;
+        }
         //newChapter.recipes.push(recipe);  // add the recipe to the chapter where the recipe was dropped
         if (result.source.droppableId === result.destination.droppableId){  // recipe being moved in same chapter
             let recipeCopy = _.cloneDeep(recipe); // create deep clone of recipe to move it independently
@@ -254,7 +248,7 @@ class Cookbook extends Component {
             response.json().then((json) => {
                 ;
             }).catch((error)=>{
-                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                 fetch(logErrorRequest);
             });
         });
@@ -288,7 +282,6 @@ class Cookbook extends Component {
 
     // return main cookbook with DragDropContext
     render(){
-        console.log("rerendering cookbook");
         let cookbook;
 
         // choose which cookbook to use
@@ -297,6 +290,7 @@ class Cookbook extends Component {
         } else {
             cookbook = this.state.filteredCookbook;
         }
+
 
         return (
             <div className="App">
@@ -307,7 +301,7 @@ class Cookbook extends Component {
                 
                 </div>
                 <div id="customContextWindow">
-                    {this.state.showContextMenu && <CustomContextMenu showContextMenu={this.displayContextMenu} renameItem={(bool) => {console.log(bool); this.displayRenameDialog(bool)}} deleteItem={this.displayDeleteDialog}/>}
+                    {this.state.showContextMenu && <CustomContextMenu showContextMenu={this.displayContextMenu} renameItem={(bool) => {this.displayRenameDialog(bool)}} deleteItem={this.displayDeleteDialog}/>}
                 </div>
                 <div id="smallDialogWindow">
                     {this.state.showRename && <RenameChapterRecipeDialog showRenameChapterRecipeDialog={this.displayRenameDialog} itemTypeToModify={this.state.itemTypeToModify} textToModify={this.state.textToModify} recipeChapter={this.state.recipeChapter} rerenderCookbook={this.rerenderCookbook} />}
@@ -315,7 +309,7 @@ class Cookbook extends Component {
                 </div>
                 <input type="text" id="search-bar" placeholder="Search recipes" value={this.state.searchbarValue} onChange={this.handleSearchBarChange}></input>
                 <div id="cookbook">
-                    <DragDropContext onDragEnd={this.handleOnDragEnd}x>
+                    <DragDropContext onDragEnd={this.handleOnDragEnd}>
                     { cookbook.length > 0 &&
                        <ul>
                                 { cookbook.map((chapter, index) => 

@@ -16,8 +16,9 @@ class Signup extends Component {
             confirmPassword: ''
         }
 
+        // import modules
         this.md5 = require('md5');
-        
+        this.checkInput = require('../modules/checkInput.js');
         this.createRequest = require('../modules/createRequest.js');
 
         // bind methods
@@ -32,7 +33,7 @@ class Signup extends Component {
 
     componentDidMount(){
         $('#name').trigger("focus");  // put cursor in name box on page load
-        $().on("keyup", (event)=>{  // trigger sign up click if user hits enter
+        $(document).on("keyup", (event)=>{  // trigger sign up click if user hits enter
             if (event.key === "Enter"){
                 $('#sign-up-btn').trigger("click");
             }
@@ -47,27 +48,18 @@ class Signup extends Component {
         window.location=`${process.env.REACT_APP_SITE_ADDRESS}/auth/facebook`;
     }
 
-    isValidEmail(email){
-        // checks to make sure there is an @ symbol and a . in that order
-        if ( (email.indexOf(".") > -1 && email.indexOf("@") >-1) && email.lastIndexOf(".") > email.indexOf("@")){
-            return true;
-        }
 
-        return false;
-    }
 
     localSignup(){
-        if (this.state.firstName === ''){
-            $('#error').text("You must enter a first name");
-        } else if (!this.isValidEmail(this.state.email)){
+        if (!this.checkInput.isValidItemName(this.state.firstName)){
+            $('#error').text("Please enter a valid name (alphanumeric characters only)");
+        } else if (!this.checkInput.isValidEmail(this.state.email)){
             $('#error').text("Please enter a valid email address");
-        } else if (this.state.password === ''){
-            $('#error').text("Please enter a password");
-        } else if (this.state.password.length < 6){
-            $('#error').text("Your password must be at least 6 characters");
+        } else if (!this.checkInput.isValidPassword(this.state.password)){
+            $('#error').text("Your password must be at least 6 characters and can only contain alphanumeric characters");
         } else if (this.state.password !== this.state.confirmPassword){
             $('#error').text("Passwords must match");
-        } else if (this.state.firstName !== '' && this.isValidEmail(this.state.email) && this.state.password !== '' && (this.state.password === this.state.confirmPassword)){
+        } else {
             let md5Password = this.md5(this.state.password);  // hash password before sending
             let newUserRequest = this.createRequest.createRequestWithBody('/api/signup', 'POST', JSON.stringify({ "firstName": this.state.firstName,
                                                                                        "email": this.state.email,
@@ -77,13 +69,11 @@ class Signup extends Component {
                     window.location=`${process.env.REACT_APP_SITE_ADDRESS}/main`;
                 }
             })).catch((error) => {
-                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                 fetch(logErrorRequest);
                 $('#error').text("An error occured");
             });
-        } else {
-            $('#error').text("An error occured");
-        }
+        } 
     }
 
     handleFirstNameChange(event){
@@ -111,7 +101,6 @@ class Signup extends Component {
     }
 
     render(){
-        // TODO: OBSCURE PASSWORD IN CONSOLE - VALUE
         return (
             <div className="App">
                 <Header />
@@ -119,10 +108,10 @@ class Signup extends Component {
                 <div className="gray-signup-box">
                     <h3>Create an account</h3>   
                     <div className="signup-box">      
-                        <label for="name">First name</label><input type="text" id="name" value={ this.state.firstName } onChange={this.handleFirstNameChange}></input>
-                        <label for="email">Email address</label><input type="text" id="email" value={ this.state.email } onChange={this.handleEmailChange}></input>          
-                        <label for="password">Choose a password</label><input type="password" id="password" value={ this.state.password } onChange={this.handlePasswordChange}></input>
-                        <label for="confirm-password">Confirm password</label><input type="password" id="confirm-password" value={ this.state.confirmPassword } onChange={this.handleConfirmPasswordChange}></input>
+                        <label for="name">First name</label><input type="text" id="name"  onChange={this.handleFirstNameChange}></input>
+                        <label for="email">Email address</label><input type="text" id="email" onChange={this.handleEmailChange}></input>          
+                        <label for="password">Choose a password</label><input type="password" id="password" onChange={this.handlePasswordChange}></input>
+                        <label for="confirm-password">Confirm password</label><input type="password" id="confirm-password" onChange={this.handleConfirmPasswordChange}></input>
                         <p id="error" className="error"></p>
                         <button id="sign-up-btn" onClick={ this.localSignup }>Sign up</button>
                     </div> 

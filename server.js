@@ -36,7 +36,7 @@ let errorLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { fla
 app.use(logger('combined', {stream: accessLogStream, 
                             skip: function(req,res) { return res.statusCode < 400 },
 }));
-app.use(logger('dev'));
+app.use(logger('dev', {skip: function(req,res){ return res.statusCode < 400}}));
 
 // import routes
 const displayRoutes = require('./server/routes/displayRoutes.js');
@@ -59,7 +59,8 @@ const port = process.env.PORT || 5000;
 app.listen(port);
 console.log(`MyVirtualCookbook is listening on port ${port}`);
 errorLogStream.write(`${new Date().toLocaleString('en-US',{ timeZone: 'America/New_York'})}
-MyVirtualCookbook is listening on port ${port}`);
+    MyVirtualCookbook is listening on port ${port}
+`);
 
 // connect to MongoDB
 mongoose.connect(
@@ -79,17 +80,24 @@ mongoose.connection.on('disconnected', ()=>{
 });
 
 // function to write to log 
-function writeToLog(text){
+// function writeToLog(text){
+//     errorLogStream.write(`${new Date().toLocaleString('en-US',{ timeZone: 'America/New_York'})}
+//     ${req.session.data.userId || ''}
+//     ${text}
+// `);
+// }
+
+function writeToLog(text, req){
     errorLogStream.write(`${new Date().toLocaleString('en-US',{ timeZone: 'America/New_York'})}
     ${req.session.data.userId || ''}
-    ${text}`);
-
+    ${text}
+`);
 }
 
 // api routes
 app.post('/api/log', async(req, res)=>{
     let text = req.body.text;
-    writeToLog(text);
+    writeToLog(text, req);
     res.end();
 });
 
@@ -103,25 +111,49 @@ app.post('/api/signup', async(req, res)=>{
     // look for user with entered credentials
     let user = await Users.findOne({"email": email.toLowerCase()}, (queryErr, result)=>{
         if (queryErr){
-            writeToLog(queryErr);
+            writeToLog(queryErr, req);
             throw queryErr;
         }
         return result;
     });
 
     if (user){ // an account is already associated with this email address
-        //TODO: this should really just merge accounts
+        if(user.password === ''){  // no password is set - merge account with Facebook or Google account
+            user.password = hashedPassword;
+            user.save((err) => {
+                if (err){
+                    writeToLog(err, req);
+                    return res.json({
+                        success: false,
+                        message: "There was a problem creating a new user. Please try again later."
+                    });
+                }
+                
+            });
+        } else {
+            return res.json({
+                success: false,
+                message: "A user with this email address already exists"
+            });
+        }
+
+        // set session data
+        const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {expiresIn: '1h'}); // generating token
+        req.session.data.token = token;
+        req.session.data.userid = user._id;
+        req.session.data.username = user.firstName;
+
         res.json({
-            success: false,
-            message: "A user with this email address already exists"
+            success: true
         });
+
     } else {
         // create and save new user
         let newUser = userMdl({"email": email.toLowerCase(), "firstName": firstName, "password": hashedPassword});
         newUser.chapterList.push(chapterMdl({"chapterName": "[Unclassified]"}));
         newUser.save((err)=>{
             if (err){
-                writeToLog(err);
+                writeToLog(err, req);
                 return res.json({
                     success: false,
                     message: "There was a problem creating a new user. Please try again later."
@@ -146,7 +178,6 @@ app.post('/api/signup', async(req, res)=>{
 app.get('/api/chapters', async (req, res)=>{  
     let token = req.session.data.token;
     if (isValidToken(token)){
-        console.log("token is valid for /api/chapters");
         let chapterNames = [];
 
         let user = await getUser(req);
@@ -206,7 +237,7 @@ app.post('/api/chapter/add/:chapterName', async (req, res)=>{
             user.chapterList.push(newChapter);
             user.save((err)=>{
                 if (err){
-                    writeToLog(err);
+                    writeToLog(err, req);
                     return res.json({
                         success: false,
                         message: "There was a problem adding a new chapter. Please try again later."
@@ -264,7 +295,7 @@ app.put('/api/chapter/rename/:oldChapterName/:newChapterName', async (req, res)=
                 oldChapter.chapterName = newChapterName; 
                 user.save((err)=>{
                     if (err){
-                        writeToLog(err);
+                        writeToLog(err, req);
                         return res.json({
                             success: false,
                             message: "An error occured"
@@ -304,7 +335,6 @@ app.put('/api/recipe/rename/:oldRecipeName/:recipeChapter/:newRecipeName', async
         let oldRecipeName = req.params.oldRecipeName;
         let newRecipeName = req.params.newRecipeName;
         let recipeChapter = req.params.recipeChapter;
-        let oldRecipeNameId = oldRecipeName.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
         let newRecipeNameId = newRecipeName.toLowerCase().replace(/ /g, '-').replace(/[^\w-]/g, '');
 
         
@@ -315,13 +345,14 @@ app.put('/api/recipe/rename/:oldRecipeName/:recipeChapter/:newRecipeName', async
             });
             
             if (chapter){  // the chapter exists
+                // look for an existing recipe with the new name
                 let existingRecipe = chapter.recipes.find((recipe) => {
-                    return recipe.nameId === newRecipeNameId;
+                    return recipe.name === newRecipeName;
                 });
 
                 if (!existingRecipe){  // there is not a recipe with the new name
                     existingRecipe = chapter.recipes.find((recipe) => {
-                        return recipe.nameId === oldRecipeNameId;
+                        return recipe.name === oldRecipeName;
                     }); 
 
                     if (existingRecipe){  // found the recipe by the old name - change name and nameId and save
@@ -330,7 +361,7 @@ app.put('/api/recipe/rename/:oldRecipeName/:recipeChapter/:newRecipeName', async
 
                         user.save((err)=>{
                             if (err){
-                                writeToLog(err);
+                                writeToLog(err, req);
                                 return res.json({
                                     success: false,
                                     message: "An error occured"
@@ -396,7 +427,7 @@ app.delete('/api/chapter/delete/:chapterName', async (req, res)=>{
                 user.chapterList.splice(chapterIndex,1);
                 user.save((err)=>{
                     if (err){
-                        writeToLog(err);
+                        writeToLog(err, req);
                         return res.json({
                             success: false,
                             message: "An error occured"
@@ -451,7 +482,7 @@ app.delete('/api/recipe/delete/:recipeChapter/:recipeName', async (req, res)=>{
 
                         user.save((err)=>{
                             if (err){
-                                writeToLog(err);
+                                writeToLog(err, req);
                                 return res.json({
                                     success: false,
                                     message: "An error occured"
@@ -496,12 +527,10 @@ app.delete('/api/recipe/delete/:recipeChapter/:recipeName', async (req, res)=>{
 
 // move a recipe from one chapter to another
 app.put('/api/recipe/move/:oldChapter/:oldChapterIndex/:newChapter/:newChapterIndex', async (req, res)=>{
-    // TODO: this should check for duplicates
     let token = req.session.data.token || '';
     if (isValidToken(token)){
         let user = await getUser(req);
         if (user){
-            let recipeId = req.params.recipeNameId;
             let oldChapterName = req.params.oldChapter;
             let newChapterName = req.params.newChapter;
 
@@ -517,11 +546,18 @@ app.put('/api/recipe/move/:oldChapter/:oldChapterIndex/:newChapter/:newChapterIn
             let recipeIndex = req.params.oldChapterIndex;
             let newRecipeIndex = req.params.newChapterIndex;
 
-            let recipe = oldChapter.recipes[recipeIndex];  // get the recipe to be moved
+            let recipe = oldChapter.recipes[recipeIndex];  // get the recipe to be moved            
+
         
-            console.log(`old index: ${recipeIndex}`);
-            console.log(`new index: ${newRecipeIndex}`);
             if (recipe){  // if the recipe exists
+                // make sure the moved recipe is not already in the new chapter (same name)
+                let duplicateRecipe = newChapter.recipes.find((nRecipe)=>{
+                    return recipe.name === nRecipe.name;
+                });
+                if (duplicateRecipe){
+                    return;
+                }
+
                 if (oldChapterName === newChapterName){ // recipe being moved in same chapter
                     // create deep clones to move recipe without disturbing chapter order
                     let recipeCopy = _.cloneDeep(recipe);
@@ -532,7 +568,6 @@ app.put('/api/recipe/move/:oldChapter/:oldChapterIndex/:newChapter/:newChapterIn
                         newChapter.recipes.splice(recipeIndex,1);  // insert the recipe into the new chapter
                         newChapter.recipes.splice(newRecipeIndex,0,recipeCopy); // remove the recipe from the old chapter
                     }
-                    //newChapter.recipes.push(recipe);  // add the recipe to the new chapter
                 } else {
                     newChapter.recipes.splice(newRecipeIndex,0,recipe);  // insert the recipe into the new chapter
                     oldChapter.recipes.splice(recipeIndex, 1);  // remove the recipe from the old chapter
@@ -540,7 +575,7 @@ app.put('/api/recipe/move/:oldChapter/:oldChapterIndex/:newChapter/:newChapterIn
 
                 await user.save((err)=>{
                     if(err){
-                        writeToLog(err);
+                        writeToLog(err, req);
                     } 
                 });
                 
@@ -557,11 +592,11 @@ app.put('/api/recipe/move/:oldChapter/:oldChapterIndex/:newChapter/:newChapterIn
 });
 
 // get recipe
-app.get('/api/recipe/:chapterName/:recipeNameId', async (req, res)=>{
+app.get('/api/recipe/:chapterName/:recipeName', async (req, res)=>{
     let token = req.session.data.token;
     if (isValidToken(token)){
         let recipeChapter = req.params.chapterName;
-        let recipeNameId = req.params.recipeNameId;
+        let recipeName = req.params.recipeName;
 
         let user = await getUser(req);
         if (user){
@@ -570,7 +605,7 @@ app.get('/api/recipe/:chapterName/:recipeNameId', async (req, res)=>{
                 if (chapter.chapterName === recipeChapter){ // this is the right chapter
                     for (let i=0; i<chapter.recipes.length; i++){
                         let recipe = chapter.recipes[i];
-                        if (recipe.nameId === recipeNameId){  
+                        if (recipe.name === recipeName){  
                             return res.json(
                                 {
                                     success: true,
@@ -603,11 +638,11 @@ app.get('/api/recipe/:chapterName/:recipeNameId', async (req, res)=>{
 });
 
 // get recipe notes
-app.get('/api/recipe/notes/:chapterName/:recipeNameId', async (req, res)=>{
+app.get('/api/recipe/notes/:chapterName/:recipeName', async (req, res)=>{
     let token = req.session.data.token;
     if (isValidToken(token)){
         let recipeChapter = req.params.chapterName;
-        let recipeNameId = req.params.recipeNameId;
+        let recipeName = req.params.recipeName;
 
         let user = await getUser(req);
         if (user){  // user found
@@ -616,7 +651,7 @@ app.get('/api/recipe/notes/:chapterName/:recipeNameId', async (req, res)=>{
                 if (chapter.chapterName === recipeChapter){ // this is the right chapter
                     for (let i=0; i<chapter.recipes.length; i++){  // iterate through recipes
                         let recipe = chapter.recipes[i];
-                        if (recipe.nameId === recipeNameId){   // this is the right recipe
+                        if (recipe.name === recipeName){   // this is the right recipe
                             return res.json({
                                     success: true,
                                     notes: recipe.recipeNotes,
@@ -686,7 +721,6 @@ app.post('/api/recipe/add', async (req, res)=>{
     let token = req.session.data.token;
 
     if (isValidToken(token)){
-        console.log("token is valid to add recipe");
         let newRecipeName = req.body.name;
         let newRecipeLink = req.body.link;
         let newRecipeChapter = req.body.chapter;
@@ -708,7 +742,7 @@ app.post('/api/recipe/add', async (req, res)=>{
                 }
             }
         ).catch((error)=>{
-            console.log(error);
+            writeToLog(error, req);
         });
 
         let user = await getUser(req);
@@ -757,7 +791,7 @@ app.post('/api/recipe/add', async (req, res)=>{
             // save user with new recipe
             user.save((err)=>{
                 if (err){
-                    writeToLog(err);
+                    writeToLog(err, req);
                     return res.json({
                         success: false,
                         message: `Something went wrong. Please try again later`
@@ -806,12 +840,44 @@ app.post('/api/checkIframe', async(req,res)=>{
             }            
         }
     ).catch((error)=>{
-        writeToLog(error);
+        writeToLog(error, req);
         res.json({
             method: 'new_window'
         });
     });
 
+
+});
+
+// make sure page user requested is in cookbook
+app.post('/api/checkPage/:chapterName/:recipeName', async(req,res)=>{
+    let chapterName = req.params.chapterName;
+    let recipeName = req.params.recipeName;
+    let recipe;
+    let importedReq = req.body.userid;
+
+    let user = await getUserByID(importedReq);
+    if (user){
+        let chapter = user.chapterList.find((chapter) => {
+            return chapter.chapterName === chapterName;
+        });
+
+        if (chapter){
+            recipe = chapter.recipes.find((recipe)=>{
+                return recipe.name === recipeName;
+            });
+        }
+
+        if (recipe){  // link is valid
+            res.json({
+                valid: true
+            });
+        } else { // link is not valid
+            res.json({
+                valid: false
+            });
+        }
+    }
 
 });
 
@@ -835,7 +901,7 @@ app.post('/api/updateRecipeMethod', async(req,res)=>{
                 targetRecipe.method = 'new_window';
                 user.save((err)=>{
                     if (err){
-                        writeToLog(err);
+                        writeToLog(err, req);
                         // not returning failure to save message because it's not that important - app will check again
                     }
                 });
@@ -854,7 +920,7 @@ app.post('/api/recipes/update_notes/:chapter/:recipe', async (req,res)=>{
     let token = req.session.data.token;
     if (isValidToken(token)){  // check token
         let recipeChapter = req.params.chapter;
-        let recipeNameId = req.params.recipe;
+        let recipeName = req.params.recipe;
         let recipeNotes = req.body.notes;
 
         let user = await getUser(req);  // make this asynchronous if it ever takes too long to update notes
@@ -871,21 +937,18 @@ app.post('/api/recipes/update_notes/:chapter/:recipe', async (req,res)=>{
             if (chapter){  // chapter was found
                 for (let i=0; i<chapter.recipes.length; i++){ // loop through recipes in chapter
                     let rec = chapter.recipes[i];
-                    if (rec.nameId === recipeNameId){   // recipe found
-                        // TODO: do something if the recipe isn't found
+                    if (rec.name === recipeName){   // recipe found
                         // update notes
                         rec.recipeNotes = recipeNotes;
                         break;
                     }
                 }
-            } else {
-                // TODO: Do something - the chapter sent in wasn't found
-            }
+            } 
 
             // save user with updated notes
             user.save((err)=>{
                 if (err) {
-                    writeToLog(err);
+                    writeToLog(err, req);
                 }
 
                 res.end();  // can send something if anything ever depends on it
@@ -935,7 +998,7 @@ app.post('/api/acceptCookies', (req,res)=>{
             user.cookiesAccepted = true;
             user.save((err)=>{
                 if (err){
-                    writeToLog(err);
+                    writeToLog(err, req);
                 }
             });
         });
@@ -956,13 +1019,24 @@ async function getUser(req){
     let userId = req.session.data.userid;
     let user = await Users.findOne({_id: userId}, (err, result)=>{
         if (err){
-            writeToLog(err);
+            writeToLog(err, req);
         }
         return result;
     });
     return user;
 }
 
+// get user from database
+async function getUserByID(id){
+    
+    let user = await Users.findOne({_id: id}, (err, result)=>{
+        if (err){
+            writeToLog(err, req);
+        }
+        return result;
+    });
+    return user;
+}
 
 // make sure user has valid token
 function isValidToken(token){ 
@@ -970,7 +1044,7 @@ function isValidToken(token){
     if (token){ // there is a token - check it
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
             if (err){
-                writeToLog(err);
+                writeToLog(err, req);
                 return tokenIsValid;
             } else {
                 tokenIsValid = true;

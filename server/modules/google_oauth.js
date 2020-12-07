@@ -2,9 +2,10 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
+const fetch = require('node-fetch');
 const { userMdl } = require('../models/User.js');
 const { chapterMdl } = require('../models/Chapter.js');
-
+const createRequest = require('../../client/src/App/modules/createRequest.js');
 
 passport.use(new GoogleStrategy({
     callbackURL: process.env.GOOGLE_CALLBACK_URL, // same URI as registered in Google console portal
@@ -19,16 +20,18 @@ async function (accessToken, refreshToken, profile, done) {
             // lookup user by email address and id
             let userWithEmail = await userMdl.findOne({"email": user_email, "googleUserId": user_id}, function(err, results){
                 if (err){
-                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
-                    fetch(logErrorRequest);
+                    fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
+                            body: JSON.stringify({"text": err}),
+                            headers: { 'Content-type': 'application/json', }});
                 }
             });
 
             // lookup user by email address
             let user = await userMdl.findOne({"email": user_email}, function(err, results){
                 if(err){
-                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
-                    fetch(logErrorRequest);
+                    fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
+                            body: JSON.stringify({"text": err}),
+                            headers: { 'Content-type': 'application/json', }});
                 }
             });
 
@@ -41,8 +44,11 @@ async function (accessToken, refreshToken, profile, done) {
                 let newUser = userMdl({"googleUserId": profile.id, "facebookUserId":"","email": user_email, "firstName": profile.name.givenName, "lastName": profile.name.familyName});
                 newUser.chapterList.push(chapterMdl({"chapterName": "[Unclassified]"}));
                 newUser.save((err)=>{
-                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
-                    fetch(logErrorRequest);
+                    if (err){
+                        fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
+                                body: JSON.stringify({"text": err}),
+                                headers: { 'Content-type': 'application/json', }});
+                        }
                 });
                 userWithEmail = newUser;
             } 
@@ -51,8 +57,9 @@ async function (accessToken, refreshToken, profile, done) {
             return done(null, {"user": userWithEmail, "token": token});
         
     } catch (error) {
-        let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
-        fetch(logErrorRequest);
+        fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
+            body: JSON.stringify({"text": error}),
+            headers: { 'Content-type': 'application/json', }});
         done(error);
     }
 }));

@@ -33,13 +33,11 @@ router.get("/main", validation.checkToken, (req,res) => {
     res.sendFile(path.join(process.cwd(), 'client', 'build', 'index.html'));
 });
 
-router.get("/notes/:chapter/:recipeNameId", validation.checkToken, (req,res) => { 
-    // TODO: make sure link is valid - or send to 404 -- maybe
+router.get("/notes/:chapter/:recipeName", validation.checkToken, (req,res) => { 
     res.sendFile(path.join(process.cwd(), 'client', 'build', 'index.html'));
 });
 
-router.get("/recipe/:chapter/:recipeNameId", validation.checkToken, (req,res) => { 
-    // TODO: make sure link is valid - or send to 404 -- maybe
+router.get("/recipe/:chapter/:recipeName", validation.checkToken, validation.isValidPage, (req,res) => { 
     res.sendFile(path.join(process.cwd(), 'client', 'build', 'index.html'));
 });
 

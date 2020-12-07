@@ -12,6 +12,8 @@ class RenameChapterRecipeDialog extends Component {
         };
 
 
+        // import modules
+        this.checkInput = require('../modules/checkInput.js');
         this.createRequest = require('../modules/createRequest.js');
 
         // bind methods
@@ -21,7 +23,7 @@ class RenameChapterRecipeDialog extends Component {
     }
 
     componentDidMount(){
-        $().on("keyup", (event)=>{  // click rename button if user hits enter
+        $(document).on("keyup", (event)=>{  // click rename button if user hits enter
             if (event.key === "Enter"){
                 $('#rename-save').trigger("click");
             }
@@ -31,12 +33,12 @@ class RenameChapterRecipeDialog extends Component {
 
     changeItem(){
         $('#error').text('');  // reset error text
-        if (this.newNameValue === ''){  // chapter can't be blank
-            $('#error').text('The chapter name can\'t be blank');
+        if (this.checkInput.hasInjection(this.state.newNameValue)){ 
+            $('#error').text('Please enter a valid chapter name');
             return;
         }
 
-        if (this.newNameValue === this.props.textToModify){  // text is the same
+        if (this.state.newNameValue === this.props.textToModify){  // text is the same
             this.props.showRenameChapterRecipeDialog(false);
             // no need to rerender
             return;
@@ -45,7 +47,7 @@ class RenameChapterRecipeDialog extends Component {
         if (this.props.itemTypeToModify === 'chapter'){  // rename chapter
             let changeChapterRequest = this.createRequest.createRequest(`/api/chapter/rename/${this.props.textToModify}/${this.state.newNameValue}`, 'PUT');
             fetch(changeChapterRequest).then((response)=>{response.json().then(json => {
-                if (json.success === true){  // rename was successful - close dialog and redisplay cookbook
+                if (json.success){  // rename was successful - close dialog and redisplay cookbook
                     this.props.showRenameChapterRecipeDialog(false);
                     this.props.rerenderCookbook();
                 } else {  // show error
@@ -53,14 +55,14 @@ class RenameChapterRecipeDialog extends Component {
                 }
             })})
             .catch(error=>{
-                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                 fetch(logErrorRequest);
             });
         
         } else if (this.props.itemTypeToModify === 'recipe'){  // rename recipe
             let changeRecipeRequest = this.createRequest.createRequest(`/api/recipe/rename/${this.props.textToModify}/${this.props.recipeChapter}/${this.state.newNameValue}`, 'PUT');
             fetch(changeRecipeRequest).then((response)=>{response.json().then(json => {
-                if (json.success === true){  // rename was successful - close dialog and redisplay cookbook
+                if (json.success){  // rename was successful - close dialog and redisplay cookbook
                     this.props.showRenameChapterRecipeDialog(false);
                     this.props.rerenderCookbook();
                 } else {  // show error
@@ -69,7 +71,7 @@ class RenameChapterRecipeDialog extends Component {
             })})
             .catch(error=>{
                 $('#error').text('Sorry, something went wrong. Please try again later.');
-                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                 fetch(logErrorRequest);
             });
         } else{

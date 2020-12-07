@@ -9,6 +9,7 @@ class Notes extends Component {
             notes: ''
         }
 
+        // import modules
         this.createRequest = require('../modules/createRequest.js');
         this.accessNotes = require('../modules/accessNotes.js');
 
@@ -22,7 +23,7 @@ class Notes extends Component {
     }
 
     getNotes(){ 
-        let getNotesRequest = this.createRequest.createRequest(`/api/recipe/notes/${this.props.match.params.chapter}/${this.props.match.params.recipeNameId}`, "GET");
+        let getNotesRequest = this.createRequest.createRequest(`/api/recipe/notes/${this.props.match.params.chapter}/${this.props.match.params.recipeName}`, "GET");
         fetch(getNotesRequest).then(
             async (response) => {
                 await response.json().then(
@@ -32,7 +33,7 @@ class Notes extends Component {
                         });
                     });
         }).catch((error)=>{
-            let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+            let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
             fetch(logErrorRequest);
         });
 
@@ -41,15 +42,14 @@ class Notes extends Component {
 
 
     render(){    
-        let text = this.state.notes;
         let chapter = this.props.match.params.chapter;
-        let recipeId = this.props.match.params.recipeNameId;
+        let recipeName = this.props.match.params.recipeName;
 
         return (
             <div clasName="notes-window">
                 <Header type="mini-header" />
-                <div className="notes-title">Notes: { this.props.match.params.chapter} &gt;&gt; { this.props.match.params.recipeNameId }</div>
-                <textarea className="notes-popup" value={this.state.notes} onChange={(event)=>{this.accessNotes.updateNotes(event, chapter, recipeId); this.setState({notes: event.target.value});}}></textarea>
+                <div className="notes-title">Notes: { this.props.match.params.chapter} &gt;&gt; { recipeName }</div>
+                <textarea className="notes-popup" value={this.state.notes} onChange={(event)=>{this.accessNotes.updateNotes(event, chapter, recipeName); this.setState({notes: event.target.value});}}></textarea>
 
             </div>
         );

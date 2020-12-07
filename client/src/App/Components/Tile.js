@@ -18,7 +18,7 @@ class Tile extends Component {
 
     render(){
         return(
-            <div className="tile"><img src={ this.srcLoc }/><br/><p>{this.props.title}</p></div>
+            <div className="tile"><img alt={this.props.title+"-img"} src={ this.srcLoc }/><br/><p>{this.props.title}</p></div>
         );
     }
 

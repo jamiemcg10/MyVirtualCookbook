@@ -2,8 +2,10 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
+const fetch = require('node-fetch');
 const { userMdl } = require('../models/User.js');
 const bcrypt = require('bcryptjs');
+const createRequest = require('../../client/src/App/modules/createRequest.js');
 
 // functions to serialize and deserialize user
 passport.serializeUser(function(user, done){
@@ -15,31 +17,27 @@ passport.deserializeUser(function(user, done){
 });
 
 passport.use(new LocalStrategy(
-    // TODO: match to other accounts
     function(username, password, done){
         // lookup user
         userMdl.findOne({"email": username.toLowerCase()}, function(err, user){
             if (err){
-                console.log(err);
-                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
-                fetch(logErrorRequest);
+                fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
+                    body: JSON.stringify({"text": err}),
+                    headers: { 'Content-type': 'application/json', }});
                 return done(err);
             }
 
-            if (!user){  // user not foudn
-                console.log("no user");
-                return done(null, false);
+            if (!user){  // user not found
+                return done(null, {"valid": false});
             }
 
             if (!bcrypt.compareSync(password, user.password)){  // compare password to hash of saved password
-                console.log("password invalid");
-                return done(null, false);
+                return done(null, {"valid": false});
             } 
 
-            console.log("password is valid");
             const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {expiresIn: '1h'}); // generating token
 
-            return done(null, {"user": user, "token": token});
+            return done(null, {"valid": true, "user": user, "token": token});
         });
     }
 ));

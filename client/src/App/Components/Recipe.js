@@ -10,6 +10,8 @@ class Recipe extends Component{
         this.chapter = this.props.chapter;
         this.notesWindow = null;
 
+        this.recipeWindow = null;
+
         this.createRequest = require('../modules/createRequest.js');
         this.accessNotes = require('../modules/accessNotes.js');
 
@@ -22,6 +24,7 @@ class Recipe extends Component{
         // bind methods
         this.showNotes = this.showNotes.bind(this);
         this.displayRecipe = this.displayRecipe.bind(this);
+        this.handleNotesChange = this.handleNotesChange.bind(this);
       
     } // end constructor
 
@@ -49,11 +52,16 @@ class Recipe extends Component{
         this.setState({
             notesDisabled: true,
         });
+
+        if (process.env.REACT_APP_CLASS_VERSION === "true"){ // always open in new window if for class
+            this.recipe.method = "new_window";
+        }
+
         if (this.recipe.method === "iframe") {  // open in iframe
             // make sure page can still be opened in iframe
             
             let iframeStillValidRequest = this.createRequest.createRequestWithBody('/api/checkIframe', 'POST', JSON.stringify({"link": this.recipe.recipeLink,
-                                                                                                                                "nameId": this.recipe.nameId,
+                                                                                                                                "name": this.recipe.name,
                                                                                                                                 "chapter": this.props.chapter}));
             await fetch(iframeStillValidRequest).then(response=>response.json().then(json=>{
                 if (json.method === 'new_window'){
@@ -61,7 +69,7 @@ class Recipe extends Component{
                     methodChanged = true;
                 }
             })).catch(error=>{
-                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                 fetch(logErrorRequest);
             });
 
@@ -70,7 +78,7 @@ class Recipe extends Component{
                                                                                                                                     "nameId": this.recipe.nameId,
                                                                                                                                     "chapter": this.props.chapter}));                                                                                  
                 fetch(changeOpeningMethodRequest).catch((error)=>{
-                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                     fetch(logErrorRequest);
                 });
             }
@@ -78,35 +86,31 @@ class Recipe extends Component{
 
             // go to recipe page
             if (this.recipe.method === "iframe") { // will still open in iframe
-                let recipeWindow = window.open(`/recipe/${this.props.chapter}/${this.props.content.nameId}`);
-                recipeWindow.addEventListener("unload", ()=>{
-                    if (recipeWindow.location.href !== "about:blank"){
-                        this.setState({
-                            notesDisabled: false,
-                            notes: recipeWindow.document.getElementsByTagName("textarea")[0].value
-                        });
-                        
-                        this.notesWindow = null;
-                    }
-                });
+                if (this.recipeWindow === null){
+                    this.recipeWindow = window.open(`/recipe/${this.props.chapter}/${this.props.content.name}`);
+
+                    this.recipeWindow.addEventListener("unload", ()=>{
+                        if (this.recipeWindow.location.href !== "about:blank"){
+                            this.setState({
+                                notesDisabled: false,
+                                notes: this.recipeWindow.document.getElementsByTagName("textarea")[0].value
+                            });
+                            
+                            this.notesWindow = null;
+                            this.recipeWindow = null;
+                        }
+                    });
+                } else {
+                    this.recipeWindow.focus();
+                }
             }
         } 
 
         if (this.recipe.method === "new_window") {  // open in new window
-            console.log(this.notesWindow);
-            let recipeWindow = window.open(this.props.content.recipeLink);
+            window.open(this.props.content.recipeLink);
             if (this.notesWindow === null){  // only open notes window once
-                this.notesWindow = window.open(`/notes/${this.props.chapter}/${this.props.content.nameId}`, "_blank", "height=300,width=300,location=0");
+                this.notesWindow = window.open(`/notes/${this.props.chapter}/${this.props.content.name}`, "_blank", "height=300,width=375,location=0");
             }
-
-            // is there a better way to do this?
-            // listen for new window unload event to try to close notes window
-            recipeWindow.addEventListener("unload", (event)=>{  // TODO: try to get this to work
-                console.log(event);
-                console.log(recipeWindow);
-                console.log("new window should be closing");
-                //notesWindow.close();
-            });
 
 
             // add event listner to re-enable notes on main cookbook when notes window closes
@@ -124,22 +128,31 @@ class Recipe extends Component{
         }
     }
 
+    handleNotesChange(event){
+        this.accessNotes.updateNotes(event, this.chapter, this.recipe.name); 
+        this.setState({
+            notes: event.target.value
+        })
+    }
+
 
     // return Draggable recipe that can be toggled to show notes
     render(){
 
         let chapter = this.props.chapter;
         let recipeId = this.props.content.nameId;
+        let recipe = this.props.content;
+        let dragId = `${chapter}-${recipeId}`;
 
         return (
-            <Draggable key={recipeId} draggableId={recipeId} index={this.props.index}>
+            <Draggable key={recipeId} draggableId={dragId} index={this.props.index}>
                 {(provided)=>(
                     <div className='recipe' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                         <div>
-                            <li recipeType={this.props.content.method} chapterName={chapter} link={this.recipe.recipeLink} itemType="recipe" onClick={()=>{this.displayRecipe()}} onContextMenu={(event)=>{this.props.sendRightClick(event)}}>{this.recipe.name}</li>
-                            <img className="recipe-icon" src={notesImg} onClick={()=>{this.showNotes()}}/>
+                            <li recipeType={this.props.content.method} chapterName={chapter} link={recipe.recipeLink} itemType="recipe" onClick={()=>{this.displayRecipe()}} onContextMenu={(event)=>{this.props.sendRightClick(event)}}>{recipe.name}</li>
+                            <img alt="recipe-ico" className="recipe-icon" src={notesImg} onClick={()=>{this.showNotes()}}/>
                         </div>
-                        <textarea className="cookbook-notes" notesOpen={this.state.notesOpen} disabled={this.state.notesDisabled} value={this.state.notes} onChange={(event)=>{this.accessNotes.updateNotes(event, chapter, recipeId); this.setState({notes: event.target.value});}}></textarea>
+                        <textarea className="cookbook-notes" notesOpen={this.state.notesOpen} disabled={this.state.notesDisabled} value={this.state.notes} onChange={this.handleNotesChange}></textarea>
                     </div>
                 )}
             </Draggable>

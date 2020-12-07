@@ -1,21 +1,21 @@
 const jwt = require('jsonwebtoken');
+const fetch = require('node-fetch');
 const dotenv = require('dotenv').config(); // for using environment variables
-const createRequest = require('../../client/src/App/modules/createRequest');
+//const createRequest = require('../../client/src/App/modules/createRequest');
 
 // check token for routes
-function checkToken(req, res, next){  
-    console.log("checking token");
+function checkToken(req, res, next){ 
     let token = req.session.data.token;
 
     if (token){ // there is a token - check it
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
             if (err){
-                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
-                fetch(logErrorRequest);
-                //console.log(err);
+                //let logErrorRequest = createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: err}));
+                fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
+                                        body: JSON.stringify({text: err}),
+                                        headers: { 'Content-type': 'application/json', }});
                 res.redirect("/login");
             } else { // token is valid
-                console.log("token is valid");
                 req.decoded = decoded;
                 next();
             }
@@ -32,8 +32,9 @@ function redirectToMain(req, res, next){
     if(token){  // there is a token
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
             if (err){
-                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: err}));
-                fetch(logErrorRequest);
+                fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
+                                                                body: JSON.stringify({text: err}),
+                                                                headers: { 'Content-type': 'application/json', }});
                 next();  // continue
             } else { // has valid token
                 res.redirect("/main");
@@ -44,7 +45,31 @@ function redirectToMain(req, res, next){
     }
 }
 
+// make sure page is in cookbook
+function isValidPage(req, res, next){
+    let chapterName = req.params.chapter;
+    let recipeName = req.params.recipeName;
+    fetch(`${process.env.SITE_ADDRESS}/api/checkPage/${chapterName}/${recipeName}`, {method: 'POST', 
+                                                                                    body: JSON.stringify({"userid": req.session.data.userid}),
+                                                                                    headers: { 'Content-type': 'application/json', }})
+        .then((response) => {response.json()
+        .then((json) => {
+            if (json.valid){
+                next();
+            } else {
+                res.end();
+            }
+        })})
+        .catch((error)=>{
+            fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
+                                                            body: JSON.stringify({text: error}),
+                                                            headers: { 'Content-type': 'application/json', }});
+            res.end();
+        });
+}
+
 module.exports = {
     checkToken: checkToken,
     redirectToMain: redirectToMain,
+    isValidPage: isValidPage
 };

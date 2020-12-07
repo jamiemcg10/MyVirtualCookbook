@@ -14,7 +14,9 @@ class AddRecipeDialog extends Component {
             errorMsg: ''
         };
 
+        // import modules
         this.createRequest = require('../modules/createRequest.js');
+        this.checkInput = require('../modules/checkInput.js');
 
         // bind methods
         this.addRecipe = this.addRecipe.bind(this);
@@ -31,7 +33,7 @@ class AddRecipeDialog extends Component {
 
     componentDidMount(){
         // save recipe if Enter key pressed
-        $().on("keyup", (event)=>{
+        $(document).on("keyup", (event)=>{
             if (event.key === "Enter"){
                 $('#recipe-save').trigger("click");
             }
@@ -42,12 +44,15 @@ class AddRecipeDialog extends Component {
     getChapters(){
         // get a list of chapters in the cookbook
         let chapters="";
-        let getChaptersRequest = this.createRequest.createRequest(`http://localhost:5000/api/chapters`, 'GET');
+        let getChaptersRequest = this.createRequest.createRequest(`${process.env.REACT_APP_SITE_ADDRESS}/api/chapters`, 'GET');
         fetch(getChaptersRequest).then(
             (response)=>{
                 response.json().then((json)=>{
                     if (json.success){
                         chapters = json.chapters;
+                        if (chapters.length === 0){ // recipes must be added to a chapter
+                            chapters.push("[Unclassified]");
+                        }
                         chapters.push(this.NEW_CHAPTER);
                         this.setState({
                             chapterNames: chapters,
@@ -63,7 +68,7 @@ class AddRecipeDialog extends Component {
                     }
                 })
             }).catch(error=>{
-                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                     fetch(logErrorRequest);
             });
 
@@ -79,21 +84,26 @@ class AddRecipeDialog extends Component {
         let newRecipeLink = this.state.recipeLinkValue;
         let newRecipeChapter = this.state.newChapterNameValue || this.state.recipeChapterValue;  // add to new chapter or existing chapter
 
-        // create pattern for valid url
-        let validLink = RegExp("^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$");
-
-        if (newRecipeName === ""){  // recipe name can't be blank
+        if (!this.checkInput.isValidItemName(newRecipeName)){  // validate recipe name
             this.setState({
                 errorMsg: 'Please enter a valid recipe name',
             });
             return;
-        } else if (newRecipeLink === "" || !validLink.test(newRecipeLink)){  // recipe link can't be blank and must be valid link
+        }
+
+        if (!this.checkInput.isValidLink(newRecipeLink)){  // validate recipe link
             this.setState({
                 errorMsg: 'Please enter a valid link',
             });
             return;
         }
 
+        if (this.state.newChapterNameValue && !this.checkInput.isValidItemName(newRecipeChapter)){  // validate chapter name if new chapter
+            this.setState({
+                errorMsg: 'Please enter a valid chapter name',
+            });
+            return;
+        }
 
         let requestBody = {
             name: newRecipeName,
@@ -103,7 +113,7 @@ class AddRecipeDialog extends Component {
         };
         requestBody = JSON.stringify(requestBody);
 
-        let newRecipeRequest = this.createRequest.createRequestWithBody(`http://localhost:5000/api/recipe/add`, 'POST', requestBody);
+        let newRecipeRequest = this.createRequest.createRequestWithBody(`${process.env.REACT_APP_SITE_ADDRESS}/api/recipe/add`, 'POST', requestBody);
         fetch(newRecipeRequest)
             .then((response) => {
                 response.json().then((json) => {
@@ -117,7 +127,7 @@ class AddRecipeDialog extends Component {
 
                     }
                 }).catch(error=>{
-                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                    let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                     fetch(logErrorRequest);
                 });
             });
@@ -168,15 +178,15 @@ class AddRecipeDialog extends Component {
                 <div id="recipe-name-box">
                     <label for="recipe-name">Recipe name:</label>
                     <br/>
-                    <input type="text" id="recipe-name" className = "add-recipe-input" value={this.state.recipeNameValue} onChange={this.handleNameChange}></input>
+                    <input type="text" id="recipe-name" className = "add-recipe-input" onChange={this.handleNameChange}></input>
                     <br/>
                     <label for="recipe-link">Recipe link:</label>
                     <br/>
-                    <input type="text" id="recipe-link" className="add-recipe-input" value={this.state.recipeLinkValue} onChange={this.handleLinkChange}></input>
+                    <input type="text" id="recipe-link" className="add-recipe-input" onChange={this.handleLinkChange}></input>
                     <br/>
                     <label for="chapter-name">Chapter: </label>
                     <br/>
-                    <select id="recipe-chapter-select" value={this.state.recipeChapterValue} onChange={this.handleChapterChange}>
+                    <select id="recipe-chapter-select"  onChange={this.handleChapterChange}>
                         {chapterList.map((chapter)=><option key={chapter.replaceAll(" ")}>{ chapter }</option>)}
                     </select>
                     <br/>
@@ -184,7 +194,7 @@ class AddRecipeDialog extends Component {
                         <div id="new-chapter-div">
                             <label for="new-chapter-name">New chapter name:</label>
                             <br/>
-                            <input type="text" id="new-chapter-name" className = "add-recipe-input" value={this.state.newChapterNameValue} onChange={this.handleNewChapterChange}></input>
+                            <input type="text" id="new-chapter-name" className = "add-recipe-input" onChange={this.handleNewChapterChange}></input>
                             <br/>
                         </div>
                     }

@@ -1,6 +1,7 @@
 import fetch from "node-fetch";
 import React, { Component, Fragment } from "react";
 import Header from '../Components/Header.js';
+import NotFound from '../pages/NotFound'
 
 // page that displays recipe and notes
 //to replace recipe page
@@ -13,10 +14,11 @@ class Page extends Component {
             url: '',
             name: '',
             chapter: this.props.match.params.chapter,
-            recipeId: this.props.match.params.recipeNameId,
+            recipeName: this.props.match.params.recipeName,
+            recipeIsValid: true
         };
 
-        
+        // import modules
         this.createRequest = require('../modules/createRequest.js');
         this.accessNotes = require('../modules/accessNotes.js');
         
@@ -29,7 +31,7 @@ class Page extends Component {
     }
 
     getRecipe(){
-        let getNotesRequest = this.createRequest.createRequest(`/api/recipe/${this.state.chapter}/${this.state.recipeId}`, "GET");
+        let getNotesRequest = this.createRequest.createRequest(`/api/recipe/${this.state.chapter}/${this.state.recipeName}`, "GET");
         fetch(getNotesRequest).then(
             async (response) => {
                 await response.json().then(
@@ -40,10 +42,15 @@ class Page extends Component {
                                 url: json.recipe.recipeLink,
                                 name: json.recipe.name
                             });
+                        } else {
+                            // can't get notes - use as proxy for recipe not being in cookbook
+                            this.setState({
+                                recipeIsValid: false
+                            })
                         }
                     });
         }).catch((error)=>{
-            let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+            let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
             fetch(logErrorRequest);
         });
 
@@ -53,17 +60,22 @@ class Page extends Component {
  
 
     render(){
-        return (
-            <Fragment >
-                <Header />
-                <div className="notes-title">{ this.state.chapter} &gt;&gt; { this.state.name }</div>
-                <iframe src={this.state.url}></iframe>
-                <div className="notes-pane">
-                    <textarea id="notes-pane" value={this.state.notes} onChange={(event)=>{this.accessNotes.updateNotes(event, this.state.chapter, this.state.recipeId); this.setState({notes: event.target.value});}}></textarea>
-                </div>
-            </Fragment>
-
-        );
+        if (this.state.recipeIsValid){
+            return (                
+                <Fragment >
+                    <Header />
+                    <div className="notes-title">{ this.state.chapter} &gt;&gt; { this.state.name }</div>
+                    <div id="recipe-page-content">
+                        <iframe src={this.state.url} title="recipe-frame"></iframe>
+                        <textarea id="notes-pane" value={this.state.notes} onChange={(event)=>{this.accessNotes.updateNotes(event, this.state.chapter, this.state.recipeName); this.setState({notes: event.target.value});}}></textarea>
+                    </div>
+                </Fragment>
+            );
+        } else {
+            return (
+                <NotFound />
+            );
+        }
     }
 
 }

@@ -15,7 +15,7 @@ class Recipe extends Component {
             recipeId: this.props.match.params.recipeNameId,
         };
 
-        
+        // import modules
         this.createRequest = require('../modules/createRequest.js');
         this.accessNotes = require('../modules/accessNotes.js');
         

@@ -14,7 +14,9 @@ class Login extends Component {
             passwordValue: ''
         }
 
+        // import modules
         this.md5 = require('md5');  // for hashing password before it is sent to the server
+        this.checkInput = require("../modules/checkInput.js");
         this.createRequest = require('../modules/createRequest.js');
         
         // bind methods
@@ -27,7 +29,7 @@ class Login extends Component {
 
     componentDidMount(){
         $('#email').trigger("focus");  // put cursor in email box when page loads
-        $().on("keyup", (event)=>{  // trigger login button if user hits enter
+        $(document).on("keyup", (event)=>{  // trigger login button if user hits enter
             if (event.key === "Enter"){
                 $('#log-in-btn').trigger("click");
             }
@@ -45,10 +47,10 @@ class Login extends Component {
 
     // for username/password
     localLogin(){
-        if (this.state.emailValue === ''){
-            $('#error').text("Please enter your email address");
-        } else if (this.state.passwordValue === ''){
-            $('#error').text("Please enter your password");
+        if (!this.checkInput.isValidEmail(this.state.emailValue)){
+            $('#error').text("Please enter a valid email address");
+        } else if (!this.checkInput.isValidPassword(this.state.passwordValue)){
+            $('#error').text("Please a valid password");
         } else {
             let md5Password = this.md5(this.state.passwordValue);
             let loginRequest = this.createRequest.createRequestWithBody('/auth/login', 'POST', JSON.stringify({"username": this.state.emailValue,
@@ -57,9 +59,11 @@ class Login extends Component {
             .then((response)=> {response.json().then((json)=>{
                 if (json.success){  // login was successful, redirect to main
                     window.location = `${process.env.REACT_APP_SITE_ADDRESS}/main`;
+                } else {
+                    $('#error').text("Your email address or password is incorrect.");
                 }
             })}).catch((error)=>{  // login was not successful
-                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST". JSON.stringify({text: error}));
+                let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                 fetch(logErrorRequest);
                 $('#error').text("An error occured");
             });   
@@ -88,8 +92,8 @@ class Login extends Component {
                 <div className="gray-login-box">
                     <h3>Sign in to continue</h3>    
                     <div className="login-box">  
-                        <label for="email">Email address</label><input type="text" id="email" name="username" value={this.state.emailValue} onChange={ this.handleEmailChange }></input>          
-                        <label for="password">Password</label><input type="password" id="password" name="password" value = {this.state.passwordValue} onChange={ this.handlePasswordChange }></input>
+                        <label for="email">Email address</label><input type="text" id="email" name="username" onChange={ this.handleEmailChange }></input>          
+                        <label for="password">Password</label><input type="password" id="password" name="password" onChange={ this.handlePasswordChange }></input>
                         <p id="error" className="error"></p>
                         <button id="log-in-btn" onClick={ this.localLogin }>Log in</button>
                     </div>                 
