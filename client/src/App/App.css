@@ -930,13 +930,37 @@ ul[display="open"] {
     padding-bottom: 60px;
   }
 
+  #error{
+    margin-left: 30px !important;
+    position: fixed !important;
+  }
+
   .gray-login-box {
     width: 75vw;
+  }
+
+  .gray-signup-box {
+    width: 75vw;
+    height: 68vh;
+    margin-top: -3vh;
+  }
+
+  h1{
+    font-size: 36px;
+  }
+
+  .header{
+    height: 15vh;
+    min-height: fit-content;
   }
 
   iframe{
     width: 100vw;
     height: 60vh;
+  }
+
+  #learnMoreLinkContainer{
+    margin-bottom: 20px;
   }
 
   .login-box {
@@ -956,7 +980,7 @@ ul[display="open"] {
   }
 
   #log-in-btn {
-    margin: 30px auto 10px;
+    margin: 40px auto 10px;
     max-width: 60vw;
   }
 
@@ -964,15 +988,60 @@ ul[display="open"] {
     margin-top: 2px;
   }
 
+  .mainPageLogo{
+    margin-top: 5vh;
+  }
+
   #notes-pane{
     width: 100vw;
-    height: 13.8vh;
+    height: 20vh;
+  }
+
+  .notes-title{
+    box-sizing: border-box;
+    height: 5vh;
+  }
+
+  ol {
+    margin-left: 65px;
+    margin-right: 50px;
+    margin-bottom: 50px;
+  }
+
+  .pageTitle {
+    margin-right: 50px;
   }
 
   #recipe-page-content {
     flex-direction: column;
     overflow: hidden;
     background-color: white;
+    height: 78.7vh;
+  }
+
+  .signup-box {
+    margin-top: 15px;
+  }
+
+  .signup-box #error {
+    max-width: 60vw; 
+  }
+
+  .signup-box input {
+    max-width: 60vw;
+  }
+
+  .signup-box label {
+    max-width: 60vw;
+  }
+
+  #sign-up-btn {
+    margin: 60px auto 5px;
+    max-width: 60vw;
+  }
+
+  .signup-btn-text {
+    margin-top: 2px;
   }
 
   .social-btn-box {
@@ -980,9 +1049,18 @@ ul[display="open"] {
   }
   .social-login-btn {
     height: 35px;
+    margin: 3px 0;
   }
 
   .social-login-btn>img {
     width: 25px;
   }
+
+  .tile{
+    width: 100px;
+    height: 100px;
+    margin: 5vh 2.5vw;
+  }
+
+
 }
