@@ -869,6 +869,7 @@ textarea {
   padding: 3px;
   font-family: cursive;
   background-color: #f3e193;
+  resize: none;
 }
 
 textarea:focus {
@@ -999,7 +1000,7 @@ ul[display="open"] {
 
   .notes-title{
     box-sizing: border-box;
-    height: 5vh;
+    height: 5%;
   }
 
   ol {

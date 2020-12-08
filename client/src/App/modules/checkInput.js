@@ -66,7 +66,6 @@ function isValidLink(link){
         return false;
     }
 
-    //let validLink = RegExp("^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$");
     let validLink = RegExp("^(http://|https://|http://www.|https://www.|www.){1}[a-z0-9]+([-.]{1}[a-z0-9]+)*.[a-z]{2,5}(:[0-9]{1,5})?(/.*)?$");
     if (!validLink.test(link)){
         return false;

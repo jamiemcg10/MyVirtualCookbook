@@ -5,7 +5,6 @@ const dotenv = require('dotenv').config();
 const fetch = require('node-fetch');
 const { userMdl } = require('../models/User.js');
 const bcrypt = require('bcryptjs');
-const createRequest = require('../../client/src/App/modules/createRequest.js');
 
 // functions to serialize and deserialize user
 passport.serializeUser(function(user, done){
@@ -22,7 +21,7 @@ passport.use(new LocalStrategy(
         userMdl.findOne({"email": username.toLowerCase()}, function(err, user){
             if (err){
                 fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
-                    body: JSON.stringify({"text": err}),
+                    body: JSON.stringify({"text": err.message}),
                     headers: { 'Content-type': 'application/json', }});
                 return done(err);
             }

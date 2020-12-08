@@ -1,5 +1,6 @@
 // templates to create requests both with and without bodies
-function createRequest(address, method){ 
+
+function createRequest(address, method){ // no body
     return new Request(address, { method: method,
                                     mode: 'cors',
                                     redirect: 'follow',
@@ -11,7 +12,7 @@ function createRequest(address, method){
                                 });
 }
 
-function createRequestWithBody(address, method, body){  
+function createRequestWithBody(address, method, body){  // with body
     return new Request(address, { method: method,
                                     mode: 'cors',
                                     redirect: 'follow',

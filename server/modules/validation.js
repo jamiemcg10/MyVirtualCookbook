@@ -1,18 +1,17 @@
 const jwt = require('jsonwebtoken');
 const fetch = require('node-fetch');
 const dotenv = require('dotenv').config(); // for using environment variables
-//const createRequest = require('../../client/src/App/modules/createRequest');
 
 // check token for routes
 function checkToken(req, res, next){ 
-    let token = req.session.data.token;
+    let token;
+    token = req.session.data.token || '';
 
     if (token){ // there is a token - check it
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
             if (err){
-                //let logErrorRequest = createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: err}));
                 fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
-                                        body: JSON.stringify({text: err}),
+                                        body: JSON.stringify({text: err.message}),
                                         headers: { 'Content-type': 'application/json', }});
                 res.redirect("/login");
             } else { // token is valid
@@ -27,13 +26,14 @@ function checkToken(req, res, next){
 
 // redirect to /main if user is logged in
 function redirectToMain(req, res, next){ 
-    let token = req.session.data.token;
+    let token;
+    token = req.session.data.token || '';
 
     if(token){  // there is a token
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
             if (err){
                 fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
-                                                                body: JSON.stringify({text: err}),
+                                                                body: JSON.stringify({text: err.message}),
                                                                 headers: { 'Content-type': 'application/json', }});
                 next();  // continue
             } else { // has valid token
@@ -62,7 +62,7 @@ function isValidPage(req, res, next){
         })})
         .catch((error)=>{
             fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
-                                                            body: JSON.stringify({text: error}),
+                                                            body: JSON.stringify({text: error.message}),
                                                             headers: { 'Content-type': 'application/json', }});
             res.end();
         });

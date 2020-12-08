@@ -5,7 +5,6 @@ const dotenv = require('dotenv').config();
 const fetch = require('node-fetch');
 const { userMdl } = require('../models/User.js');
 const { chapterMdl } = require('../models/Chapter.js');
-const createRequest = require('../../client/src/App/modules/createRequest.js');
 
 passport.use(new GoogleStrategy({
     callbackURL: process.env.GOOGLE_CALLBACK_URL, // same URI as registered in Google console portal
@@ -21,7 +20,7 @@ async function (accessToken, refreshToken, profile, done) {
             let userWithEmail = await userMdl.findOne({"email": user_email, "googleUserId": user_id}, function(err, results){
                 if (err){
                     fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
-                            body: JSON.stringify({"text": err}),
+                            body: JSON.stringify({"text": err.message}),
                             headers: { 'Content-type': 'application/json', }});
                 }
             });
@@ -30,7 +29,7 @@ async function (accessToken, refreshToken, profile, done) {
             let user = await userMdl.findOne({"email": user_email}, function(err, results){
                 if(err){
                     fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
-                            body: JSON.stringify({"text": err}),
+                            body: JSON.stringify({"text": err.message}),
                             headers: { 'Content-type': 'application/json', }});
                 }
             });
@@ -46,7 +45,7 @@ async function (accessToken, refreshToken, profile, done) {
                 newUser.save((err)=>{
                     if (err){
                         fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
-                                body: JSON.stringify({"text": err}),
+                                body: JSON.stringify({"text": err.message}),
                                 headers: { 'Content-type': 'application/json', }});
                         }
                 });
@@ -58,7 +57,7 @@ async function (accessToken, refreshToken, profile, done) {
         
     } catch (error) {
         fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
-            body: JSON.stringify({"text": error}),
+            body: JSON.stringify({"text": error.message}),
             headers: { 'Content-type': 'application/json', }});
         done(error);
     }

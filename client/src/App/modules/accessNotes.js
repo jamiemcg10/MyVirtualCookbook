@@ -8,7 +8,7 @@ function updateNotes(event, chapter, recipe){
     let updateNotesRequest = createRequest.createRequestWithBody(`/api/recipes/update_notes/${chapter}/${recipe}`, "POST", body);
     fetch(updateNotesRequest)
         .catch(error=>{
-            let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
+            let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error.message}));
             fetch(logErrorRequest);
         });
 }

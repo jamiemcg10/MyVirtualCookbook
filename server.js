@@ -9,7 +9,6 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const fetch = require('node-fetch');
 const dotenv = require('dotenv').config(); // for using environment variables
-const md5 = require('md5');
 const bcrypt = require('bcryptjs');
 const _ = require('lodash');
 
@@ -79,13 +78,6 @@ mongoose.connection.on('disconnected', ()=>{
     console.log("Disconnected from database");
 });
 
-// function to write to log 
-// function writeToLog(text){
-//     errorLogStream.write(`${new Date().toLocaleString('en-US',{ timeZone: 'America/New_York'})}
-//     ${req.session.data.userId || ''}
-//     ${text}
-// `);
-// }
 
 function writeToLog(text, req){
     errorLogStream.write(`${new Date().toLocaleString('en-US',{ timeZone: 'America/New_York'})}
@@ -111,7 +103,7 @@ app.post('/api/signup', async(req, res)=>{
     // look for user with entered credentials
     let user = await Users.findOne({"email": email.toLowerCase()}, (queryErr, result)=>{
         if (queryErr){
-            writeToLog(queryErr, req);
+            writeToLog(queryErr.message, req);
             throw queryErr;
         }
         return result;
@@ -122,7 +114,7 @@ app.post('/api/signup', async(req, res)=>{
             user.password = hashedPassword;
             user.save((err) => {
                 if (err){
-                    writeToLog(err, req);
+                    writeToLog(err.message, req);
                     return res.json({
                         success: false,
                         message: "There was a problem creating a new user. Please try again later."
@@ -153,7 +145,7 @@ app.post('/api/signup', async(req, res)=>{
         newUser.chapterList.push(chapterMdl({"chapterName": "[Unclassified]"}));
         newUser.save((err)=>{
             if (err){
-                writeToLog(err, req);
+                writeToLog(err.message, req);
                 return res.json({
                     success: false,
                     message: "There was a problem creating a new user. Please try again later."
@@ -231,13 +223,11 @@ app.post('/api/chapter/add/:chapterName', async (req, res)=>{
             
             // if here - chapter is not already in cookbook
             // create chapter, add to chapter list and save user
-            let newChapter = new Chapter({
-                                    "chapterName": newChapterName
-                                });
+            let newChapter = new Chapter({"chapterName": newChapterName});
             user.chapterList.push(newChapter);
             user.save((err)=>{
                 if (err){
-                    writeToLog(err, req);
+                    writeToLog(err.message, req);
                     return res.json({
                         success: false,
                         message: "There was a problem adding a new chapter. Please try again later."
@@ -295,7 +285,7 @@ app.put('/api/chapter/rename/:oldChapterName/:newChapterName', async (req, res)=
                 oldChapter.chapterName = newChapterName; 
                 user.save((err)=>{
                     if (err){
-                        writeToLog(err, req);
+                        writeToLog(err.message, req);
                         return res.json({
                             success: false,
                             message: "An error occured"
@@ -361,7 +351,7 @@ app.put('/api/recipe/rename/:oldRecipeName/:recipeChapter/:newRecipeName', async
 
                         user.save((err)=>{
                             if (err){
-                                writeToLog(err, req);
+                                writeToLog(err.message, req);
                                 return res.json({
                                     success: false,
                                     message: "An error occured"
@@ -427,7 +417,7 @@ app.delete('/api/chapter/delete/:chapterName', async (req, res)=>{
                 user.chapterList.splice(chapterIndex,1);
                 user.save((err)=>{
                     if (err){
-                        writeToLog(err, req);
+                        writeToLog(err.message, req);
                         return res.json({
                             success: false,
                             message: "An error occured"
@@ -575,7 +565,7 @@ app.put('/api/recipe/move/:oldChapter/:oldChapterIndex/:newChapter/:newChapterIn
 
                 await user.save((err)=>{
                     if(err){
-                        writeToLog(err, req);
+                        writeToLog(err.message, req);
                     } 
                 });
                 
@@ -742,7 +732,7 @@ app.post('/api/recipe/add', async (req, res)=>{
                 }
             }
         ).catch((error)=>{
-            writeToLog(error, req);
+            writeToLog(error.message, req);
         });
 
         let user = await getUser(req);
@@ -791,7 +781,7 @@ app.post('/api/recipe/add', async (req, res)=>{
             // save user with new recipe
             user.save((err)=>{
                 if (err){
-                    writeToLog(err, req);
+                    writeToLog(err.message, req);
                     return res.json({
                         success: false,
                         message: `Something went wrong. Please try again later`
@@ -840,7 +830,7 @@ app.post('/api/checkIframe', async(req,res)=>{
             }            
         }
     ).catch((error)=>{
-        writeToLog(error, req);
+        writeToLog(error.message, req);
         res.json({
             method: 'new_window'
         });
@@ -901,7 +891,7 @@ app.post('/api/updateRecipeMethod', async(req,res)=>{
                 targetRecipe.method = 'new_window';
                 user.save((err)=>{
                     if (err){
-                        writeToLog(err, req);
+                        writeToLog(err.message, req);
                         // not returning failure to save message because it's not that important - app will check again
                     }
                 });
@@ -948,7 +938,7 @@ app.post('/api/recipes/update_notes/:chapter/:recipe', async (req,res)=>{
             // save user with updated notes
             user.save((err)=>{
                 if (err) {
-                    writeToLog(err, req);
+                    writeToLog(err.message, req);
                 }
 
                 res.end();  // can send something if anything ever depends on it
@@ -998,7 +988,7 @@ app.post('/api/acceptCookies', (req,res)=>{
             user.cookiesAccepted = true;
             user.save((err)=>{
                 if (err){
-                    writeToLog(err, req);
+                    writeToLog(err.message, req);
                 }
             });
         });
@@ -1019,7 +1009,7 @@ async function getUser(req){
     let userId = req.session.data.userid;
     let user = await Users.findOne({_id: userId}, (err, result)=>{
         if (err){
-            writeToLog(err, req);
+            writeToLog(err.message, req);
         }
         return result;
     });
@@ -1031,7 +1021,7 @@ async function getUserByID(id){
     
     let user = await Users.findOne({_id: id}, (err, result)=>{
         if (err){
-            writeToLog(err, req);
+            writeToLog(err.message, req);
         }
         return result;
     });
@@ -1044,7 +1034,7 @@ function isValidToken(token){
     if (token){ // there is a token - check it
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
             if (err){
-                writeToLog(err, req);
+                writeToLog(err.message, req);
                 return tokenIsValid;
             } else {
                 tokenIsValid = true;

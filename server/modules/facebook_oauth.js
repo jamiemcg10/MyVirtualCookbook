@@ -5,7 +5,6 @@ const fetch = require('node-fetch');
 const dotenv = require('dotenv').config();
 const { userMdl } = require('../models/User.js');
 const { chapterMdl } = require('../models/Chapter.js');
-const createRequest = require('../../client/src/App/modules/createRequest.js');
 
 
 // functions to serialize and deserialize user
@@ -34,7 +33,7 @@ passport.use(new FacebookStrategy({
             let userWithEmail = await userMdl.findOne({"email": user_email, "facebookUserId": user_id}, function(err, results){
                 if (err){
                     fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
-                        body: JSON.stringify({"text": err}),
+                        body: JSON.stringify({"text": err.message}),
                         headers: { 'Content-type': 'application/json', }});
                 }
             });
@@ -45,7 +44,7 @@ passport.use(new FacebookStrategy({
                 user = await userMdl.findOne({"email": user_email}, (err, results)=>{
                     if (err){
                         fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
-                            body: JSON.stringify({"text": err}),
+                            body: JSON.stringify({"text": err.message}),
                             headers: { 'Content-type': 'application/json', }});
                     }
                 });
@@ -56,7 +55,7 @@ passport.use(new FacebookStrategy({
                 await user.save((err)=>{
                     if (err){
                         fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
-                            body: JSON.stringify({"text": err}),
+                            body: JSON.stringify({"text": err.message}),
                             headers: { 'Content-type': 'application/json', }});
                     }
                 });
@@ -68,7 +67,7 @@ passport.use(new FacebookStrategy({
                 newUser.save((err)=>{
                     if (err){
                         fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
-                        body: JSON.stringify({"text": err}),
+                        body: JSON.stringify({"text": err.message}),
                         headers: { 'Content-type': 'application/json', }});
                     }
                 });
@@ -80,7 +79,7 @@ passport.use(new FacebookStrategy({
 
         } catch (error){
             fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
-                body: JSON.stringify({"text": error}),
+                body: JSON.stringify({"text": error.message}),
                 headers: { 'Content-type': 'application/json', }});
             done(error);
         }
