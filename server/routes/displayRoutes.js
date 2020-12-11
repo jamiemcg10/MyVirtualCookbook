@@ -49,4 +49,9 @@ router.get("/logout", (req,res) => {  // remove token and send to homepage
     res.redirect("/");
 });
 
+// for heroku app ownership verification
+router.get("/google272a7713cdc3ed26.html", (req,res)=>{
+    res.sendFile(path.join(process.cwd(), 'google272a7713cdc3ed26.html'));
+});
+
 module.exports = router;
