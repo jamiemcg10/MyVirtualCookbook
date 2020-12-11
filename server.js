@@ -1009,7 +1009,7 @@ async function getUser(req){
     let userId = req.session.data.userid;
     let user = await Users.findOne({_id: userId}, (err, result)=>{
         if (err){
-            writeToLog(err.message, req);
+            // writeToLog(err.message, req);
         }
         return result;
     });
@@ -1021,7 +1021,7 @@ async function getUserByID(id){
     
     let user = await Users.findOne({_id: id}, (err, result)=>{
         if (err){
-            writeToLog(err.message, req);
+            writeToLog(err.message);
         }
         return result;
     });
@@ -1034,7 +1034,6 @@ function isValidToken(token){
     if (token){ // there is a token - check it
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
             if (err){
-                writeToLog(err.message, req);
                 return tokenIsValid;
             } else {
                 tokenIsValid = true;
