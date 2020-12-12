@@ -243,6 +243,7 @@ button:hover{
 
 #divider {
   overflow: hidden;
+  margin-bottom: 10px;
 }
 
 .droppable-div{
@@ -270,6 +271,7 @@ button:hover{
   font-family: 'Roboto', sans-serif;
   font-weight: 500;  
   color: white;
+  visibility: hidden;
 }
 
 .flex-container{
