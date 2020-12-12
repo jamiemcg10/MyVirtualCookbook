@@ -22,6 +22,8 @@ userSchema.virtual('fullName').get(function(){  // virtual field for getting ful
 });
 
 
+
+
 const userMdl = mongoose.model('User', userSchema);
 
 module.exports = {

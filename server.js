@@ -132,7 +132,7 @@ app.post('/api/signup', async(req, res)=>{
         // set session data
         const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {expiresIn: '1h'}); // generating token
         req.session.data.token = token;
-        req.session.data.userid = user._id;
+        req.session.data.userid = user._id.$oid;
         req.session.data.username = user.firstName;
 
         res.json({
@@ -156,7 +156,7 @@ app.post('/api/signup', async(req, res)=>{
         // set session data
         const token = jwt.sign(newUser.toJSON(), process.env.JWT_SECRET, {expiresIn: '1h'}); // generating token
         req.session.data.token = token;
-        req.session.data.userid = newUser._id;
+        req.session.data.userid = newUser._id.$oid;
         req.session.data.username = newUser.firstName;
 
         res.json({
@@ -1007,7 +1007,7 @@ app.all("*", (req,res) => {
 // get user from database
 async function getUser(req){
     let userId = req.session.data.userid;
-    let user = await Users.findOne({_id: userId}, (err, result)=>{
+    let user = await Users.findOne({_id: ObjectId(userId)}, (err, result)=>{
         if (err){
             // writeToLog(err.message, req);
         }
@@ -1019,7 +1019,7 @@ async function getUser(req){
 // get user from database
 async function getUserByID(id){
     
-    let user = await Users.findOne({_id: id}, (err, result)=>{
+    let user = await Users.findOne({_id: ObjectId(id)}, (err, result)=>{
         if (err){
             writeToLog(err.message);
         }
