@@ -12,7 +12,7 @@ router.get('/auth/google', passport.authenticate('google', {scope: ['profile', '
 router.get('/auth/google/redirect', passport.authenticate('google', {session: false, failureRedirect: `/login`}), (req, res) => {
     // Successful authentication
     req.session.data.token = req.user.token;
-    req.session.data.userid = req.user.user._id.$oid;
+    req.session.data.userid = req.user.user._id;
     req.session.data.username = req.user.user.firstName;
     res.redirect("/main"); 
 });
@@ -22,7 +22,7 @@ router.get('/auth/facebook', passport.authenticate('facebook', {scope: ['email']
 router.get('/auth/facebook/redirect', passport.authenticate('facebook', {session: false, failureRedirect: '/login'}), (req,res) => {
     // Successful authentication
     req.session.data.token = req.user.token;
-    req.session.data.userid = req.user.user._id.$oid;
+    req.session.data.userid = req.user.user._id;
     req.session.data.username = req.user.user.firstName;
     res.redirect("/main");
 });
@@ -32,7 +32,7 @@ router.post('/auth/login', passport.authenticate('local', {session: false}), (re
     // successful authentication
     if (req.user.valid) {
         req.session.data.token = req.user.token;
-        req.session.data.userid = req.user.user._id.$oid;
+        req.session.data.userid = req.user.user._id;
         req.session.data.username = req.user.user.firstName;
         return res.json({
             success: true
