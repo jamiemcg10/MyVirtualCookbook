@@ -34,7 +34,7 @@ passport.use(new LocalStrategy(
                 return done(null, {"valid": false});
             } 
 
-            const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {expiresIn: '1h'}); // generating token
+            const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {expiresIn: '1y'}); // generating token
 
             return done(null, {"valid": true, "user": user, "token": token});
         });

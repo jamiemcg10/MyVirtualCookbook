@@ -6,7 +6,7 @@ www.myvirtualcookbook.com
 <br>
 
 ### User Accounts  
-New users must first create an account. You can register using an email address and password or by linking to your Google or Facebook account.
+New users must first create an account. You can register using an email address and password or by linking to your Google account.
 
 <br>  
 
@@ -26,14 +26,3 @@ Notes can only be edited in one place at a time, so if a recipe is open, you can
   
 <br>    
 <br>  
-  
-***
-## *To run this on a local machine*
-1. Clone the code and install the app (you must have npm installed).
-2. Remame the TEMPLATE.env file in the project directory to .env and update the variables for your machine
-    - Enter a value for JWT_SECRET and SESSION_SECRET 
-    - If you use a port other than 5000 for your server, SITE_ADDRESS and PORT will need to be updated
-    - If you use a port other than 27017 for MongoDB, DB_ADDRESS will need to be updated
-    - If you do not supply a key and secret for Google and Facebook logins, that functionality will not work. However, you will still be able to create an account using an email address and password
-3. Edit the .env file in /client if your server is on a port other than 5000
-4. Run the server and go to your localhost at the appropriate port
