@@ -565,6 +565,7 @@ iframe {
 
 .no-link-decoration{
   text-decoration: none;
+  color: inherit;
 }
 
 #not-found {
