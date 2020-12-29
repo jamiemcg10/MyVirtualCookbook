@@ -32,7 +32,6 @@ class RenameChapterRecipeDialog extends Component {
     }
 
     changeItem(){
-        console.log(this.props.itemTypeToModify);
         $('#error').text('');  // reset error text
         if (this.checkInput.hasInjection(this.state.newNameValue)){ 
             $('#error').text('Please enter a valid chapter name');
