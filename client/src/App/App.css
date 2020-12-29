@@ -563,6 +563,10 @@ iframe {
   width: 215px;
 }
 
+.no-link-decoration{
+  text-decoration: none;
+}
+
 #not-found {
   font-weight: lighter;
   width: 100%;
@@ -691,6 +695,7 @@ ol {
   flex-direction: row;
   height: 87vh;
   align-items: stretch;
+  background-color: white;
 }
 
 #recipe-save {

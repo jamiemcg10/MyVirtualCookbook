@@ -149,7 +149,7 @@ class Recipe extends Component{
                 {(provided)=>(
                     <div className='recipe' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                         <div>
-                            <li recipeType={this.props.content.method} chapterName={chapter} link={recipe.recipeLink} itemType="recipe" onClick={()=>{this.displayRecipe()}} onContextMenu={(event)=>{this.props.sendRightClick(event)}}>{recipe.name}</li>
+                            <li recipeType={this.props.content.method} chapterName={chapter} link={recipe.recipeLink} itemType="recipe" onClick={()=>{this.displayRecipe()}} onContextMenu={(event)=>{this.props.sendRightClick(event)}}><a href={recipe.recipeLink} class="no-link-decoration">{recipe.name}</a></li>
                             <img alt="recipe-ico" className="recipe-icon" src={notesImg} onClick={()=>{this.showNotes()}}/>
                         </div>
                         <textarea className="cookbook-notes" notesOpen={this.state.notesOpen} disabled={this.state.notesDisabled} value={this.state.notes} onChange={this.handleNotesChange}></textarea>

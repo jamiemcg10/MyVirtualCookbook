@@ -104,8 +104,8 @@ function containsOnlyAlphaNumeric(string){
 }
 
 function containsOnlyAlphaNumericDash(string){
-    // also allows space and apostrophe
-    let validString = RegExp(/^[\w- ']*$/);
+    // also allows space and apostrophe and double quotes
+    let validString = RegExp(/^[\w- '"]*$/);
 
     if (!validString.test(string)){
         return false;
