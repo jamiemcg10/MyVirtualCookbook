@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import './styles/CookiePopupWarning.css'
 
 class CookiePopupWarning extends Component {
     constructor(props){
@@ -10,13 +11,10 @@ class CookiePopupWarning extends Component {
 
         // import module
         this.createRequest = require('../modules/createRequest.js');
-
-        // bind method
-        this.acceptWarning = this.acceptWarning.bind(this);
     }
 
 
-    acceptWarning(){
+    acceptWarning = () => {
             let acceptCookieRequest = this.createRequest.createRequest(`/api/acceptCookies`, "POST");
             fetch(acceptCookieRequest)
                 .catch(error=>{
@@ -24,15 +22,15 @@ class CookiePopupWarning extends Component {
                         fetch(logErrorRequest);
                 });
             this.props.showCookiePopupWarning(false);
-            this.props.accepted = true;
+            this.props.acceptCookies(true);
     }
 
 
     render(){     
         return(
-            <div id="cookie-popup-warning">
-                <div id="close-cookie-popup-warning" onClick={ ()=>{this.acceptWarning()}}>x</div>
-                <div id="cookie-popup-warning-text">This website uses cookies and pop-up windows to function properly. By continuing to use this site, you acknowledge 
+            <div class="cookie-popup-warning">
+                <div class="btn--close close-cookie-popup-warning" onClick={ ()=>{this.acceptWarning()}}>&times;</div>
+                <div class="cookie-popup-warning-text">This website uses cookies and pop-up windows to function properly. By continuing to use this site, you acknowledge 
                 that you accept the use of cookies. If your browser blocks pop-up windows, this site may not function properly. 
                 Please allow pop-ups from this site. We promise to not show pop-up advertisements.</div>
             </div>

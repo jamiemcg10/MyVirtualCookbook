@@ -1,0 +1,94 @@
+#add-chapter-dialog {
+    height: 200px;
+}
+
+.add-recipe-input {
+    margin: 5px 0px !important;
+}
+
+#chapter-name-box {
+    margin-top: 25px;
+    margin-left: 15px;
+}
+
+.MuiInputBase-input.chapter-select {
+    color: #666;
+}
+  
+
+.dialog {
+    background-color: #d3d3d3;
+    width: 300px;
+    border-radius: 25px;
+    top: 175px;
+    margin-top: 175px;
+    padding: 25px;
+    margin: auto;
+    margin-top: 100px;
+}
+
+/* add recipe override for dialog*/
+#add-recipe-dialog{
+    margin-top: 75px;
+}
+
+#dialog-background{
+    background-color: rgba(15,15,15,.5);
+    width: 100%;
+    height: 94.5vh;
+    position: absolute;
+    margin-top: -10px;
+    z-index: 1;
+}
+
+.dialog-title {
+    text-align: center;
+    font-size: large;
+    margin-top: 15px;
+    font-weight: bold;
+    color: rgb(80,80,80);
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+#new-chapter-div{
+    margin-left: 25px;
+    margin-top: 5px;
+  }
+
+.new-chapter-div > .add-recipe-input {
+    height: 4px;
+}
+
+.recipe-btns > button, 
+.chapter-btns > button {
+    width: 35%;
+    margin: 0px 10px;
+    color: rgb(80,80,80);
+  }
+  
+  .recipe-btns, .chapter-btns {
+    margin-top: 45px;
+    outline: none;
+  }
+  
+  .recipe-btns > button:active{
+    position: relative;
+    top: 1px;
+    outline: none;
+  }
+
+  
+
+#recipe-chapter-select {
+    display: block;
+}
+
+#recipe-chapter-select {
+    width: 185px;
+    color: rgb(80,80,80);
+  }
+
+#recipe-name-box {
+    margin-top: 25px;
+    margin-left: 15px;
+  }

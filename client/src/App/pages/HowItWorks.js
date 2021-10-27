@@ -14,7 +14,7 @@ class HowItWorks extends Component{
                     <li>You can drag and drop recipes from one chapter to another. It’s your cookbook! You can decide how your recipes will be organized</li>
                     <li>There are notes attached to each recipe. You can access them from the table of contents or from each recipe page. You can add notes on what works, what doesn’t work, what you changed, or whatever you want!</li>
                     <li>Your recipes will automatically open in a new tab. A separate window will pop-up for your notes</li>
-                    {/* <li>Some recipes will automatically open in a new tab. When this happens, a separate window will pop-up for your notes</li> */}
+                    <li>Some recipes will automatically open in a new tab. When this happens, a separate window will pop-up for your notes</li>
                 </ol>
             </div>
         );

@@ -5,26 +5,55 @@
 'use strict';
 
 chrome.runtime.onInstalled.addListener(function() {
-  chrome.storage.sync.set({color: '#3aa757'}, function() {
-    console.log('The color is green.');
-  });
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
     chrome.declarativeContent.onPageChanged.addRules([{
       conditions: [new chrome.declarativeContent.PageStateMatcher({
         pageUrl: {hostEquals: 'developer.chrome.com'},
-      })],
-      actions: [new chrome.declarativeContent.ShowPageAction()]
+      })
+      ],
+          actions: [new chrome.declarativeContent.ShowPageAction()]
     }]);
   });
+});
 
-  chrome.contextMenus.create({"id": "mvc-add",
-                                "title": "Add to MyVirtualCookbook",
-                            }, ()=>{
-      console.log("menu item created");
-  });
-  chrome.contextMenus.onClicked.addListener(()=>{
-      alert("clicked");
-  });
+function login(){
+  let loginRequest = new Request("http://www.myvirtualcookbook.com/api/chapters",
+      {
+        method: 'GET',
+        mode: 'cors',
+        redirect: 'follow',
+        headers: {
+          'Accept': 'application/json',
+          'Access-Control-Allow-Origin': 'http://www.myvirtualcookbook.com/'
+        }
+      }
+  );
+
+  fetch(loginRequest)
+      .then((response)=>{
+        console.log(response);
+        response.text().then((res)=>{console.log(res)});
+      })
+      .catch((err)=>{
+        console.log(err);
+      });
+
+}
+
+login();
+
+
+let parent = chrome.contextMenus.create({"id": "mvc-add", "title": "Add to MyVirtualCookbook",}, ()=>{
+  //console.log("menu item created");
+});
+
+// this should be a list of chapters from the cookbook
+let child1 = chrome.contextMenus.create({"id": "beef", "title": "Beef", "parentId": parent})
+let child2 = chrome.contextMenus.create({"id": "chicken", "title": "Chicken", "parentId": parent})
+chrome.contextMenus.onClicked.addListener((event)=>{
+  console.log(event);
+  alert(event);
+  alert("clicked2");
 });
 
 // check to make sure account hasn't been deleted (lol)

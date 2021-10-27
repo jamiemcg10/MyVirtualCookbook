@@ -1,0 +1,73 @@
+a {
+    text-decoration: none;
+}
+
+.home-btn-box {
+  justify-content: space-around;
+  margin: 0 10rem;
+}
+
+.home-btn-box button {
+  color: rgb(80,80,80);
+}
+
+/* #learn-more-btn {
+    background-color: #6aa84fff;
+    color: white;
+}
+
+#login-btn{ 
+  background-color: #ffd966ff;
+} */
+
+.mainPageLogo{
+  text-align: center;
+  padding-top: 20vh;
+  font-size: 5vh;
+}
+
+/* #signup-btn {  /* on main page /
+  background-color: #ffffffff;
+}
+
+#signup-btn:hover {
+  background-color: #f3f3f3;
+} */
+
+.tile{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  width: 150px;
+  height: 150px;
+  margin: 2.5vh 2.5vw;
+  background-color: #999999 !important;
+  color: white !important;
+}
+
+.tile * {
+  color: white;
+}
+
+
+.tile-box{
+    background-color: #6aa84fff;
+    margin-top: 5vh;
+    margin-bottom: 4vh;
+    padding-bottom: 3vh;
+    padding-top: 1vh;
+}
+
+
+@media only screen and (max-width: 500px){
+  .mainPageLogo{
+    padding-top: 15vh;
+  }
+  .tile{
+    width: 100px;
+    height: 100px;
+    margin: 5vh 2.5vw;
+  }
+}
+

@@ -52,7 +52,7 @@ app.use(session({
 app.use(displayRoutes);
 app.use(authRoutes);
 
-app.use('/client/build', express.static(__dirname + "/client/build"));  // serve build files from React build folder
+//app.use('/client/build', express.static(__dirname + "/client/build"));  // serve build files from React build folder
 
 const port = process.env.PORT || 5000;
 app.listen(port);

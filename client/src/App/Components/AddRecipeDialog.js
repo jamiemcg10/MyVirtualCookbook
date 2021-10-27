@@ -1,5 +1,6 @@
 import React, {Component} from "react";
-import $ from 'jquery';
+import { TextField, InputLabel, Button, FormControl, NativeSelect, ClickAwayListener } from '@material-ui/core'
+import './styles/AddChapterRecipeDialog.css'
 
 class AddRecipeDialog extends Component {
     constructor(props){
@@ -14,34 +15,37 @@ class AddRecipeDialog extends Component {
             errorMsg: ''
         };
 
+        this.saveBtn = React.createRef();
+        this.recipeName = React.createRef();
+    
         // import modules
         this.createRequest = require('../modules/createRequest.js');
         this.checkInput = require('../modules/checkInput.js');
 
-        // bind methods
-        this.addRecipe = this.addRecipe.bind(this);
-        this.cancelRecipeAdd = this.cancelRecipeAdd.bind(this);
-        this.handleLinkChange = this.handleLinkChange.bind(this);
-        this.handleNameChange = this.handleNameChange.bind(this);
-        this.handleChapterChange = this.handleChapterChange.bind(this);
-        this.handleNewChapterChange = this.handleNewChapterChange.bind(this);
-        this.getChapters = this.getChapters.bind(this);
-
         this.NEW_CHAPTER = "< + New Chapter >";  // value for new chapter dropdown item
-        this.getChapters();  // get a list of chapters to display in the dropdown
     }
 
     componentDidMount(){
+        let recipeNameInput = this.recipeName.current.childNodes[1].childNodes[0];
+        recipeNameInput.focus()
+
+        this.getChapters();  // get a list of chapters to display in the dropdown
+
         // save recipe if Enter key pressed
-        $(document).on("keyup", (event)=>{
-            if (event.key === "Enter"){
-                $('#recipe-save').trigger("click");
-            }
-        });
-        $('#recipe-name').trigger("focus");  // put cursor in recipe name textbox
+        document.addEventListener("keyup", this.hitEnter);
     }
 
-    getChapters(){
+    componentWillUnmount(){
+        document.removeEventListener("keyup", this.hitEnter)
+    }
+
+    hitEnter = (event) => {
+        if (event.key === "Enter"){
+            this.saveBtn.current.click();
+        }
+    }
+
+    getChapters = () => {
         // get a list of chapters in the cookbook
         let chapters="";
         let getChaptersRequest = this.createRequest.createRequest(`${process.env.REACT_APP_SITE_ADDRESS}/api/chapters`, 'GET');
@@ -74,7 +78,7 @@ class AddRecipeDialog extends Component {
 
     }
 
-    addRecipe(){
+    addRecipe = () => {
         // adds recipe to cookbook
         this.setState({  // reset error message when called
             errorMsg: '',
@@ -134,23 +138,23 @@ class AddRecipeDialog extends Component {
 
     }
 
-    cancelRecipeAdd(){
+    cancelRecipeAdd = () => {
         this.props.showAddRecipeDialog(false);
     }
 
-    handleNameChange(event){  // holds the value in the recipe name box
+    handleNameChange = (event) => {  // holds the value in the recipe name box
         this.setState({
             recipeNameValue: event.target.value,
         })
     }
 
-    handleLinkChange(event){  // holds the value in the recipe link box
+    handleLinkChange = (event) => {  // holds the value in the recipe link box
         this.setState({
             recipeLinkValue: event.target.value,
         });
     }
 
-    handleChapterChange(event){  // holds the value in the chapter dropdown
+    handleChapterChange = (event) => {  // holds the value in the chapter dropdown
         if (this.state.newChapterNameValue !== this.NEW_CHAPTER){ // if the chapter recipe is being added to isn't new, set the new chapter name to null
             this.setState({
                 newChapterNameValue: ''
@@ -161,7 +165,7 @@ class AddRecipeDialog extends Component {
         });
     }
 
-    handleNewChapterChange(event){  // holds the value in the new chapter name box
+    handleNewChapterChange = (event) => {  // holds the value in the new chapter name box
         this.setState({
             newChapterNameValue: event.target.value,
         });
@@ -173,38 +177,84 @@ class AddRecipeDialog extends Component {
 
         return(
             <div id="dialog-background">
-            <div id="add-recipe-dialog" className="dialog"> 
-                <p className="dialog-title">Add recipe</p>
-                <div id="recipe-name-box">
-                    <label for="recipe-name">Recipe name:</label>
-                    <br/>
-                    <input type="text" id="recipe-name" className = "add-recipe-input" onChange={this.handleNameChange}></input>
-                    <br/>
-                    <label for="recipe-link">Recipe link:</label>
-                    <br/>
-                    <input type="text" id="recipe-link" className="add-recipe-input" onChange={this.handleLinkChange}></input>
-                    <br/>
-                    <label for="chapter-name">Chapter: </label>
-                    <br/>
-                    <select id="recipe-chapter-select"  onChange={this.handleChapterChange}>
-                        {chapterList.map((chapter)=><option key={chapter.replaceAll(" ")}>{ chapter }</option>)}
-                    </select>
-                    <br/>
-                    {this.state.recipeChapterValue === this.NEW_CHAPTER &&   
-                        <div id="new-chapter-div">
-                            <label for="new-chapter-name">New chapter name:</label>
-                            <br/>
-                            <input type="text" id="new-chapter-name" className = "add-recipe-input" onChange={this.handleNewChapterChange}></input>
-                            <br/>
-                        </div>
-                    }
-                    <p className="error" id="error">{this.state.errorMsg}</p>
-                </div>
-                <div className="flex-container recipe-btns">
-                    <button id="recipe-save" onClick={this.addRecipe}>Save</button>
-                    <button id="recipe-cancel" onClick={this.cancelRecipeAdd}>Cancel</button>
-                </div>
-            </div> 
+                <ClickAwayListener
+                    onClickAway={() => {this.props.showAddRecipeDialog(false)}}
+                >
+                <div 
+                    id="add-recipe-dialog" 
+                    className="dialog"> 
+                    <p className="dialog-title">Add recipe</p>
+                    <div id="recipe-name-box">
+                        <TextField
+                            label="Recipe name"
+                            variant="outlined"
+                            size="small"
+                            className="add-recipe-input"
+                            ref={this.recipeName}
+                            onChange={this.handleNameChange}
+                        ></TextField>
+                        <TextField
+                            id="recipe-link" 
+                            label="Recipe link"
+                            variant="outlined"
+                            size="small"
+                            className="add-recipe-input" 
+                            onChange={this.handleLinkChange}
+                        ></TextField>
+                        <FormControl>
+                            <InputLabel variant="standard" htmlFor="chapter-select">Chapter</InputLabel>
+                            <NativeSelect
+                                defaultValue={chapterList[0]}
+                                inputProps={{
+                                    name: 'Chapter',
+                                    id: 'chapter-select',
+                                    className: 'chapter-select',
+                                    onChange: this.handleChapterChange,
+                                }}
+                            >
+                                { chapterList.map((chapter) => 
+                                                
+                                        <option key={chapter.replaceAll(" ")}>
+                                            { chapter }
+                                        </option>
+                                    
+                                )}
+                            </NativeSelect>
+                        </FormControl>
+
+                        {this.state.recipeChapterValue === this.NEW_CHAPTER &&   
+                            <div id="new-chapter-div">
+                                <TextField
+                                    id="new-chapter-name" 
+                                    label="New chapter name"
+                                    variant="outlined"
+                                    size="small"
+                                    className="add-recipe-input" 
+                                    onChange={this.handleNewChapterChange}
+                                ></TextField>
+                            </div>
+                        }
+                        <p className="error" id="error">{this.state.errorMsg}</p>
+                    </div>
+                    <div className="flex-container recipe-btns">
+                        <Button 
+                            className="btn btn--yellow"
+                            ref={this.saveBtn}
+                            variant="contained"
+                            onClick={this.addRecipe}
+                        >
+                            Save
+                        </Button>
+                        <Button 
+                            className="btn btn--white"
+                            variant="contained"
+                            onClick={this.cancelRecipeAdd}
+                        >
+                            Cancel
+                        </Button>
+                    </div>
+                </div> 
+            </ClickAwayListener>
         </div>
         );
     }

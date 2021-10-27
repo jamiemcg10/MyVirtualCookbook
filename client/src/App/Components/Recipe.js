@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import notesImg from '../../Images/text-documents-line.png';
+import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
+import './styles/Recipe.css'
 
 class Recipe extends Component{
     constructor(props){
@@ -21,15 +22,10 @@ class Recipe extends Component{
             notes: this.props.content.recipeNotes,
         }
 
-        // bind methods
-        this.showNotes = this.showNotes.bind(this);
-        this.displayRecipe = this.displayRecipe.bind(this);
-        this.handleNotesChange = this.handleNotesChange.bind(this);
-      
     } // end constructor
 
 
-    showNotes(){  // toggle state of notes textarea
+    showNotes = () => {  // toggle state of notes textarea
         if (this.state.notesOpen === "false"){
             this.setState({
                 notesOpen: "true"
@@ -42,7 +38,7 @@ class Recipe extends Component{
     }
 
 
-    async displayRecipe(){
+    displayRecipe = async () => {
         // displays recipe either in new window or iframe in new page
         // check whether page can be opened in iframe before opening in iframe
 
@@ -53,13 +49,9 @@ class Recipe extends Component{
             notesDisabled: true,
         });
 
-        if (process.env.REACT_APP_CLASS_VERSION === "true"){ // always open in new window if for class
-            this.recipe.method = "new_window";
-        }
-
+        console.log(this.recipe.method)
         if (this.recipe.method === "iframe") {  // open in iframe
             // make sure page can still be opened in iframe
-            
             let iframeStillValidRequest = this.createRequest.createRequestWithBody('/api/checkIframe', 'POST', JSON.stringify({"link": this.recipe.recipeLink,
                                                                                                                                 "name": this.recipe.name,
                                                                                                                                 "chapter": this.props.chapter}));
@@ -68,11 +60,12 @@ class Recipe extends Component{
                     this.recipe.method = json.method;
                     methodChanged = true;
                 }
+                
             })).catch(error=>{
                 let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                 fetch(logErrorRequest);
             });
-
+            
             if (methodChanged){  // can no longer open in iframe - send request to server to update asynchronously
                 let changeOpeningMethodRequest = this.createRequest.createRequestWithBody('/api/updateRecipeMethod', 'POST', JSON.stringify({"link": this.recipe.recipeLink,
                                                                                                                                     "nameId": this.recipe.nameId,
@@ -86,6 +79,7 @@ class Recipe extends Component{
 
             // go to recipe page
             if (this.recipe.method === "iframe") { // will still open in iframe
+                console.log(this.recipeWindow)
                 if (this.recipeWindow === null){
                     this.recipeWindow = window.open(`/recipe/${this.props.chapter}/${this.props.content.name}`);
 
@@ -112,7 +106,7 @@ class Recipe extends Component{
                 this.notesWindow = window.open(`/notes/${this.props.chapter}/${this.props.content.name}`, "_blank", "height=300,width=375,location=0");
             }
 
-
+            console.log(this.notesWindow)
             // add event listner to re-enable notes on main cookbook when notes window closes
             this.notesWindow.addEventListener("unload", ()=>{  
                 if (this.notesWindow.location.href !== "about:blank"){
@@ -128,7 +122,7 @@ class Recipe extends Component{
         }
     }
 
-    handleNotesChange(event){
+    handleNotesChange = (event) => {
         this.accessNotes.updateNotes(event, this.chapter, this.recipe.name); 
         this.setState({
             notes: event.target.value
@@ -145,14 +139,46 @@ class Recipe extends Component{
         let dragId = `${chapter}-${recipeId}`;
 
         return (
-            <Draggable key={recipeId} draggableId={dragId} index={this.props.index}>
+            <Draggable 
+                key={recipeId} 
+                draggableId={dragId} 
+                index={this.props.index}
+            >
                 {(provided)=>(
-                    <div className='recipe' ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                    <div 
+                        className='recipe' 
+                        ref={provided.innerRef} 
+                        {...provided.draggableProps} 
+                        {...provided.dragHandleProps}
+                    >
                         <div>
-                            <a href={recipe.recipeLink} class="no-link-decoration"><li recipeType={this.props.content.method} chapterName={chapter} link={recipe.recipeLink} itemType="recipe" onClick={()=>{this.displayRecipe()}} onContextMenu={(event)=>{this.props.sendRightClick(event)}}>{recipe.name}</li></a>
-                            <img alt="recipe-ico" className="recipe-icon" src={notesImg} onClick={()=>{this.showNotes()}}/>
+                            <a 
+                                className="no-link-decoration"
+                            >
+                                <li 
+                                    recipetype={this.props.content.method} 
+                                    chaptername={chapter} 
+                                    link={recipe.recipeLink} 
+                                    itemType="recipe" 
+                                    onClick={()=>{this.displayRecipe()}} 
+                                    onContextMenu={(event)=>{this.props.sendRightClick(event)}}
+                                >
+                                    {recipe.name}
+                                </li>
+                            </a>
+                            <DescriptionOutlinedIcon
+                                alt="toggle notes box" 
+                                className="recipe-icon"
+                                onClick={()=>{this.showNotes()}}
+                            ></DescriptionOutlinedIcon>
                         </div>
-                        <textarea className="cookbook-notes" notesOpen={this.state.notesOpen} disabled={this.state.notesDisabled} value={this.state.notes} onChange={this.handleNotesChange}></textarea>
+                        <textarea 
+                            className="cookbook-notes" 
+                            notesopen={this.state.notesOpen} 
+                            disabled={this.state.notesDisabled} 
+                            value={this.state.notes} 
+                            onChange={this.handleNotesChange}
+                        ></textarea>
                     </div>
                 )}
             </Draggable>
