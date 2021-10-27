@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import Recipe from './Recipe.js';
+import './styles/Chapter.css'
 
 class Chapter extends Component{
     constructor(props){
@@ -40,10 +41,23 @@ class Chapter extends Component{
             <Droppable droppableId={this.props.name}>
                 {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef} className="droppable-div" >
-                <li itemType="chapter" ref={this.chapterRef} chapterExpanded={chapterExpanded} onClick={()=>{this.toggleChapter();}}  onContextMenu={(event)=>{this.props.rightClick(event); event.preventDefault();}} >{this.props.name}</li>
-                <ul ref={this.recipesRef} chapterOpen="true">
+                <li itemType="chapter" 
+                    ref={this.chapterRef} 
+                    chapterexpanded={chapterExpanded} 
+                    onClick={()=>{this.toggleChapter();}}  
+                    onContextMenu={(event)=>{this.props.rightClick(event); event.preventDefault();}} 
+                >
+                    {this.props.name}
+                </li>
+                <ul ref={this.recipesRef} chapteropen="true">
                     {this.props.recipes.map((recipe, index) => 
-                        <Recipe content={recipe} key={recipe._id} chapter={this.props.name} index={ index } sendRightClick={(event)=>{this.props.rightClick(event); event.preventDefault();}}/>
+                        <Recipe 
+                            content={recipe} 
+                            key={recipe._id} 
+                            chapter={this.props.name} 
+                            index={ index } 
+                            sendRightClick={(event)=>{this.props.rightClick(event); event.preventDefault();}}
+                        />
                     )}
                 {provided.placeholder}
                 </ul>

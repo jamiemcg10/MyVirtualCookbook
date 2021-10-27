@@ -1,7 +1,6 @@
 import fetch from "node-fetch";
 import React, { Component } from "react";
 import { DragDropContext } from 'react-beautiful-dnd';
-import $ from 'jquery';
 import _ from 'lodash';
 import AddChapterDialog from "../Components/AddChapterDialog.js";
 import AddRecipeDialog from "../Components/AddRecipeDialog.js";
@@ -11,6 +10,10 @@ import DeleteChapterRecipeDialog from '../Components/DeleteChapterRecipeDialog.j
 import Header from '../Components/Header.js';
 import Chapter from '../Components/Chapter.js';
 import CookiePopupWarning from '../Components/CookiePopupWarning.js';
+import { InputAdornment, FormControl, TextField } from "@material-ui/core";
+import SearchIcon from '@material-ui/icons/Search'
+import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp';
+import './styles/Cookbook.css'
 
 // main cookbook page /main
 class Cookbook extends Component {
@@ -30,65 +33,52 @@ class Cookbook extends Component {
             cookbook: [],
             filteredCookbook: [],
             cookiesAccepted: true,  // default to true for loading purposes
+            menuStyle: {
+                left: 0,
+                top: 0
+            }
         };
 
         this.createRequest = require('../modules/createRequest.js');
-
-        // bind methods
-        this.displayAddChapterWindow = this.displayAddChapterWindow.bind(this);
-        this.displayAddRecipeWindow = this.displayAddRecipeWindow.bind(this);
-        this.rerenderCookbook = this.rerenderCookbook.bind(this);
-        this.getCookbook = this.getCookbook.bind(this);
-        this.toggleChapter = this.toggleChapter.bind(this);
-        this.handleOnDragEnd = this.handleOnDragEnd.bind(this);
-        this.displayContextMenu = this.displayContextMenu.bind(this);
-        this.showMenu = this.showMenu.bind(this);
-        this.displayRenameDialog = this.displayRenameDialog.bind(this);
-        this.displayDeleteDialog = this.displayDeleteDialog.bind(this);
-        this.filterCookbook = this.filterCookbook.bind(this);
-        this.handleSearchBarChange = this.handleSearchBarChange.bind(this);
-        this.checkCookieAcceptance = this.checkCookieAcceptance.bind(this);
         
         if (window.location.hash === '#_=_'){  // remove chars added after fb login
             window.location.hash = '';
         }
 
-        this.getCookbook();
-        this.checkCookieAcceptance();
-
+        this.body = document.getElementsByTagName('body')[0];
+        this.customContextMenu = React.createRef();
     }
 
     componentDidMount(){
-        $('body').on("click", ()=>{  // hide context menu when user clicks somewhere else
-            this.displayContextMenu(false);
-        });
+        this.getCookbook();
+        this.checkCookieAcceptance();
     }
 
-    displayAddChapterWindow(bool){
+    displayAddChapterWindow = (bool) => {
         this.setState({
             showAddChapter: bool,
         });
     }
 
-    displayAddRecipeWindow(bool){
+    displayAddRecipeWindow = (bool) => {
         this.setState({
             showAddRecipe: bool,
         });
     }
 
-    displayContextMenu(bool){
+    displayContextMenu = (bool) => {
         this.setState({
             showContextMenu: bool,
         });
     }
 
-    displayRenameDialog(bool){
+    displayRenameDialog = (bool) => {
         this.setState({
             showRename: bool,
         });
     }
 
-    displayDeleteDialog(bool){
+    displayDeleteDialog = (bool) => {
         this.setState({
             showDelete: bool,
         });
@@ -96,7 +86,7 @@ class Cookbook extends Component {
 
 
     // get all chapters and recipes
-    async getCookbook(){
+    getCookbook = async () => {
        let recipeRequest = this.createRequest.createRequest("/api/recipes", "GET");
        fetch(recipeRequest).then(
            (response)=> { response.json().then(
@@ -112,11 +102,11 @@ class Cookbook extends Component {
    }
     
    
-    rerenderCookbook(){  // called to re-display cookbook after a change
+    rerenderCookbook = () => {  // called to re-display cookbook after a change
         this.getCookbook();     
     }
 
-    filterCookbook(filterText){
+    filterCookbook = (filterText) => {
         // returns a version of the cookbook that contains only entries that contain the filterText
 
         let searchText = filterText.toLowerCase();
@@ -151,26 +141,16 @@ class Cookbook extends Component {
 
     }
 
-    toggleChapter(id){ 
-        // change attribute to determine whether chapter shows as open or closed
-
-        if ($(`#${id}`).attr("display") === "open"){
-            $(`#${id}`).attr("display", "closed");
-            $(`[key='${id}']`).attr("display", "closed");
-        } else if ($(`#${id}`).attr("display") === "closed"){
-            $(`#${id}`).attr("display", "open");
-            $(`[key='${id}']`).attr("display", "open");
-        }
-    }
-
-    showMenu(event){
+    showMenu = (event) => {
         this.displayContextMenu(false);  // hide menu before it's shown again
-        let x = event.clientX;
-        let y = event.clientY;
 
         this.setState({
             textToModify: event.target.innerText,
-            itemTypeToModify: event.target.getAttribute('itemType')
+            itemTypeToModify: event.target.getAttribute('itemType'),
+            menuStyle: {  // set position of context menu to be where user clicked
+                top: event.clientY,
+                left: event.clientX
+            }
         });
 
         if (event.target.getAttribute('itemType') === 'recipe'){  // set chapter for recipe to find more easily
@@ -178,17 +158,12 @@ class Cookbook extends Component {
                 recipeChapter: event.target.getAttribute('chaptername')
             });
         }
-        
-        // set position of context menu to be where user clicked
-        $('#customContextWindow').css('left', x);
-        $('#customContextWindow').css('top', y);
-
 
         this.displayContextMenu(true);
 
     }
 
-    handleSearchBarChange(event){  
+    handleSearchBarChange = (event) => {  
         // update value in search bar as user types and filter the cookbook
         this.setState({
             searchbarValue: event.target.value
@@ -196,7 +171,7 @@ class Cookbook extends Component {
         this.filterCookbook(event.target.value);
     }
 
-    async handleOnDragEnd(result){
+    handleOnDragEnd = async (result) => {
         if (!result.destination){
             return;
         }
@@ -223,7 +198,7 @@ class Cookbook extends Component {
         if (duplicateRecipe){
             return;
         }
-        //newChapter.recipes.push(recipe);  // add the recipe to the chapter where the recipe was dropped
+
         if (result.source.droppableId === result.destination.droppableId){  // recipe being moved in same chapter
             let recipeCopy = _.cloneDeep(recipe); // create deep clone of recipe to move it independently
             if (result.source.index > result.destination.index){  // being moved up
@@ -255,7 +230,7 @@ class Cookbook extends Component {
         
     }
 
-    checkCookieAcceptance(){
+    checkCookieAcceptance = () => {
         let checkCookieRequest = this.createRequest.createRequest(`/api/checkCookieAcceptance`, "GET");
         fetch(checkCookieRequest)
             .then((response)=>{
@@ -270,7 +245,7 @@ class Cookbook extends Component {
             });
     }
 
-    showCookiePopupWarning(bool){
+    showCookiePopupWarning = (bool) => {
         if (!bool){
             this.setState({
                 cookiesAccepted: true
@@ -296,24 +271,83 @@ class Cookbook extends Component {
             <div className="App">
                 <Header />
                 <div id="dialogWindow">
-                    {this.state.showAddChapter && <AddChapterDialog showAddChapterDialog={this.displayAddChapterWindow} rerenderCookbook={this.rerenderCookbook}/>}
-                    {this.state.showAddRecipe && <AddRecipeDialog showAddRecipeDialog={this.displayAddRecipeWindow} rerenderCookbook={this.rerenderCookbook}/>}
-                
+                    {this.state.showAddChapter && 
+                        <AddChapterDialog 
+                            showAddChapterDialog={this.displayAddChapterWindow} 
+                            rerenderCookbook={this.rerenderCookbook}
+                        />
+                    }
+                    {this.state.showAddRecipe && 
+                        <AddRecipeDialog 
+                            showAddRecipeDialog={this.displayAddRecipeWindow} 
+                            rerenderCookbook={this.rerenderCookbook}
+                        />
+                    }
                 </div>
-                <div id="customContextWindow">
-                    {this.state.showContextMenu && <CustomContextMenu showContextMenu={this.displayContextMenu} renameItem={(bool) => {this.displayRenameDialog(bool)}} deleteItem={this.displayDeleteDialog}/>}
+                <div id="customContextMenu"
+                    ref={this.customContextMenu}
+                    style={this.state.menuStyle}
+                >
+                    {this.state.showContextMenu && 
+                        <CustomContextMenu 
+                            showContextMenu={this.displayContextMenu} 
+                            renameItem={(bool) => {this.displayRenameDialog(bool)}} 
+                            deleteItem={this.displayDeleteDialog}
+                        />
+                    }
                 </div>
                 <div id="smallDialogWindow">
-                    {this.state.showRename && <RenameChapterRecipeDialog showRenameChapterRecipeDialog={this.displayRenameDialog} itemTypeToModify={this.state.itemTypeToModify} textToModify={this.state.textToModify} recipeChapter={this.state.recipeChapter} rerenderCookbook={this.rerenderCookbook} />}
-                    {this.state.showDelete && <DeleteChapterRecipeDialog showDeleteChapterRecipeDialog={this.displayDeleteDialog} itemTypeToDelete={this.state.itemTypeToModify} textToDelete={this.state.textToModify} recipeChapter={this.state.recipeChapter} rerenderCookbook={this.rerenderCookbook} />}
+                    {this.state.showRename && 
+                        <RenameChapterRecipeDialog 
+                            showRenameChapterRecipeDialog={this.displayRenameDialog} 
+                            itemTypeToModify={this.state.itemTypeToModify} 
+                            textToModify={this.state.textToModify} 
+                            recipeChapter={this.state.recipeChapter} 
+                            rerenderCookbook={this.rerenderCookbook} 
+                        />
+                    }
+                    {this.state.showDelete && 
+                        <DeleteChapterRecipeDialog 
+                            showDeleteChapterRecipeDialog={this.displayDeleteDialog} 
+                            itemTypeToDelete={this.state.itemTypeToModify} 
+                            textToDelete={this.state.textToModify} 
+                            recipeChapter={this.state.recipeChapter} 
+                            rerenderCookbook={this.rerenderCookbook} 
+                        />
+                    }
                 </div>
-                <input type="text" id="search-bar" placeholder="Search recipes" value={this.state.searchbarValue} onChange={this.handleSearchBarChange}></input>
+
+                {/* pull the search out */}
+                    <FormControl
+                        id="search-bar">
+                        <TextField
+                            placeholder="Search recipes" 
+                            value={this.state.searchbarValue} 
+                            onChange={this.handleSearchBarChange}
+                            variant="outlined"
+                            size="small"
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment className="search-icon" position="start">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
+                    </FormControl>
+                
                 <div id="cookbook">
                     <DragDropContext onDragEnd={this.handleOnDragEnd}>
                     { cookbook.length > 0 &&
                        <ul>
                                 { cookbook.map((chapter, index) => 
-                                    <Chapter name={chapter.chapterName} recipes={chapter.recipes} rightClick={ (event)=>{this.showMenu(event);} } index={index}/>
+                                    <Chapter 
+                                        name={chapter.chapterName} 
+                                        recipes={chapter.recipes} 
+                                        rightClick={ (event)=>{this.showMenu(event);} } 
+                                        index={index}
+                                        key={index}
+                                    />
                                 )} 
                         
                         </ul>
@@ -324,9 +358,33 @@ class Cookbook extends Component {
                      </DragDropContext>  
 
                 </div>
-                {!this.state.cookiesAccepted && <CookiePopupWarning accepted={this.state.cookiesAccepted} showCookiePopupWarning={(bool) => {this.showCookiePopupWarning(bool)}}/>}
+                {!this.state.cookiesAccepted && 
+                    <CookiePopupWarning 
+                        accepted={this.state.cookiesAccepted} 
+                        acceptCookies={(value)=>{this.setState({cookiesAccepted: value});}}
+                        showCookiePopupWarning={(bool) => {this.showCookiePopupWarning(bool)}}
+                    />
+                }
                 <div className="add-bar flex-container">
-                    <div id="add-chapter" className="add-btn" onClick={() => this.displayAddChapterWindow(true)}><div className="add-sign">+</div>Add chapter</div><div id="add-recipe" className="add-btn" onClick={()=>{ this.displayAddRecipeWindow(true) }}><div className="add-sign">+</div>Add recipe</div>
+                    <div 
+                        id="add-chapter" 
+                        className="btn--add" 
+                        onClick={() => this.displayAddChapterWindow(true)}
+                    >
+                        <div className="add-sign"><AddCircleSharpIcon/></div>
+                        
+                        Add chapter
+                    </div>
+                    
+                    <div 
+                        id="add-recipe" 
+                        className="btn--add" 
+                        onClick={()=>{ this.displayAddRecipeWindow(true) }}
+                    >
+                        <div className="add-sign"><AddCircleSharpIcon/></div>
+                        
+                        Add recipe
+                    </div>
                 </div>
             </div>
         );

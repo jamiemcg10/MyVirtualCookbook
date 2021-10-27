@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import $ from 'jquery';
+import { Button, TextField, ClickAwayListener } from '@material-ui/core'
+import './styles/AddChapterRecipeDialog.css'
 
 
 // window for adding a chapter to the cookbook
@@ -16,22 +17,27 @@ class AddChapterDialog extends Component {
         this.checkInput = require('../modules/checkInput.js');
         this.createRequest = require('../modules/createRequest.js');
 
-        // bind methods
-        this.cancelChapterAdd = this.cancelChapterAdd.bind(this);
-        this.addChapter = this.addChapter.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.saveBtn = React.createRef();
+        this.chapterName = React.createRef();
     }
 
     componentDidMount(){
-        $('#chapter-name').trigger("focus");  // put cursor in textbox
-        $(document).on("keyup", (event)=>{  // save chapter if user clicks enter
-            if (event.key === "Enter"){
-                $('#chapter-save').trigger("click");
-            }
-        });
+        let chapterNameInput = this.chapterName.current.childNodes[1].childNodes[0];
+        chapterNameInput.focus()
+        document.addEventListener("keyup", this.hitEnter);
     }
 
-    addChapter(){
+    componentWillUnmount(){
+        document.removeEventListener("keyup", this.hitEnter);
+    }
+
+    hitEnter = (event) => {
+        if (event.key === "Enter"){
+            this.saveBtn.current.click();
+        }
+    }
+
+    addChapter = () => {
             this.setState({
                 errorMsg: ''
             });
@@ -53,24 +59,20 @@ class AddChapterDialog extends Component {
                             this.setState({
                                 errorMsg: json.message
                             });
-
                         }
-
                     })}
                 ).catch(error=>{
                     let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                     fetch(logErrorRequest);
                 });
-
             }
-   
     }
 
-    cancelChapterAdd(){
+    cancelChapterAdd = () => {
             this.props.showAddChapterDialog(false);
     }
 
-    handleChange(event){  // change value of chapter name textbox
+    handleChange = (event) => {  // change value of chapter name textbox
         this.setState({
             chapterNameValue: event.target.value,
         });
@@ -79,23 +81,44 @@ class AddChapterDialog extends Component {
     render(){
         return (
             <div id="dialog-background">
-                <div id="add-chapter-dialog" className="dialog">
-                    <p className="dialog-title">Add chapter</p>
-                    <div id="chapter-name-box">
-                        <label for="chapter-name">Chapter name:</label>
-                        <br/>
-                        <input type="text" id="chapter-name" value={this.state.value} onChange={this.handleChange}></input>
-                        <p className="error" id="error">{this.state.errorMsg}</p>
+                <ClickAwayListener
+                    onClickAway={ () => {this.props.showAddChapterDialog(false)} }
+                >
+                    <div id="add-chapter-dialog" className="dialog">
+                        <p className="dialog-title">Add chapter</p>
+                        <div id="chapter-name-box">
+                        <TextField
+                            label="Chapter name"
+                            variant="outlined"
+                            size="small"
+                            value={this.state.value}
+                            onChange={this.handleChange}
+                            ref={this.chapterName}
+                        ></TextField>
+                            <p className="error" id="error">{this.state.errorMsg}</p>
+                        </div>
+                        <div className="flex-container chapter-btns">
+                            <Button 
+                                className="btn btn--yellow"
+                                variant="contained"
+                                ref={this.saveBtn}
+                                onClick={this.addChapter}
+                            >
+                                Save
+                            </Button>
+                            <Button 
+                                className="btn --btn--white"
+                                variant="contained"
+                                onClick={this.cancelChapterAdd}
+                            >
+                                Cancel
+                            </Button>
+                        </div>
                     </div>
-                    <div className="flex-container chapter-btns">
-                        <button id="chapter-save" onClick={this.addChapter}>Save</button>
-                        <button id="chapter-cancel" onClick={this.cancelChapterAdd}>Cancel</button>
-                    </div>
-                </div>
+                </ClickAwayListener>
             </div>
         );
     }
-
 }
 
 

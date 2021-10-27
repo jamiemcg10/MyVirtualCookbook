@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Header from '../Components/Header.js';
+import './styles/Notes.css'
 
 class Notes extends Component {
     constructor(props){
@@ -13,16 +14,12 @@ class Notes extends Component {
         this.createRequest = require('../modules/createRequest.js');
         this.accessNotes = require('../modules/accessNotes.js');
 
-
-        // bind method
-        this.getNotes = this.getNotes.bind(this);
-
         // get notes from db
         this.getNotes();
 
     }
 
-    getNotes(){ 
+    getNotes = () => { 
         let getNotesRequest = this.createRequest.createRequest(`/api/recipe/notes/${this.props.match.params.chapter}/${this.props.match.params.recipeName}`, "GET");
         fetch(getNotesRequest).then(
             async (response) => {
@@ -46,7 +43,7 @@ class Notes extends Component {
         let recipeName = this.props.match.params.recipeName;
 
         return (
-            <div clasName="notes-window">
+            <div className="notes-window">
                 <Header type="mini-header" />
                 <div className="notes-title">Notes: { this.props.match.params.chapter} &gt;&gt; { recipeName }</div>
                 <textarea className="notes-popup" value={this.state.notes} onChange={(event)=>{this.accessNotes.updateNotes(event, chapter, recipeName); this.setState({notes: event.target.value});}}></textarea>

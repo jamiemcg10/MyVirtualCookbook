@@ -1,0 +1,32 @@
+.mini-header {
+    display: flex;
+    background-color: #6aa84fff;
+    justify-content: space-between;
+    color: white;
+    padding: 0px 15px;
+    height: 12vh;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    font-size: small;
+}
+  
+.mini-header h1 {
+    font-size: medium;
+    word-spacing: -4px;
+}
+
+.notes-popup {
+    width: 98%;
+    position: fixed;
+    height: 78%;
+}
+
+.notes-window {
+    overflow-x: hidden;
+}
+
+.notes-window .notes-title {
+    padding: 12px 0px 3px 8px;
+}

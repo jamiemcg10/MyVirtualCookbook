@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './styles/NotFound.css'
 
 // show for invalid route
 class NotFound extends Component {

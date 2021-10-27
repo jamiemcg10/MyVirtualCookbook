@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import $ from 'jquery';
+import { Button, ClickAwayListener, TextField } from '@material-ui/core'
+import './styles/DeleteRenameChapterRecipeDialog.css'
 
 // dialog window to rename an existing chapter
 class RenameChapterRecipeDialog extends Component {
@@ -16,25 +17,33 @@ class RenameChapterRecipeDialog extends Component {
         this.checkInput = require('../modules/checkInput.js');
         this.createRequest = require('../modules/createRequest.js');
 
-        // bind methods
-        this.cancelRename = this.cancelRename.bind(this);
-        this.changeItem = this.changeItem.bind(this);
-        this.handleChange = this.handleChange.bind(this);
+        this.saveBtn = React.createRef();
+        this.chapterName = React.createRef();
     }
 
     componentDidMount(){
-        $(document).on("keyup", (event)=>{  // click rename button if user hits enter
-            if (event.key === "Enter"){
-                $('#rename-save').trigger("click");
-            }
-        });
-        $('#chapter-recipe-name').trigger('focus');  // put cursor in chapter name box when component loads
+        document.addEventListener("keyup", this.hitEnter);
+        let chapterNameInput = this.chapterName.current.childNodes[1].childNodes[0];
+        chapterNameInput.focus();  // put cursor in chapter name box when component loads
     }
 
-    changeItem(){
-        $('#error').text('');  // reset error text
+    componentWillUnmount(){
+        document.removeEventListener("keyup", this.hitEnter);
+    }
+    hitEnter = (event) => {
+        if (event.key === "Enter"){
+            this.saveBtn.current.click();
+        }
+    }
+
+    changeItem = () => {
+        this.setState({
+            errorMsg: ''
+        });
         if (this.checkInput.hasInjection(this.state.newNameValue)){ 
-            $('#error').text('Please enter a valid chapter name');
+            this.setState({
+                errorMsg: 'Please enter a valid chapter name'
+            });
             return;
         }
 
@@ -51,7 +60,9 @@ class RenameChapterRecipeDialog extends Component {
                     this.props.showRenameChapterRecipeDialog(false);
                     this.props.rerenderCookbook();
                 } else {  // show error
-                    $('#error').text(json.message);
+                    this.setState({
+                        errorMsg: json.message
+                    });
                 }
             })})
             .catch(error=>{
@@ -66,26 +77,32 @@ class RenameChapterRecipeDialog extends Component {
                     this.props.showRenameChapterRecipeDialog(false);
                     this.props.rerenderCookbook();
                 } else {  // show error
-                    $('#error').text(json.message);
+                    this.setState({
+                        errorMsg: json.message
+                    });
                 }
             })})
             .catch(error=>{
-                $('#error').text('Sorry, something went wrong. Please try again later.');
+                this.setState({
+                    errorMsg: 'Sorry, something went wrong. Please try again later.'
+                });
                 let logErrorRequest = this.createRequest.createRequestWithBody("/api/log", "POST", JSON.stringify({text: error}));
                 fetch(logErrorRequest);
             });
         } else{
             // there's an error - either a chapter or recipe should have been selected
-            $('#error').text('Sorry, something went wrong. Please try again later.');
+            this.setState({
+                errorMsg: 'Sorry, something went wrong. Please try again later.'
+            });
         }
     }
 
-    cancelRename(){
-            this.props.showRenameChapterRecipeDialog(false);
+    cancelRename = () => {
+        this.props.showRenameChapterRecipeDialog(false);
 
     }
 
-    handleChange(event){
+    handleChange = (event) => {
         this.setState({
             newNameValue: event.target.value,
         });
@@ -94,19 +111,41 @@ class RenameChapterRecipeDialog extends Component {
     render(){
         return (
             <div id="dialog-background">
-                <div id="rename-dialog" className="dialog">
-                    <p className="dialog-title">Rename {this.props.itemTypeToModify}</p>
-                    <div id="rename-box">
-                        <label for="chapter-recipe-name">New name:</label>
-                        <br/>
-                        <input type="text" id="chapter-recipe-name" value={this.state.newNameValue} onChange={this.handleChange}></input>
-                        <p className="error" id="error">{this.state.errorMsg}</p>
+                <ClickAwayListener
+                    onClickAway={() => this.props.showRenameChapterRecipeDialog(false)}
+                >
+                    <div id="rename-dialog" className="dialog">
+                        <p className="dialog-title">Rename {this.props.itemTypeToModify}</p>
+                        <div id="rename-box">
+                            <TextField
+                                id="chapter-recipe-name"
+                                label="New name"
+                                variant="outlined"
+                                size="small"
+                                ref={this.chapterName}
+                                value={this.state.newNameValue}
+                                onChange={this.handleChange}
+                            ></TextField>
+                            <p className="error" id="error">{this.state.errorMsg}</p>
+                        </div>
+                        <div className="flex-container chapter-btns">
+                            <Button 
+                                id="rename-save" 
+                                variant="contained"
+                                onClick={this.changeItem}
+                            >
+                                    Rename
+                            </Button>
+                            <Button 
+                                id="rename-cancel" 
+                                variant="contained"
+                                onClick={this.cancelRename}
+                            >
+                                Cancel
+                            </Button>
+                        </div>
                     </div>
-                    <div className="flex-container chapter-btns">
-                        <button id="rename-save" onClick={this.changeItem}>Rename</button>
-                        <button id="rename-cancel" onClick={this.cancelRename}>Cancel</button>
-                    </div>
-                </div>
+                </ClickAwayListener>
             </div>
         );
     }

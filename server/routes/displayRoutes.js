@@ -30,6 +30,7 @@ router.get("/about", (req,res) => {
 });
 
 router.get("/main", validation.checkToken, (req,res) => {
+    console.log(req)
     res.sendFile(path.join(process.cwd(), 'client', 'build', 'index.html'));
 });
 
@@ -47,6 +48,11 @@ router.get("/logout", (req,res) => {  // remove token and send to homepage
     req.session.data.username = null;
     req.session.destroy();
     res.redirect("/");
+});
+
+// for heroku app ownership verification
+router.get("/google272a7713cdc3ed26.html", (req,res)=>{
+    res.sendFile(path.join(process.cwd(), 'google272a7713cdc3ed26.html'));
 });
 
 module.exports = router;

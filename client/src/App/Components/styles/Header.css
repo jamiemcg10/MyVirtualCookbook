@@ -1,0 +1,74 @@
+.header, .mini-header {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+.header {
+  display: flex;
+  background-color: #6aa84fff;  
+  justify-content: space-between;
+  color: white;
+  padding: 0px 15px;
+  height: 12vh;
+  align-items: center;
+  margin-bottom: 10px;
+  position: relative;
+  top: 0;
+  z-index: 999;
+  min-height: min-content;
+}
+  
+.header-link {
+  letter-spacing: .5px;
+}
+li  {
+  color: white;
+  list-style: outside;
+  list-style-type: decimal;  
+  font-size: x-large;
+  margin-top: 20px;
+}  
+
+li::marker {
+  font-weight: 900;
+}
+
+#login-link{
+  color:#ffd966ff;
+  white-space: nowrap;
+}
+
+.logo {
+  color: #ffd966;
+  word-spacing: -7px;
+  letter-spacing: .5px;
+}
+
+
+#logo-link {
+  text-decoration: none;
+}
+
+#logout-link{
+  color:#ffd966ff;
+  white-space: nowrap;
+}
+
+.logoSpan{
+  color: white;
+}
+
+ol {
+  margin-left: 100px;
+  margin-right: 200px;
+}
+
+#signup-link{
+  color: #ffffffff;
+}
+
+@media only screen and (max-width: 500px){
+  .header{
+    height: 15vh;
+    min-height: fit-content;
+  }
+}

@@ -1,0 +1,86 @@
+.MuiButton-root.btn,
+.btn {
+    font-family: "Roboto",sans-serif;
+    transition: all 200ms;
+}
+
+.MuiButton-root.btn:hover,
+.btn-hover {
+    transform: translate3d(0, 0, 0) rotate(0) skewX(0) skewY(0) scaleX(110%) scaleY(105%);
+}
+
+.btn--close:hover {
+    transform: scale(1.2);
+}
+
+.btn--home{
+    width: 175px;
+    height: 40px;
+    margin-top: 1rem !important;
+    box-shadow: 2px 2px 4px #181818;
+  }
+    
+.btn--home:active {
+    position: relative;
+    top: 1px;
+    outline: none;
+}
+
+.btn--login-signup {
+    box-shadow: 1px 1px 6px #a7a7a7;
+}
+
+.btn--login-signup:hover {
+    box-shadow: 3px 3px 6px #a7a7a7;
+}
+
+.MuiButton-root.btn--yellow,
+.btn--yellow,
+.MuiButton-root.btn--yellow:hover,
+.btn--yellow:hover {
+    background-color: #ffd966;
+    color: #505050;
+}
+
+
+.MuiButton-root.btn--white,
+.btn--white,
+.MuiButton-root.btn--white:hover,
+.btn--white:hover {
+    background-color: #ffffffff;
+    font-family: "Roboto",sans-serif;
+    color: #505050;
+}
+
+
+.MuiButton-root.btn--green,
+.btn-green {
+    background-color: #6aa84fff;
+    color: white;
+}
+
+.MuiButton-root.btn--green,
+.btn-green,
+.MuiButton-root.btn--green:hover,
+.btn-green:hover {
+    background-color: #6aa84fff;
+    color: white;
+}
+
+.btn--add {
+    margin: 0px 10vw;
+    padding: 0px 5px;
+    border-radius: 5px;
+    transition: all 200ms;
+}
+  
+.btn--add:active {
+    position: relative;
+    top: 1px;
+    box-shadow: 3px -1px 5px #999999;
+}
+
+.btn--add:hover {
+    cursor: pointer;
+    box-shadow: 3px -1px 10px #999999;
+}
