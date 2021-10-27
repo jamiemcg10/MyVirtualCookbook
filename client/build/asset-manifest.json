@@ -1,23 +1,24 @@
 {
   "files": {
-    "main.css": "/client/build/static/css/main.a97f9046.chunk.css",
-    "main.js": "/client/build/static/js/main.5ad6b93e.chunk.js",
-    "main.js.map": "/client/build/static/js/main.5ad6b93e.chunk.js.map",
-    "runtime-main.js": "/client/build/static/js/runtime-main.0c6a9313.js",
-    "runtime-main.js.map": "/client/build/static/js/runtime-main.0c6a9313.js.map",
-    "static/js/2.46a90373.chunk.js": "/client/build/static/js/2.46a90373.chunk.js",
-    "static/js/2.46a90373.chunk.js.map": "/client/build/static/js/2.46a90373.chunk.js.map",
-    "index.html": "/client/build/index.html",
-    "precache-manifest.206911c6359a8a4b63cf06b1e1c5277a.js": "/client/build/precache-manifest.206911c6359a8a4b63cf06b1e1c5277a.js",
-    "service-worker.js": "/client/build/service-worker.js",
-    "static/css/main.a97f9046.chunk.css.map": "/client/build/static/css/main.a97f9046.chunk.css.map",
-    "static/js/2.46a90373.chunk.js.LICENSE.txt": "/client/build/static/js/2.46a90373.chunk.js.LICENSE.txt",
-    "static/media/facebook-logo.png": "/client/build/static/media/facebook-logo.1afe9458.png"
+    "main.css": "/static/css/main.1cb1b75d.chunk.css",
+    "main.js": "/static/js/main.c2a1a307.chunk.js",
+    "main.js.map": "/static/js/main.c2a1a307.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.09b85ec0.js",
+    "runtime-main.js.map": "/static/js/runtime-main.09b85ec0.js.map",
+    "static/js/2.5f74f0f3.chunk.js": "/static/js/2.5f74f0f3.chunk.js",
+    "static/js/2.5f74f0f3.chunk.js.map": "/static/js/2.5f74f0f3.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.5e1e481867e4f702296f5e0fb243493e.js": "/precache-manifest.5e1e481867e4f702296f5e0fb243493e.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.1cb1b75d.chunk.css.map": "/static/css/main.1cb1b75d.chunk.css.map",
+    "static/js/2.5f74f0f3.chunk.js.LICENSE.txt": "/static/js/2.5f74f0f3.chunk.js.LICENSE.txt",
+    "static/media/facebook-logo.png": "/static/media/facebook-logo.1afe9458.png",
+    "static/media/App.css": "/static/media/james-lee-Mfjq1hi-lVg-unsplash.445cba3e.jpg"
   },
   "entrypoints": [
-    "static/js/runtime-main.0c6a9313.js",
-    "static/js/2.46a90373.chunk.js",
-    "static/css/main.a97f9046.chunk.css",
-    "static/js/main.5ad6b93e.chunk.js"
+    "static/js/runtime-main.09b85ec0.js",
+    "static/js/2.5f74f0f3.chunk.js",
+    "static/css/main.1cb1b75d.chunk.css",
+    "static/js/main.c2a1a307.chunk.js"
   ]
 }
