@@ -35,7 +35,7 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "http://localhost:5000/",
+  "homepage": "http://localhost:5000/client/build",
   "devDependencies": {
     "@material-ui/icons": "^4.11.2"
   }
