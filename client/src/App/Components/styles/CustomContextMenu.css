@@ -1,0 +1,10 @@
+#menu {
+    width: fit-content;
+    z-index: 49;
+    color: #3a3939;
+    min-width: 110px;
+}
+
+.MuiMenuItem-root.menu {
+    font-size: .75rem;
+}

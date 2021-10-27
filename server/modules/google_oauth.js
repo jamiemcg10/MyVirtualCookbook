@@ -52,7 +52,7 @@ async function (accessToken, refreshToken, profile, done) {
                 userWithEmail = newUser;
             } 
 
-            const token = jwt.sign(userWithEmail.toJSON(), process.env.JWT_SECRET, {expiresIn: '1y'}); // generating token
+            const token = jwt.sign(userWithEmail.toJSON(), process.env.JWT_SECRET, {notBefore: '1y'}); // generating token
             return done(null, {"user": userWithEmail, "token": token});
         
     } catch (error) {

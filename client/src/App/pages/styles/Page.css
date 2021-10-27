@@ -1,0 +1,55 @@
+iframe {
+    width: 67.75vw;
+}
+
+.page-notes {
+    width: 32vw;
+    background-color: #f3e193;
+    color: #333;
+    font-size: 18px;
+}
+
+.page-notes-title {
+    color: white;
+    letter-spacing: .5px;
+    font-weight: bold;
+    padding: 5px 0px 5px 8px;
+    position: sticky;
+    top: 12vh;
+    margin-bottom: 4px;
+    margin-top: -10px;
+    background-color: #163d61;
+}
+
+.page-content{
+    display: flex;
+    flex-direction: row;
+    height: 83vh;
+    align-items: stretch;
+    background-color: white;
+}
+  
+@media only screen and (max-width: 500px){
+  iframe{
+    width: 100vw;
+    height: 60vh;
+  }
+
+  .page-notes{
+    width: 100vw;
+    height: 20vh;
+  }
+
+  .page-notes-title{
+    box-sizing: border-box;
+    height: 5%;
+  }
+
+  .page-content {
+    flex-direction: column;
+    overflow: hidden;
+    background-color: white;
+    height: 58.7vh;
+  }
+
+}

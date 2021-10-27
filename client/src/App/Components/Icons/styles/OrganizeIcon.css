@@ -1,0 +1,35 @@
+#oi-arrows, #oi-folders {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+#oi-up-arrow {
+    transform: rotate(-45deg);
+}
+
+#oi-str-arrow {
+    margin: -10px 0px;
+}
+
+#oi-down-arrow {
+    transform: rotate(45deg);
+}
+
+#oi-book {
+    font-size: xxx-large;
+    align-self: center;
+}
+
+#oi-container {
+    display: flex;
+}
+
+#oi-container * {
+    color: white;
+}
+
+.oi-folder {
+    width: 1.25rem;
+    color: white;
+}

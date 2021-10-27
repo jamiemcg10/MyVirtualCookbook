@@ -1,7 +1,8 @@
 import fetch from "node-fetch";
 import React, { Component, Fragment } from "react";
 import Header from '../Components/Header.js';
-import NotFound from '../pages/NotFound'
+import NotFound from '../pages/NotFound';
+import './styles/Page.css'
 
 // page that displays recipe and notes
 //to replace recipe page
@@ -21,16 +22,15 @@ class Page extends Component {
         // import modules
         this.createRequest = require('../modules/createRequest.js');
         this.accessNotes = require('../modules/accessNotes.js');
-        
-        // bind method
-        this.getRecipe = this.getRecipe.bind(this);
-
-        // get recipe link and name and notes from db
-        this.getRecipe();
 
     }
 
-    getRecipe(){
+    componentDidMount(){
+        // get recipe link and name and notes from db
+        this.getRecipe();
+    }
+
+    getRecipe = () => {
         let getNotesRequest = this.createRequest.createRequest(`/api/recipe/${this.state.chapter}/${this.state.recipeName}`, "GET");
         fetch(getNotesRequest).then(
             async (response) => {
@@ -64,10 +64,17 @@ class Page extends Component {
             return (                
                 <Fragment >
                     <Header />
-                    <div className="notes-title">{ this.state.chapter} &gt;&gt; { this.state.name }</div>
-                    <div id="recipe-page-content">
+                    <div className="page-notes-title">
+                        { this.state.chapter} &gt;&gt; { this.state.name }
+                    </div>
+                    <div className="page-content">
                         <iframe src={this.state.url} title="recipe-frame"></iframe>
-                        <textarea id="notes-pane" value={this.state.notes} onChange={(event)=>{this.accessNotes.updateNotes(event, this.state.chapter, this.state.recipeName); this.setState({notes: event.target.value});}}></textarea>
+                        <textarea 
+                            className="page-notes" 
+                            value={this.state.notes} 
+                            onChange={(event)=>{this.accessNotes.updateNotes(event, this.state.chapter, this.state.recipeName); this.setState({notes: event.target.value});}}
+                        >
+                        </textarea>
                     </div>
                 </Fragment>
             );

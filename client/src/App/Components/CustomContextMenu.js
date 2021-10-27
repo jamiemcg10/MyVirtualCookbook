@@ -1,49 +1,38 @@
 import React, { Component } from 'react';
-import $ from 'jquery';
-
+import { MenuList, MenuItem, Paper, ClickAwayListener } from '@material-ui/core'
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import './styles/CustomContextMenu.css'
 
 // renders right click menu for cookbook
 class CustomContextMenu extends Component {
 
 
-    componentDidMount(){
-        // highlight on mouseover, set props on click
-        $('#rename').on("mouseover", (event)=>{
-            $('#rename').css("backgroundColor","rgb(0, 95, 255)");
-          $('#rename').css("color","antiquewhite");
-        });
-        
-        $('#rename').on("mouseout", (event)=>{
-            $('#rename').css("backgroundColor","");
-          $('#rename').css("color","");
-        });
-        
-        $('#delete').on("mouseover", (event)=>{
-            $('#delete').css("backgroundColor","rgb(0, 95, 255)");
-          $('#delete').css("color","antiquewhite");
-        });
-        
-        $('#delete').on("mouseout", (event)=>{
-            $('#delete').css("backgroundColor","");
-          $('#delete').css("color","");
-        });
-
-        $('#rename').on("click", (event)=>{
-            this.props.renameItem(true);
-        });
-        
-        $('#delete').on("click", (event)=>{
-            this.props.deleteItem(true);
-        });
-    }
-
-
 render(){
     return(
-        <div id="customContextMenu">
-            <div id="rename" className="menu-item"><span>Rename</span></div>
-            <div id="delete" className="menu-item"><span>Delete</span></div>
-        </div>
+        <Paper
+            id="menu"
+        >
+            <ClickAwayListener onClickAway={ ()=>{this.props.showContextMenu(false)} }>
+                <MenuList>
+                    <MenuItem
+                        className="menu"
+                        onClick={ ()=>{this.props.showContextMenu(false); this.props.renameItem(true);} }
+                    >
+                        <EditIcon fontSize="small"></EditIcon>
+                        &nbsp;Rename
+                    </MenuItem>
+                    <MenuItem
+                        className="menu"
+                        onClick={ ()=>{this.props.showContextMenu(false); this.props.deleteItem(true);} }
+                    >
+                        <DeleteIcon fontSize="small"></DeleteIcon>
+                        &nbsp;Delete
+                    </MenuItem>
+                </MenuList>
+            </ClickAwayListener>
+        </Paper>
+
     );
 };
 
