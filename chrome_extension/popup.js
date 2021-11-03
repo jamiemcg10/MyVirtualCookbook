@@ -5,5 +5,5 @@
 'use strict';
 
 function googleLogin(){ // send to path to redirect through Google
-  window.location=`www.muvirtualcookbook.com/auth/google`;
+  window.location=`www.myvirtualcookbook.com/auth/google`;
 }

@@ -130,7 +130,7 @@ app.post('/api/signup', async(req, res)=>{
         }
 
         // set session data
-        const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {expiresIn: '1h'}); // generating token
+        const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET, {expiresIn: '1y'}); // generating token
         req.session.data.token = token;
         req.session.data.userid = user._id;
         req.session.data.username = user.firstName;
@@ -154,7 +154,7 @@ app.post('/api/signup', async(req, res)=>{
         });
 
         // set session data
-        const token = jwt.sign(newUser.toJSON(), process.env.JWT_SECRET, {expiresIn: '1h'}); // generating token
+        const token = jwt.sign(newUser.toJSON(), process.env.JWT_SECRET, {expiresIn: '1y'}); // generating token
         req.session.data.token = token;
         req.session.data.userid = newUser._id;
         req.session.data.username = newUser.firstName;
