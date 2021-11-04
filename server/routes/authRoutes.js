@@ -9,7 +9,7 @@ const LAuth = require('../modules/local_oauth.js');
 
 // Google routes
 router.get('/auth/google', passport.authenticate('google', {scope: ['profile', 'email'], session: true}));
-router.get('/auth/google/redirect', passport.authenticate('google', {session: false, failureRedirect: `/login`}), (req, res) => {
+router.get('/auth/google/redirect', passport.authenticate('google', {session: false, failureRedirect: `/signup`}), (req, res) => {
     // Successful authentication
     req.session.data.token = req.user.token;
     req.session.data.userid = req.user.user._id;
