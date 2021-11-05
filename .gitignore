@@ -1,4 +1,5 @@
 .env
+.env.local
 access.log
 log.txt
 /node_modules/
