@@ -48,8 +48,6 @@ class Login extends Component {
     
 
     googleLogin = () => { // send to path to redirect through Google
-        console.log(process.env.REACT_APP_SITE_ADDRESS) 
-        console.log(`${process.env.REACT_APP_SITE_ADDRESS}/auth/google`)
         window.location=`${process.env.REACT_APP_SITE_ADDRESS}/auth/google`;
     }
 

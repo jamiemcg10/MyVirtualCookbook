@@ -52,14 +52,10 @@ async function (accessToken, refreshToken, profile, done) {
                 userWithEmail = newUser;
             } 
 
-            console.log(user)
-
             const token = jwt.sign(userWithEmail.toJSON(), process.env.JWT_SECRET, {expiresIn: '1y'}); // generating token
-            console.log(token)
             return done(null, {"user": userWithEmail, "token": token});
         
     } catch (error) {
-        console.log(error.message)
         fetch(`${process.env.SITE_ADDRESS}/api/log`, {method: 'POST', 
             body: JSON.stringify({"text": error.message}),
             headers: { 'Content-type': 'application/json', }});

@@ -49,7 +49,6 @@ class Recipe extends Component{
             notesDisabled: true,
         });
 
-        console.log(this.recipe.method)
         if (this.recipe.method === "iframe") {  // open in iframe
             // make sure page can still be opened in iframe
             let iframeStillValidRequest = this.createRequest.createRequestWithBody('/api/checkIframe', 'POST', JSON.stringify({"link": this.recipe.recipeLink,
@@ -79,7 +78,6 @@ class Recipe extends Component{
 
             // go to recipe page
             if (this.recipe.method === "iframe") { // will still open in iframe
-                console.log(this.recipeWindow)
                 if (this.recipeWindow === null){
                     this.recipeWindow = window.open(`/recipe/${this.props.chapter}/${this.props.content.name}`);
 
@@ -106,7 +104,6 @@ class Recipe extends Component{
                 this.notesWindow = window.open(`/notes/${this.props.chapter}/${this.props.content.name}`, "_blank", "height=300,width=375,location=0");
             }
 
-            console.log(this.notesWindow)
             // add event listner to re-enable notes on main cookbook when notes window closes
             this.notesWindow.addEventListener("unload", ()=>{  
                 if (this.notesWindow.location.href !== "about:blank"){
