@@ -9,7 +9,7 @@ export default function Home() {
       <div className="text-center pt-32">
         <Logo />
       </div>
-      <div className="bg-[#6aa84fff] mt-10 mb-10 py-7 flex flex-wrap justify-around">
+      <div className="bg-mvc-green mt-10 mb-10 py-7 flex flex-wrap justify-around">
         <HomePageTile type="add" />
         <HomePageTile type="organize" />
         <HomePageTile type="notes" />

@@ -29,3 +29,12 @@ body {
     text-wrap: balance;
   }
 }
+
+@layer components {
+  .page-title {
+    @apply text-mvc-yellow;
+    text-align: right;
+    margin: 15px 0 45px 0;
+    text-shadow: 2px 2px 5px rgb(66 66 66 / 70%);
+  }
+}
