@@ -4,6 +4,7 @@ import { Button, ThemeProvider } from '@mui/material'
 import { createTheme, alpha, getContrastRatio } from '@mui/material/styles'
 
 declare module '@mui/material/Button' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ButtonPropsColorOverrides {
     'mvc-green': true
     'mvc-yellow': true
