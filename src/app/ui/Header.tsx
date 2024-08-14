@@ -5,10 +5,12 @@ function getLogoLink(loggedIn: boolean) {
   return loggedIn ? '/main' : './'
 }
 
+let loggedIn = false
+
 export default function Header() {
   return (
     <div className="bg-mvc-green flex h-20 items-center justify-between px-5">
-      <Link href={getLogoLink(false)}>
+      <Link href={getLogoLink(loggedIn)}>
         <Logo small />
       </Link>
       {false ? (
