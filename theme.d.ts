@@ -4,7 +4,8 @@ declare module '@mui/material/styles' {
   interface CustomTheme extends Theme {
     palette: {
       'mvc-green': any, // change later
-      'mvc-yellow': any
+      'mvc-yellow': any,
+      'mvc-white': any
     };
   }
   // allow configuration using `createTheme`
@@ -12,6 +13,7 @@ declare module '@mui/material/styles' {
     palette?: {
       'mvc-green'?: any
       'mvc-yellow'?: any
+      'mvc-white': any
     };
   }
 

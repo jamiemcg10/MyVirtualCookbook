@@ -8,6 +8,7 @@ declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides {
     'mvc-green': true
     'mvc-yellow': true
+    'mvc-white': true
   }
 }
 
@@ -16,6 +17,9 @@ const greenMain = alpha(greenBase, 0.7)
 
 const yellowBase = '#ffd966'
 const yellowMain = alpha(yellowBase, 0.7)
+
+const whiteBase = '#fff'
+const whiteMain = alpha(whiteBase, 0.7)
 
 const theme = createTheme({
   typography: {
@@ -33,13 +37,19 @@ const theme = createTheme({
       light: alpha(yellowBase, 0.5),
       dark: alpha(yellowBase, 0.9),
       contrastText: getContrastRatio(yellowMain, '#fff') > 4.5 ? '#fff' : '#303030'
+    },
+    'mvc-white': {
+      main: whiteMain,
+      light: alpha(whiteBase, 0.5),
+      dark: alpha(whiteBase, 0.9),
+      contrastText: '#303030'
     }
   }
 })
 
 export default function ThemedButton(props: {
-  color: 'mvc-green' | 'mvc-yellow'
-  className: string
+  color: 'mvc-green' | 'mvc-yellow' | 'mvc-white'
+  className?: string
   children: any
 }) {
   return (
