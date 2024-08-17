@@ -5,7 +5,7 @@ export default function About() {
     <>
       <Header />
       <div className="px-5">
-        <h1 className="text-4xl page-title">How it works</h1>
+        <h1 className="page-title">How it works</h1>
         <ol className="px-5 text-white list-decimal flex flex-col space-y-4">
           <li>
             Sign up for an account. You can create an account using your email address and a
