@@ -1,8 +1,7 @@
 'use client'
-import { useContext, useEffect, useState } from 'react'
-import { initializeFirebase } from '../utils/firebase'
-import Session, { SessionContext } from '../utils/Session'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { useEffect, useState } from 'react'
+import Session from '../utils/Session'
+import Header from '../ui/Header'
 
 interface AppProps {
   children: any
@@ -24,6 +23,7 @@ export default function App({ children }: AppProps) {
 
   return (
     <Session session={user} setSession={setUser}>
+      <Header />
       {children}
     </Session>
   )

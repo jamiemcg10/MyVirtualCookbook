@@ -1,11 +1,9 @@
 'use client'
 
 import { TextField } from '@mui/material'
-import Header from './Header'
 import ThemedButton from './ThemedButton'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
-// import supabase from '../utils/supabase'
 import clsx from 'clsx'
 import {
   getAuth,
@@ -78,7 +76,6 @@ export default function LoginForm() {
 
   return (
     <>
-      <Header />
       <div className="px-5">
         <h1 className="page-title">Log in</h1>
         <div className="w-[22rem] p-9 shadow-xl bg-gray-300 rounded-lg m-auto login-container">

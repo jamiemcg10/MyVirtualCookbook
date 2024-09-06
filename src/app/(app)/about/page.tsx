@@ -1,9 +1,6 @@
-import Header from '../ui/Header'
-
 export default function About() {
   return (
     <>
-      <Header />
       <div className="px-5">
         <h1 className="page-title">How it works</h1>
         <ol className="px-5 text-white list-decimal flex flex-col space-y-4">
