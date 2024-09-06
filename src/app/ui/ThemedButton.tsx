@@ -1,7 +1,16 @@
 'use client'
 
-import { Button, ThemeProvider } from '@mui/material'
+import { Button, Theme, ThemeProvider } from '@mui/material'
 import { createTheme, alpha, getContrastRatio } from '@mui/material/styles'
+import { PropsWithChildren } from 'react'
+
+interface ThemedButtonProps extends PropsWithChildren {
+  color: 'mvc-green' | 'mvc-yellow' | 'mvc-white'
+  className?: string
+  disabled?: boolean
+  children: any
+  onClick?: any
+}
 
 declare module '@mui/material/Button' {
   // eslint-disable-next-line no-unused-vars
@@ -47,15 +56,22 @@ const theme = createTheme({
   }
 })
 
-export default function ThemedButton(props: {
-  color: 'mvc-green' | 'mvc-yellow' | 'mvc-white'
-  className?: string
-  children: any
-}) {
+export default function ThemedButton({
+  color,
+  className,
+  disabled = false,
+  children,
+  onClick
+}: ThemedButtonProps) {
   return (
     <ThemeProvider theme={theme}>
-      <Button variant="contained" color={props.color} className={`w-max ${props.className}`}>
-        {props.children}
+      <Button
+        variant="contained"
+        color={color}
+        className={`w-max ${className}`}
+        disabled={disabled}
+        onClick={onClick}>
+        {children}
       </Button>
     </ThemeProvider>
   )

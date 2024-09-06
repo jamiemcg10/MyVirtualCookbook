@@ -1,7 +1,7 @@
-import Logo from './ui/Logo'
-import HomePageTile from './ui/tiles/HomePageTile'
+import Logo from '../ui/Logo'
+import HomePageTile from '../ui/tiles/HomePageTile'
 import Link from 'next/link'
-import ThemedButton from './ui/ThemedButton'
+import ThemedButton from '../ui/ThemedButton'
 
 export default function Home() {
   return (
