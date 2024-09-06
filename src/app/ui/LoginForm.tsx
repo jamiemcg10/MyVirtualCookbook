@@ -1,8 +1,6 @@
 'use client'
 
 import { TextField } from '@mui/material'
-import ThemedButton from './ThemedButton'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import {
@@ -10,9 +8,13 @@ import {
   sendSignInLinkToEmail,
   isSignInWithEmailLink,
   signInWithEmailLink,
-  getAdditionalUserInfo
+  getAdditionalUserInfo,
+  GoogleAuthProvider,
+  signInWithPopup
 } from 'firebase/auth'
 import Snackbar from '@mui/material/Snackbar'
+import LinkSignInButton from './buttons/LinkSignInButton'
+import GoogleSignInButton from './buttons/GoogleSignInButton'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
@@ -37,6 +39,25 @@ export default function LoginForm() {
         window.localStorage.setItem('emailForSignIn', email)
         setEmail('')
         setShowNotification(true)
+      })
+      .catch(({ message }) => {
+        setErrorText(message)
+      })
+  }
+
+  const signInWithGoogle = () => {
+    const auth = getAuth()
+    const provider = new GoogleAuthProvider()
+
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result)
+        const token = credential?.accessToken
+
+        const user = result.user
+
+        console.log({ user })
       })
       .catch(({ message }) => {
         setErrorText(message)
@@ -99,24 +120,8 @@ export default function LoginForm() {
               {errorText}
             </p>
             <div className="flex flex-col mt-4">
-              <ThemedButton
-                color="mvc-yellow"
-                className="min-w-full mb-2"
-                disabled={submitBtnDisabled}
-                onClick={sendMagicLink}>
-                Send Log in link
-              </ThemedButton>
-
-              <ThemedButton color="mvc-white" className="min-w-full">
-                <Image
-                  src="/google-logo.png"
-                  alt="google logo"
-                  width={24}
-                  height={24}
-                  className="mr-2"
-                />
-                Sign in with Google
-              </ThemedButton>
+              <LinkSignInButton disabled={submitBtnDisabled} onClick={sendMagicLink} />
+              <GoogleSignInButton onClick={signInWithGoogle} />
             </div>
           </div>
         </div>
