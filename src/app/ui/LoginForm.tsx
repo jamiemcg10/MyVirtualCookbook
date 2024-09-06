@@ -10,7 +10,8 @@ import {
   signInWithEmailLink,
   getAdditionalUserInfo,
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithPopup,
+  AdditionalUserInfo
 } from 'firebase/auth'
 import Snackbar from '@mui/material/Snackbar'
 import LinkSignInButton from './buttons/LinkSignInButton'
@@ -55,13 +56,23 @@ export default function LoginForm() {
         const credential = GoogleAuthProvider.credentialFromResult(result)
         const token = credential?.accessToken
 
-        const user = result.user
+        const user = getAdditionalUserInfo(result)
+        const userProfile = getAdditionalUserInfo(result)?.profile
+        const isNewUser = getAdditionalUserInfo(result)?.isNewUser
+
+        if (user && isNewUser) {
+          createUser(user)
+        }
 
         console.log({ user })
       })
       .catch(({ message }) => {
         setErrorText(message)
       })
+  }
+
+  const createUser = (user: AdditionalUserInfo) => {
+    // move this to separate file
   }
 
   const submitBtnDisabled = email === ''
@@ -102,7 +113,7 @@ export default function LoginForm() {
         <div className="w-[22rem] p-9 shadow-xl bg-gray-300 rounded-lg m-auto login-container">
           <h3 className="text-gray-700 text-center mb-6 text-xl">Log in to continue</h3>
           <div>
-            <TextField
+            {/* <TextField
               fullWidth
               variant="outlined"
               size="small"
@@ -111,7 +122,7 @@ export default function LoginForm() {
               label="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-            />
+            /> */}
             <p
               className={clsx(
                 'ml-0.5 mt-0.5 text-red-600 text-xs italic',
@@ -120,7 +131,7 @@ export default function LoginForm() {
               {errorText}
             </p>
             <div className="flex flex-col mt-4">
-              <LinkSignInButton disabled={submitBtnDisabled} onClick={sendMagicLink} />
+              {/* <LinkSignInButton disabled={submitBtnDisabled} onClick={sendMagicLink} /> */}
               <GoogleSignInButton onClick={signInWithGoogle} />
             </div>
           </div>
