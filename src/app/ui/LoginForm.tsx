@@ -10,12 +10,13 @@ import {
   signInWithEmailLink,
   getAdditionalUserInfo,
   GoogleAuthProvider,
-  signInWithPopup,
-  AdditionalUserInfo
+  signInWithPopup
 } from 'firebase/auth'
 import Snackbar from '@mui/material/Snackbar'
-import LinkSignInButton from './buttons/LinkSignInButton'
+// import LinkSignInButton from './buttons/LinkSignInButton'
 import GoogleSignInButton from './buttons/GoogleSignInButton'
+import { collection, doc, setDoc } from 'firebase/firestore'
+import { auth, db, users } from '../utils/firebase/firebase'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
@@ -27,7 +28,6 @@ export default function LoginForm() {
   }
 
   const sendMagicLink = async () => {
-    const auth = getAuth()
     console.log('sign in with email')
     console.log(process.env.REACT_APP_BASE_URL, window.location.origin)
     const actionCodeSettings = {
@@ -47,7 +47,6 @@ export default function LoginForm() {
   }
 
   const signInWithGoogle = () => {
-    const auth = getAuth()
     const provider = new GoogleAuthProvider()
 
     signInWithPopup(auth, provider)
@@ -56,11 +55,16 @@ export default function LoginForm() {
         const credential = GoogleAuthProvider.credentialFromResult(result)
         const token = credential?.accessToken
 
-        const user = getAdditionalUserInfo(result)
-        const userProfile = getAdditionalUserInfo(result)?.profile
-        const isNewUser = getAdditionalUserInfo(result)?.isNewUser
+        console.log({ result })
 
-        if (user && isNewUser) {
+        const additionalInfo = getAdditionalUserInfo(result)
+
+        const user = { ...result, ...(additionalInfo || {}) }
+
+        const userProfile = getAdditionalUserInfo(result)?.profile
+        const isNewUser = user?.isNewUser || false
+
+        if (isNewUser) {
           createUser(user)
         }
 
@@ -71,14 +75,22 @@ export default function LoginForm() {
       })
   }
 
-  const createUser = (user: AdditionalUserInfo) => {
-    // move this to separate file
+  const createUser = async (user: any) => {
+    // move this to separate file, make a better type
+    if (user.providerId === 'google.com') {
+      const id = user.user.uid
+      const displayName = user.profile.given_name
+
+      users.set(id, {
+        id,
+        username: displayName
+      })
+    }
   }
 
-  const submitBtnDisabled = email === ''
+  // const submitBtnDisabled = email === ''
 
   useEffect(() => {
-    const auth = getAuth() // move this to a context or something
     console.log(auth.currentUser)
     if (isSignInWithEmailLink(auth, window.location.href)) {
       let linkEmail = window.localStorage.getItem('emailForSignIn')

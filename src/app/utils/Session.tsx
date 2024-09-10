@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, createContext } from 'react'
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth'
-import { initializeFirebase } from './firebase'
+import { onAuthStateChanged, User } from 'firebase/auth'
+import { auth } from './firebase/firebase'
 
 interface SessionProps {
   children: any
@@ -13,11 +13,8 @@ interface SessionProps {
 export const SessionContext = createContext<User | undefined>(undefined)
 
 export default function Session({ children, session, setSession }: SessionProps) {
-  initializeFirebase()
-
   useEffect(() => {
     console.log('using session effect 2')
-    const auth = getAuth()
     onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log({ user })
