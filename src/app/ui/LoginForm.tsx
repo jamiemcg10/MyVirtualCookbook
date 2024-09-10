@@ -1,10 +1,9 @@
 'use client'
 
-import { TextField } from '@mui/material'
+// import { TextField } from '@mui/material'
 import { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import {
-  getAuth,
   sendSignInLinkToEmail,
   isSignInWithEmailLink,
   signInWithEmailLink,
@@ -15,8 +14,7 @@ import {
 import Snackbar from '@mui/material/Snackbar'
 // import LinkSignInButton from './buttons/LinkSignInButton'
 import GoogleSignInButton from './buttons/GoogleSignInButton'
-import { collection, doc, setDoc } from 'firebase/firestore'
-import { auth, db, users } from '../utils/firebase/firebase'
+import { auth, users } from '../utils/firebase'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
