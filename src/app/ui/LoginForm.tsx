@@ -55,14 +55,11 @@ export default function LoginForm() {
 
         console.log({ result })
 
-        const additionalInfo = getAdditionalUserInfo(result)
+        const user = { ...result, ...(getAdditionalUserInfo(result) || {}) }
 
-        const user = { ...result, ...(additionalInfo || {}) }
+        const isNewUser = user?.isNewUser
 
-        const userProfile = getAdditionalUserInfo(result)?.profile
-        const isNewUser = user?.isNewUser || false
-
-        if (isNewUser) {
+        if (!!isNewUser) {
           createUser(user)
         }
 
@@ -78,10 +75,12 @@ export default function LoginForm() {
     if (user.providerId === 'google.com') {
       const id = user.user.uid
       const displayName = user.profile.given_name
+      const pictureUrl = user.profile.picture
 
       users.set(id, {
         id,
-        username: displayName
+        username: displayName,
+        pictureUrl
       })
     }
   }

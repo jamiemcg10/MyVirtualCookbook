@@ -6,6 +6,7 @@ const usersRef = collection(db, 'users')
 interface User {
   id: string,
   username: string
+  pictureUrl?: string
 }
 
 export const users = {
