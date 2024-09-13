@@ -14,12 +14,8 @@ export default function App({ children }: AppProps) {
     console.log({ user })
     if (user) {
       console.log('there is a user') // redirect if home or at login not at about page
-      //   window.location.href = '/cookbook'
     }
   }, [user])
-
-  console.log({ user })
-  console.log('heres a layout')
 
   return (
     <Session session={user} setSession={setUser}>

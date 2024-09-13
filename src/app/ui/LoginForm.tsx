@@ -1,7 +1,7 @@
 'use client'
 
-// import { TextField } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { TextField } from '@mui/material'
+import { useContext, useEffect, useState } from 'react'
 import clsx from 'clsx'
 import {
   sendSignInLinkToEmail,
@@ -12,24 +12,25 @@ import {
   signInWithPopup
 } from 'firebase/auth'
 import Snackbar from '@mui/material/Snackbar'
-// import LinkSignInButton from './buttons/LinkSignInButton'
+import LinkSignInButton from './buttons/LinkSignInButton'
 import GoogleSignInButton from './buttons/GoogleSignInButton'
 import { auth, users } from '../utils/firebase'
+import { redirect } from 'next/navigation'
+import { SessionContext } from '../utils/Session'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
   const [errorText, setErrorText] = useState('')
   const [showNotification, setShowNotification] = useState(false)
+  const session = useContext(SessionContext)
 
   function handleSnackbarClose() {
     setShowNotification(false)
   }
 
   const sendMagicLink = async () => {
-    console.log('sign in with email')
-    console.log(process.env.REACT_APP_BASE_URL, window.location.origin)
     const actionCodeSettings = {
-      url: `${window.location.origin}/login`,
+      url: `${window.location.origin}/cookbook`,
       handleCodeInApp: true
     }
 
@@ -50,20 +51,20 @@ export default function LoginForm() {
     signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result)
-        const token = credential?.accessToken
-
-        console.log({ result })
+        // const credential = GoogleAuthProvider.credentialFromResult(result)
+        // const token = credential?.accessToken
 
         const user = { ...result, ...(getAdditionalUserInfo(result) || {}) }
-
-        const isNewUser = user?.isNewUser
+        const isNewUser = user.isNewUser
 
         if (!!isNewUser) {
           createUser(user)
         }
 
         console.log({ user })
+
+        // redirect to cookbook
+        redirect('/cookbook')
       })
       .catch(({ message }) => {
         setErrorText(message)
@@ -72,8 +73,9 @@ export default function LoginForm() {
 
   const createUser = async (user: any) => {
     // move this to separate file, make a better type
+    const id = user.user.uid
+
     if (user.providerId === 'google.com') {
-      const id = user.user.uid
       const displayName = user.profile.given_name
       const pictureUrl = user.profile.picture
 
@@ -82,13 +84,21 @@ export default function LoginForm() {
         username: displayName,
         pictureUrl
       })
+    } else {
+      users.set(id, {
+        id,
+        username: user.user.email
+      })
     }
   }
 
-  // const submitBtnDisabled = email === ''
+  const submitBtnDisabled = email === ''
 
   useEffect(() => {
-    console.log(auth.currentUser)
+    if (!!session) {
+      redirect('/cookbook')
+    }
+
     if (isSignInWithEmailLink(auth, window.location.href)) {
       let linkEmail = window.localStorage.getItem('emailForSignIn')
 
@@ -100,20 +110,20 @@ export default function LoginForm() {
       signInWithEmailLink(auth, linkEmail, window.location.href)
         .then((result) => {
           window.localStorage.removeItem('emailForSignIn')
-          const user = getAdditionalUserInfo(result)
-          const userProfile = getAdditionalUserInfo(result)?.profile
+          const user = { ...result, ...(getAdditionalUserInfo(result) || {}) }
+
           const isNewUser = getAdditionalUserInfo(result)?.isNewUser
 
-          console.log({ user, userProfile, isNewUser })
-
-          // add user to session storage
+          if (!!isNewUser) {
+            createUser(user)
+          }
         })
         .catch((error) => {
           setErrorText(error.message)
           console.log({ error })
         })
     }
-  }, [])
+  }, [session])
 
   return (
     <>
@@ -122,7 +132,7 @@ export default function LoginForm() {
         <div className="w-[22rem] p-9 shadow-xl bg-gray-300 rounded-lg m-auto login-container">
           <h3 className="text-gray-700 text-center mb-6 text-xl">Log in to continue</h3>
           <div>
-            {/* <TextField
+            <TextField
               fullWidth
               variant="outlined"
               size="small"
@@ -131,7 +141,7 @@ export default function LoginForm() {
               label="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-            /> */}
+            />
             <p
               className={clsx(
                 'ml-0.5 mt-0.5 text-red-600 text-xs italic',
@@ -140,7 +150,7 @@ export default function LoginForm() {
               {errorText}
             </p>
             <div className="flex flex-col mt-4">
-              {/* <LinkSignInButton disabled={submitBtnDisabled} onClick={sendMagicLink} /> */}
+              <LinkSignInButton disabled={submitBtnDisabled} onClick={sendMagicLink} />
               <GoogleSignInButton onClick={signInWithGoogle} />
             </div>
           </div>
