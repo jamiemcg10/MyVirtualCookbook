@@ -57,7 +57,7 @@ export default function LoginForm() {
         const user = { ...result, ...(getAdditionalUserInfo(result) || {}) }
         const isNewUser = user.isNewUser
 
-        if (!!isNewUser) {
+        if (isNewUser) {
           createUser(user)
         }
 
@@ -95,7 +95,7 @@ export default function LoginForm() {
   const submitBtnDisabled = email === ''
 
   useEffect(() => {
-    if (!!session) {
+    if (session) {
       redirect('/cookbook')
     }
 
@@ -114,7 +114,7 @@ export default function LoginForm() {
 
           const isNewUser = getAdditionalUserInfo(result)?.isNewUser
 
-          if (!!isNewUser) {
+          if (isNewUser) {
             createUser(user)
           }
         })
