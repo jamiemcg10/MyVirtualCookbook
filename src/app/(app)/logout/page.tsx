@@ -1,4 +1,4 @@
-import LogoutPage from '@/app/ui/LogoutPage'
+import LogoutPage from '@/app/(app)/logout/Logout'
 
 export default function Logout() {
   return (

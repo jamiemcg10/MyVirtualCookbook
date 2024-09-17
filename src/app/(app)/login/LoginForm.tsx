@@ -12,11 +12,11 @@ import {
   signInWithPopup
 } from 'firebase/auth'
 import Snackbar from '@mui/material/Snackbar'
-import LinkSignInButton from './buttons/LinkSignInButton'
-import GoogleSignInButton from './buttons/GoogleSignInButton'
-import { auth, users } from '../utils/firebase'
+import LinkSignInButton from '../../ui/buttons/LinkSignInButton'
+import GoogleSignInButton from '../../ui/buttons/GoogleSignInButton'
+import { auth, users } from '../../utils/firebase'
 import { redirect } from 'next/navigation'
-import { SessionContext } from '../utils/Session'
+import { SessionContext } from '../../utils/Session'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
