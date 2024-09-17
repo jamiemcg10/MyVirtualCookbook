@@ -7,6 +7,7 @@ import { auth } from './firebase/firebase'
 import { users } from './firebase/users'
 import { User } from '../lib/types/user'
 import { Subscription } from 'rxjs'
+import { DocumentData } from 'firebase/firestore'
 
 interface SessionProps {
   children: any
@@ -22,10 +23,13 @@ export default function Session({ children }: SessionProps) {
     onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         const userRef = users(authUser.uid).getRef()
-        userSubscription = docData(userRef, { idField: 'uid' }).subscribe((_user: User) => {
-          console.log({ _user })
-          setUser(_user)
-        })
+        userSubscription = docData(userRef).subscribe(
+          // can add `{ idField: 'uid' }` as second arg
+          (_user: DocumentData | undefined) => {
+            console.log({ _user })
+            setUser(_user as User)
+          }
+        )
       } else {
         // User is signed out
         userSubscription.unsubscribe()
