@@ -79,13 +79,13 @@ export default function LoginForm() {
       const displayName = user.profile.given_name
       const pictureUrl = user.profile.picture
 
-      users.set(id, {
+      users(id).set({
         id,
         username: displayName,
         pictureUrl
       })
     } else {
-      users.set(id, {
+      users(id).set({
         id,
         username: user.user.email
       })

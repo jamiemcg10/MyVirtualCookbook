@@ -1,31 +1,40 @@
 'use client'
 
-import { useEffect, createContext } from 'react'
-import { onAuthStateChanged, User } from 'firebase/auth'
+import { useEffect, createContext, useState } from 'react'
+import { onAuthStateChanged } from 'firebase/auth'
+import { docData } from 'rxfire/firestore'
 import { auth } from './firebase/firebase'
+import { users } from './firebase/users'
+import { User } from '../lib/types/user'
+import { Subscription } from 'rxjs'
 
 interface SessionProps {
   children: any
-  session: any
-  setSession: any
 }
 
 export const SessionContext = createContext<User | undefined>(undefined)
 
-export default function Session({ children, session, setSession }: SessionProps) {
+export default function Session({ children }: SessionProps) {
+  const [user, setUser] = useState<User | undefined>(undefined)
+
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log({ user })
-        setSession(user)
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
+    let userSubscription: Subscription = new Subscription()
+    onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        const userRef = users(authUser.uid).getRef()
+        userSubscription = docData(userRef, { idField: 'uid' }).subscribe((_user: User) => {
+          console.log({ _user })
+          setUser(_user)
+        })
       } else {
         // User is signed out
-        setSession(undefined)
+        userSubscription.unsubscribe()
+        setUser(undefined)
       }
     })
+
+    userSubscription.unsubscribe()
   }, [])
 
-  return <SessionContext.Provider value={session}>{children}</SessionContext.Provider>
+  return <SessionContext.Provider value={user}>{children}</SessionContext.Provider>
 }

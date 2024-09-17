@@ -8,10 +8,8 @@ interface AppProps {
 }
 
 export default function App({ children }: AppProps) {
-  const [user, setUser] = useState(undefined)
-
   return (
-    <Session session={user} setSession={setUser}>
+    <Session>
       <Header />
       {children}
     </Session>

@@ -10,11 +10,10 @@ function getLogoLink(loggedIn: boolean) {
 }
 
 export default function Header() {
-  const session = useContext(SessionContext)
-  console.log({ session }) // name should come from the user
-  const loggedIn = !!session
+  const user = useContext(SessionContext)
+  const loggedIn = !!user
 
-  const greeting = session?.displayName ? `Hi ${session.displayName}!` : 'Hi!'
+  const greeting = user?.username ? `Hi ${user.username}!` : 'Hi!'
 
   return (
     <div className="bg-mvc-green flex h-16 items-center justify-between px-5">
