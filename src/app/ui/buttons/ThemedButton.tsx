@@ -1,6 +1,6 @@
 'use client'
 
-import { Button, Theme, ThemeProvider } from '@mui/material'
+import { Button, ThemeProvider } from '@mui/material'
 import { createTheme, alpha, getContrastRatio } from '@mui/material/styles'
 import { PropsWithChildren } from 'react'
 
