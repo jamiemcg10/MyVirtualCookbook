@@ -1,12 +1,12 @@
-import { Theme, ThemeOptions } from '@mui/material/styles';
+import { Theme, ThemeOptions } from '@mui/material/styles'
 
 declare module '@mui/material/styles' {
   interface CustomTheme extends Theme {
     palette: {
-      'mvc-green': any, // change later
-      'mvc-yellow': any,
+      'mvc-green': any // change later
+      'mvc-yellow': any
       'mvc-white': any
-    };
+    }
   }
   // allow configuration using `createTheme`
   interface CustomThemeOptions extends ThemeOptions {
@@ -14,8 +14,9 @@ declare module '@mui/material/styles' {
       'mvc-green'?: any
       'mvc-yellow'?: any
       'mvc-white': any
-    };
+      'mvc-gray': any
+    }
   }
 
-  export function createTheme(options?: CustomThemeOptions): CustomTheme;
+  export function createTheme(options?: CustomThemeOptions): CustomTheme
 }
