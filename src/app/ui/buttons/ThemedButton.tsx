@@ -5,7 +5,8 @@ import { createTheme, alpha, getContrastRatio } from '@mui/material/styles'
 import { PropsWithChildren } from 'react'
 
 interface ThemedButtonProps extends PropsWithChildren {
-  color: 'mvc-green' | 'mvc-yellow' | 'mvc-white'
+  color: 'mvc-green' | 'mvc-yellow' | 'mvc-white' | 'mvc-gray'
+  variant?: 'text' | 'contained' | 'outlined'
   className?: string
   disabled?: boolean
   children: any
@@ -18,6 +19,7 @@ declare module '@mui/material/Button' {
     'mvc-green': true
     'mvc-yellow': true
     'mvc-white': true
+    'mvc-gray': true
   }
 }
 
@@ -29,6 +31,9 @@ const yellowMain = alpha(yellowBase, 0.7)
 
 const whiteBase = '#fff'
 const whiteMain = alpha(whiteBase, 0.7)
+
+const grayBase = '#808080'
+const grayMain = alpha(grayBase, 0.7)
 
 const theme = createTheme({
   typography: {
@@ -52,6 +57,12 @@ const theme = createTheme({
       light: alpha(whiteBase, 0.5),
       dark: alpha(whiteBase, 0.9),
       contrastText: '#303030'
+    },
+    'mvc-gray': {
+      main: grayMain,
+      light: alpha(grayBase, 0.5),
+      dark: alpha(grayBase, 0.9),
+      contrastText: '#303030' // not working
     }
   }
 })
@@ -60,13 +71,14 @@ export default function ThemedButton({
   color,
   className,
   disabled = false,
+  variant = 'contained',
   children,
   onClick
 }: ThemedButtonProps) {
   return (
     <ThemeProvider theme={theme}>
       <Button
-        variant="contained"
+        variant={variant}
         color={color}
         className={`w-max ${className}`}
         disabled={disabled}
