@@ -5,7 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { docData } from 'rxfire/firestore'
 import { auth } from './firebase/firebase'
 import { users } from './firebase/users'
-import { User } from '../lib/types/user'
+import { User } from '../lib/types'
 import { Subscription } from 'rxjs'
 import { DocumentData } from 'firebase/firestore'
 
