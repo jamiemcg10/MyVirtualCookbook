@@ -1,6 +1,6 @@
 import { collection, doc, setDoc } from 'firebase/firestore'
 import { db } from './firebase'
-import { User } from '@/app/lib/types/user'
+import { User } from '@/app/lib/types'
 
 const usersRef = collection(db, 'users')
 
