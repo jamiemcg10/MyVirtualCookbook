@@ -3,7 +3,7 @@ import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionActions from '@mui/material/AccordionActions'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import cs from 'clsx'
 import ThemedButton from './buttons/ThemedButton'
 import { Chilanka } from 'next/font/google'
@@ -17,6 +17,10 @@ interface CookbookRecipeProps {
 export default function CookbookRecipe({ recipe }: CookbookRecipeProps) {
   const [editing, setEditing] = useState(false)
   const notesElRef = useRef<HTMLTextAreaElement | null>(null)
+
+  useEffect(() => {
+    if (notesElRef.current) notesElRef.current.innerText = notes
+  }, [])
 
   const { name, link, notes } = recipe
 
@@ -48,9 +52,7 @@ export default function CookbookRecipe({ recipe }: CookbookRecipeProps) {
             editing && 'border-2 border-mvc-green',
             chilanka.className
           )}
-          ref={notesElRef}>
-          {notes}
-        </textarea>
+          ref={notesElRef}></textarea>
       </AccordionDetails>
       <AccordionActions className="pt-0">
         {!editing ? (
