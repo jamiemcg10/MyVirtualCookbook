@@ -7,11 +7,12 @@ import { useState, useRef, useEffect } from 'react'
 import cs from 'clsx'
 import ThemedButton from './buttons/ThemedButton'
 import { Chilanka } from 'next/font/google'
+import { RecipeWithNotes } from '../lib/types'
 
 const chilanka = Chilanka({ weight: '400', preload: false })
 
 interface CookbookRecipeProps {
-  recipe: any
+  recipe: RecipeWithNotes
 }
 
 export default function CookbookRecipe({ recipe }: CookbookRecipeProps) {

@@ -1,12 +1,9 @@
 'use client'
 import Session from '../utils/Session'
 import Header from '../ui/Header'
+import { PropsWithChildren } from 'react'
 
-interface AppProps {
-  children: any
-}
-
-export default function App({ children }: AppProps) {
+export default function App({ children }: PropsWithChildren) {
   return (
     <Session>
       <Header />

@@ -1,11 +1,11 @@
-import { Recipe, RecipeWithNotes } from './recipe'
+import { RecipeWithNotes } from './recipe'
 
 export interface Chapter {
   id: string
   name: string
-  recipes: Recipe[]
+  recipeIds: string[]
 }
 
-export interface ChapterWithRecipeNotes extends Omit<Chapter, 'recipes'> {
+export interface ChapterWithRecipeNotes extends Omit<Chapter, 'recipeIds'> {
   recipes: RecipeWithNotes[]
 }

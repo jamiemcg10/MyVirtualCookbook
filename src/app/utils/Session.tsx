@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, createContext, useState } from 'react'
+import { useEffect, createContext, useState, PropsWithChildren } from 'react'
 import { onAuthStateChanged } from 'firebase/auth'
 import { docData } from 'rxfire/firestore'
 import { auth } from './firebase/firebase'
@@ -9,20 +9,17 @@ import { User } from '../lib/types'
 import { Subscription } from 'rxjs'
 import { DocumentData } from 'firebase/firestore'
 
-interface SessionProps {
-  children: any
-}
-
 export const SessionContext = createContext<User | undefined>(undefined)
 
-export default function Session({ children }: SessionProps) {
+export default function Session({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | undefined>(undefined)
 
   useEffect(() => {
     let userSubscription: Subscription = new Subscription()
+
     onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
-        const userRef = users(authUser.uid).getRef()
+        const userRef = users(authUser.uid).ref
         userSubscription = docData(userRef).subscribe(
           // can add `{ idField: 'uid' }` as second arg
           (_user: DocumentData | undefined) => {

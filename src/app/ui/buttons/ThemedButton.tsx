@@ -2,15 +2,14 @@
 
 import { Button, ThemeProvider } from '@mui/material'
 import { createTheme, alpha, getContrastRatio } from '@mui/material/styles'
-import { PropsWithChildren } from 'react'
+import { MouseEventHandler, PropsWithChildren } from 'react'
 
 interface ThemedButtonProps extends PropsWithChildren {
   color: 'mvc-green' | 'mvc-yellow' | 'mvc-white' | 'mvc-gray'
   variant?: 'text' | 'contained' | 'outlined'
   className?: string
   disabled?: boolean
-  children: any
-  onClick?: any
+  onClick?: MouseEventHandler
 }
 
 declare module '@mui/material/Button' {
