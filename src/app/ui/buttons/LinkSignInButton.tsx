@@ -1,8 +1,9 @@
+import { MouseEventHandler } from 'react'
 import ThemedButton from './ThemedButton'
 
 interface LinkSignInButtonProps {
   disabled: boolean
-  onClick: Function
+  onClick: MouseEventHandler
 }
 
 export default function LinkSignInButton({ disabled, onClick }: LinkSignInButtonProps) {
