@@ -1,8 +1,9 @@
+import { MouseEventHandler } from 'react'
 import ThemedButton from './ThemedButton'
 import Image from 'next/image'
 
 interface GoogleSignInButtonProps {
-  onClick: Function
+  onClick: MouseEventHandler
 }
 
 export default function GoogleSignInButton({ onClick }: GoogleSignInButtonProps) {
