@@ -6,20 +6,25 @@ import { DocumentData } from 'rxfire/firestore/interfaces'
 
 export const getCookbook = (userId: string) => {
   const userRef = users(userId).ref
+  const chaptersRef = users(userId).chapters.ref
   const recipesRef = users(userId).recipes.ref
   const notesRef = users(userId).notes.ref
 
   const user = docData(userRef)
+  const chapters = collectionData(chaptersRef)
   const recipes = collectionData(recipesRef)
   const notes = collectionData(notesRef, { idField: 'id' })
 
-  return combineLatest([user, recipes, notes]).pipe(
-    map(([user, recipes, notes]) => {
-      console.log({ user, recipes, notes })
-      const chapters = user?.chapters.map((chapter: Chapter) => {
-        const _recipes = chapter.recipeIds.map((id: string) => {
-          const recipe = recipes.find((r: DocumentData) => r.id === id)
-          const recipeWithNotes = { ...recipe, notes: notes.find((r) => r.id === id)?.notes }
+  return combineLatest([user, chapters, recipes, notes]).pipe(
+    map(([user, chapters, recipes, notes]) => {
+      const _chapters = user?.chapterOrder.map((cid: string) =>
+        chapters.find((c: DocumentData) => c.id === cid)
+      )
+
+      const fullChapters = _chapters.map((chapter: Chapter) => {
+        const _recipes = chapter.recipeOrder.map((rid: string) => {
+          const recipe = recipes.find((r: DocumentData) => r.id === rid)
+          const recipeWithNotes = { ...recipe, notes: notes.find((r) => r.id === rid)?.notes }
           return recipeWithNotes
         })
 
@@ -29,7 +34,7 @@ export const getCookbook = (userId: string) => {
           recipes: _recipes
         }
       })
-      return chapters
+      return fullChapters
     }),
     shareReplay({ bufferSize: 1, refCount: true })
   )

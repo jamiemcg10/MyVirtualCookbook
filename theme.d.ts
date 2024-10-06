@@ -6,6 +6,7 @@ declare module '@mui/material/styles' {
       'mvc-green': any // change later
       'mvc-yellow': any
       'mvc-white': any
+      'mvc-gray': any
     }
   }
   // allow configuration using `createTheme`
