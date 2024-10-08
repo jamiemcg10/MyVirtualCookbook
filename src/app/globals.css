@@ -23,6 +23,8 @@ body {
   background-image: linear-gradient(to right, #073763f6, #073763f6), url('/recipe-bkg.jpg');
   background-size: cover;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 @layer utilities {
