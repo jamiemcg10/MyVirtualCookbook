@@ -4,19 +4,24 @@ import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown'
 import CookbookRecipe from './CookbookRecipe'
 import { RecipeWithNotes, ChapterWithRecipeNotes } from '../lib/types'
-import EditRoundedIcon from '@mui/icons-material/EditRounded'
-import SaveRoundedIcon from '@mui/icons-material/SaveRounded'
 import { users } from '../utils/firebase'
-import { useContext, useRef, useState } from 'react'
-import { Input } from '@mui/material'
-import { Roboto } from 'next/font/google'
+import { useContext } from 'react'
 import { SessionContext } from '../utils/Session'
+import InlineInput from './InlineInput'
 
 interface CookbookChapterProps {
   chapter: ChapterWithRecipeNotes
 }
 
-const roboto = Roboto({ weight: '700', subsets: ['latin'] })
+declare module '@mui/material/InputBase' {
+  // eslint-disable-next-line no-unused-vars
+  interface InputBasePropsColorOverrides {
+    'mvc-green': true
+    'mvc-yellow': true
+    'mvc-white': true
+    'mvc-gray': true
+  }
+}
 
 const mapRecipes = (recipes: RecipeWithNotes[]) => {
   return recipes.map((recipe) => {
@@ -24,25 +29,14 @@ const mapRecipes = (recipes: RecipeWithNotes[]) => {
   })
 }
 
-const sharedButtonStyles = {
-  fontSize: 14,
-  marginLeft: 0.7,
-  xtransitionDuration: '1000ms',
-  transitionProperty: 'all',
-  '&:hover': {
-    fontSize: 16
-  }
-}
-
 export default function CookbookChapter({ chapter }: CookbookChapterProps) {
-  function editTitle() {
-    const inputValue = (inputElRef?.current?.children[0] as HTMLInputElement).value
-    user && users(user.id).chapters.update(chapter.id, { name: inputValue })
+  function saveTitle(newTitle: string) {
+    if (user && chapter.name !== newTitle) {
+      users(user.id).chapters.update(chapter.id, { name: newTitle })
+    }
   }
 
   const user = useContext(SessionContext)
-  const [editing, setEditing] = useState(false)
-  const inputElRef = useRef<HTMLElement>()
 
   const recipes = mapRecipes(chapter.recipes)
 
@@ -61,42 +55,9 @@ export default function CookbookChapter({ chapter }: CookbookChapterProps) {
             '.Mui-expanded': { margin: '6px 0' }
           }}
           expandIcon={<ExpandCircleDownIcon />}>
-          <div className="flex items-center">
-            {!editing ? (
-              <>
-                <h1 className="text-gray-700">{chapter.name}</h1>
-                <EditRoundedIcon
-                  className="text-gray-500 hover:text-mvc-green hover:bg-mvc-green/20 hover:text-base transition-all duration-1000 rounded-sm"
-                  sx={sharedButtonStyles}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setEditing(true)
-                  }}
-                />
-              </>
-            ) : (
-              <>
-                <Input
-                  ref={inputElRef}
-                  className={roboto.className}
-                  sx={roboto.style}
-                  defaultValue={chapter.name}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                  }}
-                />
-                <SaveRoundedIcon
-                  className="text-gray-500 hover:text-mvc-green hover:bg-mvc-green/20 hover:text-base transition-all duration-1000 rounded-sm"
-                  sx={{ ...sharedButtonStyles }}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setEditing(false)
-                    editTitle()
-                  }}
-                />
-              </>
-            )}
-          </div>
+          <InlineInput label={chapter.name} onSave={saveTitle}>
+            <h1 className="text-gray-700">{chapter.name}</h1>
+          </InlineInput>
         </AccordionSummary>
         <AccordionDetails className="p-0 pb-2">{recipes}</AccordionDetails>
       </Accordion>
