@@ -30,9 +30,9 @@ const mapRecipes = (recipes: RecipeWithNotes[]) => {
 }
 
 export default function CookbookChapter({ chapter }: CookbookChapterProps) {
-  function saveTitle(newTitle: string) {
+  async function saveTitle(newTitle: string) {
     if (user && chapter.name !== newTitle) {
-      users(user.id).chapters.update(chapter.id, { name: newTitle })
+      await users(user.id).chapters.update(chapter.id, { name: newTitle })
     }
   }
 
