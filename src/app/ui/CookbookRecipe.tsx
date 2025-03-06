@@ -3,11 +3,14 @@ import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionActions from '@mui/material/AccordionActions'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useContext } from 'react'
 import cs from 'clsx'
 import ThemedButton from './buttons/ThemedButton'
 import { Chilanka } from 'next/font/google'
 import { RecipeWithNotes } from '../lib/types'
+import InlineInput from './InlineInput'
+import { users } from '../utils/firebase'
+import { SessionContext } from '../utils/Session'
 
 const chilanka = Chilanka({ weight: '400', preload: false })
 
@@ -16,6 +19,14 @@ interface CookbookRecipeProps {
 }
 
 export default function CookbookRecipe({ recipe }: CookbookRecipeProps) {
+  async function saveTitle(newTitle: string) {
+    if (user && recipe.name !== newTitle) {
+      await users(user.id).recipes.update(recipe.id, { name: newTitle })
+    }
+  }
+
+  const user = useContext(SessionContext)
+
   const [editing, setEditing] = useState(false)
   const notesElRef = useRef<HTMLTextAreaElement | null>(null)
 
@@ -40,9 +51,11 @@ export default function CookbookRecipe({ recipe }: CookbookRecipeProps) {
           '.Mui-expanded': { margin: '6px 0' }
         }}
         expandIcon={<ExpandMoreIcon className="text-mvc-green" />}>
-        <a href={link} className="underline text-mvc-green">
-          {name}
-        </a>
+        <InlineInput label={recipe.name} onSave={saveTitle}>
+          <a href={link} className="underline text-mvc-green">
+            {name}
+          </a>
+        </InlineInput>
       </AccordionSummary>
       <AccordionDetails className="py-0">
         <textarea

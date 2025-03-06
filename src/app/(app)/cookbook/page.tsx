@@ -6,7 +6,7 @@ import { getCookbook } from '../../utils/cookbook'
 import { SessionContext } from '@/app/utils/Session'
 import { ChapterWithRecipeNotes } from '@/app/lib/types'
 import Footer from '@/app/ui/Footer'
-import { CircularProgress, ThemeProvider } from '@mui/material'
+import { CircularProgress, Drawer, ThemeProvider } from '@mui/material'
 import { theme } from '@/app/ui/.theme/theme'
 
 declare module '@mui/material/CircularProgress' {
@@ -30,7 +30,7 @@ export default function Cookbook() {
   }, [user])
 
   return (
-    <>
+    <div className="flex h-full">
       {cookbook ? (
         <>
           <div className="p-8 flex flex-col space-y-2 grow">
@@ -51,6 +51,6 @@ export default function Cookbook() {
           </ThemeProvider>
         </div>
       )}
-    </>
+    </div>
   )
 }
