@@ -9,6 +9,8 @@ import InlineInputEditActions from './InlineInputEditActions'
 interface InlineInputProps extends PropsWithChildren {
   label: string
   onSave: (newLabel: string) => Promise<void>
+  onCancel: () => void
+  focusOnLoad?: boolean
 }
 
 const roboto = Roboto({ weight: '700', subsets: ['latin'] })
@@ -22,13 +24,24 @@ const sharedButtonStyles = {
   }
 }
 
-export default function InlineInput({ children, label, onSave }: InlineInputProps) {
-  const [editing, setEditing] = useState(false)
+export default function InlineInput({
+  children,
+  label,
+  onSave,
+  onCancel,
+  focusOnLoad
+}: InlineInputProps) {
+  const [editing, setEditing] = useState(!!focusOnLoad)
   const inputElRef = useRef<HTMLElement>()
+
+  // let value = label
+  const [saveDisabled, setSaveDisabled] = useState(!label)
 
   function getInputValue() {
     return (inputElRef?.current?.children[0] as HTMLInputElement).value
   }
+
+  // focusOnLoad && inputElRef.current?.focus() // not working
 
   return (
     <div className="flex items-center">
@@ -58,6 +71,9 @@ export default function InlineInput({ children, label, onSave }: InlineInputProp
               }}
               defaultValue={label}
               color="mvc-green"
+              onInput={(e) => {
+                setSaveDisabled(!(e.target as HTMLInputElement).value)
+              }}
               onClick={(e) => {
                 e.stopPropagation()
               }}
@@ -66,7 +82,9 @@ export default function InlineInput({ children, label, onSave }: InlineInputProp
           <InlineInputEditActions
             styles={sharedButtonStyles}
             onSave={async () => await onSave(getInputValue())}
+            onCancel={onCancel}
             setEditing={setEditing}
+            saveDisabled={saveDisabled}
           />
         </>
       )}

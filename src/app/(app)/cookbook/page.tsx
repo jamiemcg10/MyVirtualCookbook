@@ -5,9 +5,11 @@ import React, { useContext, useEffect, useState } from 'react'
 import { getCookbook } from '../../utils/cookbook'
 import { SessionContext } from '@/app/utils/Session'
 import { ChapterWithRecipeNotes } from '@/app/lib/types'
-import Footer from '@/app/ui/Footer'
-import { CircularProgress, Drawer, ThemeProvider } from '@mui/material'
+// import Sidebar from '@/app/ui/Sidebar'
+import { CircularProgress, ThemeProvider } from '@mui/material'
 import { theme } from '@/app/ui/.theme/theme'
+import ThemedButton from '@/app/ui/buttons/ThemedButton'
+import AddIcon from '@mui/icons-material/Add'
 
 declare module '@mui/material/CircularProgress' {
   // eslint-disable-next-line no-unused-vars
@@ -23,6 +25,8 @@ export default function Cookbook() {
   const user = useContext(SessionContext)
   const [cookbook, setCookbook] = useState<ChapterWithRecipeNotes[] | null>(null)
 
+  const [showChapterAdd, setShowChapterAdd] = useState(false)
+
   useEffect(() => {
     window.history.replaceState(null, '', '/cookbook')
 
@@ -30,27 +34,40 @@ export default function Cookbook() {
   }, [user])
 
   return (
-    <div className="flex h-full">
-      {cookbook ? (
-        <>
-          <div className="p-8 flex flex-col space-y-2 grow">
-            {cookbook.length ? (
-              cookbook.map((chapter) => {
-                return <CookbookChapter chapter={chapter} key={chapter.id} />
-              })
-            ) : (
-              <div>Your cookbook is empty. Add chapters and recipes to get started.</div>
-            )}
+    <div>
+      <ThemedButton color="mvc-white" className="my-4 ml-8" onClick={() => setShowChapterAdd(true)}>
+        <AddIcon
+          style={{
+            verticalAlign: 'top',
+            height: 20,
+            width: 20,
+            marginLeft: -10,
+            marginTop: -2
+          }}></AddIcon>
+        <span>Add Chapter</span>
+      </ThemedButton>
+      <div className="flex h-full">
+        {cookbook ? (
+          <>
+            <div className="px-8 flex flex-col space-y-2 grow">
+              {cookbook.length &&
+                cookbook.map((chapter) => {
+                  return <CookbookChapter chapter={chapter} key={chapter.id} />
+                })}
+              {showChapterAdd && <CookbookChapter setShowChapterAdd={setShowChapterAdd} />}
+              {!cookbook.length && !showChapterAdd && (
+                <div>Your cookbook is empty. Add chapters and recipes to get started.</div>
+              )}
+            </div>
+          </>
+        ) : (
+          <div className="grow justify-center items-center flex">
+            <ThemeProvider theme={theme}>
+              <CircularProgress size="65px" color="mvc-yellow" />
+            </ThemeProvider>
           </div>
-          <Footer />
-        </>
-      ) : (
-        <div className="grow justify-center items-center flex">
-          <ThemeProvider theme={theme}>
-            <CircularProgress size="65px" color="mvc-yellow" />
-          </ThemeProvider>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

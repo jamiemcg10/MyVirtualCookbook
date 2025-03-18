@@ -2,17 +2,22 @@ import SaveRoundedIcon from '@mui/icons-material/SaveRounded'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import { type Dispatch, type SetStateAction, useEffect } from 'react'
 import { SxProps } from '@mui/material/styles'
+import clsx from 'clsx'
 
 interface InlineInputEditActionsProps {
   onSave: () => Promise<void>
+  onCancel: () => void
   styles: SxProps
   setEditing: Dispatch<SetStateAction<boolean>>
+  saveDisabled: boolean
 }
 
 export default function InlineInputEditActions({
   onSave,
+  onCancel,
   styles,
-  setEditing
+  setEditing,
+  saveDisabled
 }: InlineInputEditActionsProps) {
   useEffect(() => {
     async function keydownListener({ key }: KeyboardEvent) {
@@ -20,6 +25,7 @@ export default function InlineInputEditActions({
         await onSave()
         setEditing(false)
       } else if (key === 'Escape') {
+        onCancel()
         setEditing(false)
       }
     }
@@ -38,14 +44,22 @@ export default function InlineInputEditActions({
         sx={{ ...styles }}
         onClick={(e) => {
           e.stopPropagation()
+          onCancel()
           setEditing(false)
         }}
       />
       <SaveRoundedIcon
-        className="text-gray-500 hover:text-mvc-green hover:bg-mvc-green/20 hover:text-base transition-all rounded-sm"
+        className={clsx('text-gray-500', {
+          'hover:text-mvc-green hover:bg-mvc-green/20 hover:text-base transition-all rounded-sm':
+            !saveDisabled,
+          'cursor-default': saveDisabled
+        })}
         sx={{ ...styles }}
         onClick={async (e) => {
           e.stopPropagation()
+
+          if (saveDisabled) return
+
           setEditing(false)
           await onSave()
         }}

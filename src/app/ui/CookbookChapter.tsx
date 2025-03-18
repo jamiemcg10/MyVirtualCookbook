@@ -8,9 +8,12 @@ import { users } from '../utils/firebase'
 import { useContext } from 'react'
 import { SessionContext } from '../utils/Session'
 import InlineInput from './InlineInput'
+import { uid } from 'uid'
+import { arrayUnion } from 'firebase/firestore'
 
 interface CookbookChapterProps {
-  chapter: ChapterWithRecipeNotes
+  chapter?: ChapterWithRecipeNotes
+  setShowChapterAdd?: (v: boolean) => void
 }
 
 declare module '@mui/material/InputBase' {
@@ -29,16 +32,37 @@ const mapRecipes = (recipes: RecipeWithNotes[]) => {
   })
 }
 
-export default function CookbookChapter({ chapter }: CookbookChapterProps) {
+function getNewChapter(name: string) {
+  return {
+    id: uid(8),
+    name,
+    recipes: [],
+    recipeOrder: []
+  }
+}
+
+export default function CookbookChapter({ chapter, setShowChapterAdd }: CookbookChapterProps) {
   async function saveTitle(newTitle: string) {
-    if (user && chapter.name !== newTitle) {
+    if (!user?.id) return
+
+    if (chapter && chapter.name !== newTitle) {
       await users(user.id).chapters.update(chapter.id, { name: newTitle })
+    } else if (!chapter) {
+      const newChapter = getNewChapter(newTitle)
+      setShowChapterAdd && setShowChapterAdd(false)
+
+      await users(user.id).chapters.set(newChapter.id, newChapter)
+      await users(user.id).update({ chapterOrder: arrayUnion(newChapter.id) })
     }
+  }
+
+  function cancelEdit() {
+    setShowChapterAdd && setShowChapterAdd(false)
   }
 
   const user = useContext(SessionContext)
 
-  const recipes = mapRecipes(chapter.recipes)
+  const recipes = mapRecipes(chapter?.recipes || [])
 
   return (
     <div className="rounded-md">
@@ -55,8 +79,12 @@ export default function CookbookChapter({ chapter }: CookbookChapterProps) {
             '.Mui-expanded': { margin: '6px 0' }
           }}
           expandIcon={<ExpandCircleDownIcon />}>
-          <InlineInput label={chapter.name} onSave={saveTitle}>
-            <h1 className="text-gray-700">{chapter.name}</h1>
+          <InlineInput
+            label={chapter?.name || ''}
+            onSave={saveTitle}
+            focusOnLoad={!chapter?.name}
+            onCancel={cancelEdit}>
+            <h1 className="text-gray-700">{chapter?.name}</h1>
           </InlineInput>
         </AccordionSummary>
         <AccordionDetails className="p-0 pb-2">{recipes}</AccordionDetails>
@@ -64,3 +92,5 @@ export default function CookbookChapter({ chapter }: CookbookChapterProps) {
     </div>
   )
 }
+
+// HIDE ACCORDION if empty
