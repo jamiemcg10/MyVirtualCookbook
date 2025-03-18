@@ -8,12 +8,10 @@ import { users } from '../utils/firebase'
 import { useContext } from 'react'
 import { SessionContext } from '../utils/Session'
 import InlineInput from './InlineInput'
-import { uid } from 'uid'
-import { arrayUnion } from 'firebase/firestore'
+import { arrayRemove } from 'firebase/firestore'
 
 interface CookbookChapterProps {
-  chapter?: ChapterWithRecipeNotes
-  setShowChapterAdd?: (v: boolean) => void
+  chapter: ChapterWithRecipeNotes
 }
 
 declare module '@mui/material/InputBase' {
@@ -32,32 +30,20 @@ const mapRecipes = (recipes: RecipeWithNotes[]) => {
   })
 }
 
-function getNewChapter(name: string) {
-  return {
-    id: uid(8),
-    name,
-    recipes: [],
-    recipeOrder: []
-  }
-}
-
-export default function CookbookChapter({ chapter, setShowChapterAdd }: CookbookChapterProps) {
+export default function CookbookChapter({ chapter }: CookbookChapterProps) {
   async function saveTitle(newTitle: string) {
     if (!user?.id) return
 
-    if (chapter && chapter.name !== newTitle) {
+    if (chapter.name !== newTitle) {
       await users(user.id).chapters.update(chapter.id, { name: newTitle })
-    } else if (!chapter) {
-      const newChapter = getNewChapter(newTitle)
-      setShowChapterAdd && setShowChapterAdd(false)
-
-      await users(user.id).chapters.set(newChapter.id, newChapter)
-      await users(user.id).update({ chapterOrder: arrayUnion(newChapter.id) })
     }
   }
 
-  function cancelEdit() {
-    setShowChapterAdd && setShowChapterAdd(false)
+  async function cancelEdit() {
+    if (user && !chapter.name) {
+      await users(user.id).update({ chapterOrder: arrayRemove(chapter.id) })
+      await users(user.id).chapters.delete(chapter.id)
+    }
   }
 
   const user = useContext(SessionContext)
@@ -75,10 +61,11 @@ export default function CookbookChapter({ chapter, setShowChapterAdd }: Cookbook
         <AccordionSummary
           sx={{
             minHeight: '38px',
+            flexDirection: 'row-reverse',
             '.MuiAccordionSummary-content': { margin: '0' },
             '.Mui-expanded': { margin: '6px 0' }
           }}
-          expandIcon={<ExpandCircleDownIcon />}>
+          expandIcon={<ExpandCircleDownIcon className="mr-4" />}>
           <InlineInput
             label={chapter?.name || ''}
             onSave={saveTitle}

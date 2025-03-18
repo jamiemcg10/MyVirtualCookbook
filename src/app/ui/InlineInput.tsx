@@ -9,7 +9,7 @@ import InlineInputEditActions from './InlineInputEditActions'
 interface InlineInputProps extends PropsWithChildren {
   label: string
   onSave: (newLabel: string) => Promise<void>
-  onCancel: () => void
+  onCancel: () => Promise<void>
   focusOnLoad?: boolean
 }
 
@@ -34,7 +34,6 @@ export default function InlineInput({
   const [editing, setEditing] = useState(!!focusOnLoad)
   const inputElRef = useRef<HTMLElement>()
 
-  // let value = label
   const [saveDisabled, setSaveDisabled] = useState(!label)
 
   function getInputValue() {
@@ -82,7 +81,7 @@ export default function InlineInput({
           <InlineInputEditActions
             styles={sharedButtonStyles}
             onSave={async () => await onSave(getInputValue())}
-            onCancel={onCancel}
+            onCancel={async () => await onCancel()}
             setEditing={setEditing}
             saveDisabled={saveDisabled}
           />
