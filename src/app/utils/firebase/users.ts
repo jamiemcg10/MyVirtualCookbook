@@ -13,6 +13,9 @@ export const users = (id: string) => {
     set: async (user: User) => {
       await setDoc(doc(usersRef, id), user)
     },
+    update: async (id: string, update: Partial<User>) => {
+      await updateDoc(doc(usersRef, id), update)
+    },
     chapters: chapters(id),
     recipes: recipes(id),
     notes: notes(id)
