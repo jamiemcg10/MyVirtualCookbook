@@ -9,6 +9,8 @@ import { useContext } from 'react'
 import { SessionContext } from '../utils/Session'
 import InlineInput from './InlineInput'
 import { arrayRemove } from 'firebase/firestore'
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
+import { sharedMiniButtonStyles } from '../utils/sharedMiniButtonStyles'
 
 interface CookbookChapterProps {
   chapter: ChapterWithRecipeNotes
@@ -62,11 +64,13 @@ export default function CookbookChapter({ chapter }: CookbookChapterProps) {
           sx={{
             minHeight: '38px',
             flexDirection: 'row-reverse',
+            alignItems: 'center',
             '.MuiAccordionSummary-content': { margin: '0' },
             '.Mui-expanded': { margin: '6px 0' }
           }}
+          className="items-center"
           expandIcon={<ExpandCircleDownIcon />}>
-          <div className="ml-4">
+          <div className="ml-4 basis-full">
             <InlineInput
               label={chapter?.name || ''}
               onSave={saveTitle}
@@ -75,11 +79,13 @@ export default function CookbookChapter({ chapter }: CookbookChapterProps) {
               <h1 className="text-gray-700">{chapter?.name}</h1>
             </InlineInput>
           </div>
+          <DeleteRoundedIcon
+            sx={sharedMiniButtonStyles}
+            className="text-gray-500 hover:text-red-600 hover:bg-red-600/20 self-center"
+          />
         </AccordionSummary>
         <AccordionDetails className="p-0 pb-2">{recipes}</AccordionDetails>
       </Accordion>
     </div>
   )
 }
-
-// HIDE ACCORDION if empty
