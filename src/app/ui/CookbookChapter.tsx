@@ -65,14 +65,16 @@ export default function CookbookChapter({ chapter }: CookbookChapterProps) {
             '.MuiAccordionSummary-content': { margin: '0' },
             '.Mui-expanded': { margin: '6px 0' }
           }}
-          expandIcon={<ExpandCircleDownIcon className="mr-4" />}>
-          <InlineInput
-            label={chapter?.name || ''}
-            onSave={saveTitle}
-            focusOnLoad={!chapter?.name}
-            onCancel={cancelEdit}>
-            <h1 className="text-gray-700">{chapter?.name}</h1>
-          </InlineInput>
+          expandIcon={<ExpandCircleDownIcon />}>
+          <div className="ml-4">
+            <InlineInput
+              label={chapter?.name || ''}
+              onSave={saveTitle}
+              focusOnLoad={!chapter?.name}
+              onCancel={cancelEdit}>
+              <h1 className="text-gray-700">{chapter?.name}</h1>
+            </InlineInput>
+          </div>
         </AccordionSummary>
         <AccordionDetails className="p-0 pb-2">{recipes}</AccordionDetails>
       </Accordion>
