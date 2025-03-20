@@ -49,39 +49,37 @@ export default function Cookbook() {
   }, [user])
 
   return (
-    <div>
-      <ThemedButton color="mvc-white" className="my-4 ml-8" onClick={() => addNewChapter()}>
-        <AddIcon
-          style={{
-            verticalAlign: 'top',
-            height: 20,
-            width: 20,
-            marginLeft: -10,
-            marginTop: -2
-          }}></AddIcon>
-        <span>Add Chapter</span>
-      </ThemedButton>
-      <div className="flex h-full">
-        {cookbook ? (
-          <>
-            <div className="px-8 flex flex-col space-y-2 grow">
-              {cookbook.length &&
-                cookbook.map((chapter) => {
-                  return <CookbookChapter chapter={chapter} key={chapter.id} />
-                })}
-              {!cookbook.length && (
-                <div>Your cookbook is empty. Add chapters and recipes to get started.</div>
-              )}
-            </div>
-          </>
-        ) : (
-          <div className="grow justify-center items-center flex">
-            <ThemeProvider theme={theme}>
-              <CircularProgress size="65px" color="mvc-yellow" />
-            </ThemeProvider>
+    <div className="flex h-full flex-col">
+      {cookbook ? (
+        <>
+          <ThemedButton color="mvc-white" className="my-4 ml-8" onClick={() => addNewChapter()}>
+            <AddIcon
+              style={{
+                verticalAlign: 'top',
+                height: 20,
+                width: 20,
+                marginLeft: -10,
+                marginTop: -2
+              }}></AddIcon>
+            <span>Add Chapter</span>
+          </ThemedButton>
+          <div className="px-8 flex flex-col space-y-2 grow">
+            {cookbook.length &&
+              cookbook.map((chapter) => {
+                return <CookbookChapter chapter={chapter} key={chapter.id} />
+              })}
+            {!cookbook.length && (
+              <div>Your cookbook is empty. Add chapters and recipes to get started.</div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      ) : (
+        <div className="grow justify-center items-center flex">
+          <ThemeProvider theme={theme}>
+            <CircularProgress size="65px" color="mvc-yellow" />
+          </ThemeProvider>
+        </div>
+      )}
     </div>
   )
 }
