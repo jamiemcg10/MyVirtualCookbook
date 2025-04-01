@@ -25,6 +25,8 @@ export default function CookbookRecipe({ recipe }: CookbookRecipeProps) {
     }
   }
 
+  function cancelEdit() {}
+
   const user = useContext(SessionContext)
 
   const [editing, setEditing] = useState(false)
@@ -51,7 +53,7 @@ export default function CookbookRecipe({ recipe }: CookbookRecipeProps) {
           '.Mui-expanded': { margin: '6px 0' }
         }}
         expandIcon={<ExpandMoreIcon className="text-mvc-green" />}>
-        <InlineInput label={recipe.name} onSave={saveTitle}>
+        <InlineInput label={recipe.name} onSave={saveTitle} onCancel={cancelEdit}>
           <a href={link} className="underline text-mvc-green">
             {name}
           </a>

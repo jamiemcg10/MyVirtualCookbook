@@ -10,7 +10,7 @@ import { sharedMiniButtonStyles } from '../utils/sharedMiniButtonStyles'
 interface InlineInputProps extends PropsWithChildren {
   label: string
   onSave: (newLabel: string) => Promise<void>
-  onCancel: () => Promise<void>
+  onCancel: () => Promise<void> | void
   focusOnLoad?: boolean
 }
 
