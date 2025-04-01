@@ -14,6 +14,8 @@ import { sharedMiniButtonStyles } from '../utils/sharedMiniButtonStyles'
 
 interface CookbookChapterProps {
   chapter: ChapterWithRecipeNotes
+  setShowDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>
+  key: string
 }
 
 declare module '@mui/material/InputBase' {
@@ -32,7 +34,7 @@ const mapRecipes = (recipes: RecipeWithNotes[]) => {
   })
 }
 
-export default function CookbookChapter({ chapter }: CookbookChapterProps) {
+export default function CookbookChapter({ chapter, setShowDeleteDialog }: CookbookChapterProps) {
   async function saveTitle(newTitle: string) {
     if (!user?.id) return
 
@@ -46,6 +48,11 @@ export default function CookbookChapter({ chapter }: CookbookChapterProps) {
       await users(user.id).update({ chapterOrder: arrayRemove(chapter.id) })
       await users(user.id).chapters.delete(chapter.id)
     }
+  }
+
+  function onShowDeleteDialog(e: React.MouseEvent<SVGSVGElement>) {
+    e.stopPropagation()
+    setShowDeleteDialog(true)
   }
 
   const user = useContext(SessionContext)
@@ -81,6 +88,7 @@ export default function CookbookChapter({ chapter }: CookbookChapterProps) {
           </div>
           <DeleteRoundedIcon
             sx={sharedMiniButtonStyles}
+            onClick={onShowDeleteDialog}
             className="text-gray-500 hover:text-red-600 hover:bg-red-600/20 self-center"
           />
         </AccordionSummary>
