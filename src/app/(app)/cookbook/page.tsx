@@ -5,25 +5,14 @@ import React, { useContext, useEffect, useState } from 'react'
 import { getCookbook } from '../../utils/cookbook'
 import { SessionContext } from '@/app/utils/Session'
 import { ChapterWithRecipeNotes } from '@/app/lib/types'
-// import Sidebar from '@/app/ui/Sidebar'
-import {
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  IconButton,
-  ThemeProvider
-} from '@mui/material'
+import { CircularProgress, ThemeProvider } from '@mui/material'
 import { theme } from '@/app/ui/.theme/theme'
 import ThemedButton from '@/app/ui/buttons/ThemedButton'
 import AddIcon from '@mui/icons-material/Add'
 import { uid } from 'uid'
 import { arrayRemove, arrayUnion } from 'firebase/firestore'
 import { users } from '@/app/utils/firebase'
-import CloseIcon from '@mui/icons-material/Close'
+import DeleteChapterDialog from '@/app/ui/dialogs/DeleteChapterDialog'
 
 declare module '@mui/material/CircularProgress' {
   // eslint-disable-next-line no-unused-vars
@@ -109,47 +98,12 @@ export default function Cookbook() {
               <div>Your cookbook is empty. Add chapters and recipes to get started.</div>
             )}
           </div>
-          <Dialog
-            open={showDeleteDialog}
-            onClose={() => closeDeleteChapterDialog()}
-            sx={{ '.MuiDialog-paper': { backgroundColor: '#e1e1e1', padding: '0 15px' } }}>
-            <DialogTitle>Delete Chapter</DialogTitle>
-            <IconButton
-              onClick={() => closeDeleteChapterDialog()}
-              aria-label="close"
-              sx={(theme) => ({
-                position: 'absolute',
-                right: 8,
-                top: 8,
-                color: theme.palette.grey[500]
-              })}>
-              <CloseIcon />
-            </IconButton>
-            <DialogContent>
-              <DialogContentText>
-                Are you sure? This chapter and the recipes in it will be permanently deleted. This
-                can't be undone.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <ThemedButton
-                variant="outlined"
-                color="mvc-gray"
-                className="my-4 ml-8"
-                onClick={() => {
-                  setShowDeleteDialog(false)
-                }}>
-                <span>Cancel</span>
-              </ThemedButton>
-              <Button
-                color="error"
-                variant="contained"
-                className="my-4 ml-8"
-                onClick={deleteActiveChapter}>
-                Permanently Delete
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <DeleteChapterDialog
+            showDeleteDialog={showDeleteDialog}
+            closeDeleteChapterDialog={closeDeleteChapterDialog}
+            deleteActiveChapter={deleteActiveChapter}
+            setShowDeleteDialog={setShowDeleteDialog}
+          />
         </>
       ) : (
         <div className="grow justify-center items-center flex">
