@@ -1,15 +1,12 @@
 'use client'
 
-import { Button, ThemeProvider } from '@mui/material'
+import { Button, ButtonProps, ThemeProvider } from '@mui/material'
 import { MouseEventHandler, PropsWithChildren } from 'react'
 import { theme } from '../.theme/theme'
 
-interface ThemedButtonProps extends PropsWithChildren {
+interface ThemedButtonProps extends PropsWithChildren, ButtonProps {
   color: 'mvc-green' | 'mvc-yellow' | 'mvc-white' | 'mvc-gray'
-  variant?: 'text' | 'contained' | 'outlined'
   className?: string
-  disabled?: boolean
-  onClick?: MouseEventHandler
 }
 
 declare module '@mui/material/Button' {
@@ -28,6 +25,9 @@ export default function ThemedButton({
   disabled = false,
   variant = 'contained',
   children,
+  size = 'medium',
+  startIcon = undefined,
+  endIcon = undefined,
   onClick
 }: ThemedButtonProps) {
   return (
@@ -35,9 +35,12 @@ export default function ThemedButton({
       <Button
         variant={variant}
         color={color}
+        size={size}
         className={`w-max ${className}`}
         disabled={disabled}
-        onClick={onClick}>
+        onClick={onClick}
+        startIcon={startIcon}
+        endIcon={endIcon}>
         {children}
       </Button>
     </ThemeProvider>
