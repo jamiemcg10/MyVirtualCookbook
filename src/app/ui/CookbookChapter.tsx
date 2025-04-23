@@ -11,6 +11,9 @@ import InlineInput from './InlineInput'
 import { arrayRemove } from 'firebase/firestore'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import { sharedMiniButtonStyles } from '../utils/sharedMiniButtonStyles'
+import ThemedButton from './buttons/ThemedButton'
+import AddIcon from '@mui/icons-material/Add'
+import { Button } from '@mui/material'
 
 interface CookbookChapterProps {
   chapter: ChapterWithRecipeNotes
@@ -18,6 +21,7 @@ interface CookbookChapterProps {
   key: string
 }
 
+// this isn't being used
 declare module '@mui/material/InputBase' {
   // eslint-disable-next-line no-unused-vars
   interface InputBasePropsColorOverrides {
@@ -71,8 +75,7 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
           sx={{
             minHeight: '38px',
             flexDirection: 'row-reverse',
-            alignItems: 'center',
-            '.MuiAccordionSummary-content': { margin: '0' },
+            '.MuiAccordionSummary-content': { margin: '0', alignItems: 'center' },
             '.Mui-expanded': { margin: '6px 0' }
           }}
           className="items-center"
@@ -86,6 +89,24 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
               <h1 className="text-gray-700">{chapter?.name}</h1>
             </InlineInput>
           </div>
+          {/* TODO: Implement start icon prop in themed button */}
+          <ThemedButton
+            color="mvc-green"
+            variant="text"
+            size="small"
+            className="shrink-0 ml-8"
+            onClick={() => {}}
+            startIcon={
+              <AddIcon
+                style={{
+                  height: 20,
+                  width: 20,
+                  marginRight: '-7'
+                }}
+              />
+            }>
+            <span>Add Recipe</span>
+          </ThemedButton>
           <DeleteRoundedIcon
             sx={sharedMiniButtonStyles}
             onClick={onShowDeleteDialog}
