@@ -13,6 +13,7 @@ import { uid } from 'uid'
 import { arrayRemove, arrayUnion } from 'firebase/firestore'
 import { users } from '@/app/utils/firebase'
 import DeleteChapterDialog from '@/app/ui/dialogs/DeleteChapterDialog'
+import AddRecipeDialog from '@/app/ui/dialogs/AddRecipeDialog'
 
 declare module '@mui/material/CircularProgress' {
   // eslint-disable-next-line no-unused-vars
@@ -108,6 +109,12 @@ export default function Cookbook() {
             closeDeleteChapterDialog={closeDeleteChapterDialog}
             deleteActiveChapter={deleteActiveChapter}
             setShowDeleteDialog={setShowDeleteDialog}
+          />
+          <AddRecipeDialog
+            showAddRecipeDialog={true}
+            closeAddRecipeDialog={() => {}}
+            deleteActiveRecipe={() => {}}
+            setShowAddRecipeDialog={() => {}}
           />
         </>
       ) : (
