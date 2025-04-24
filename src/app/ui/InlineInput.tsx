@@ -32,6 +32,12 @@ export default function InlineInput({
     return (inputElRef?.current?.children[0] as HTMLInputElement).value
   }
 
+  if (focusOnLoad) {
+    requestAnimationFrame(() => {
+      setTimeout(() => inputElRef.current?.focus(), 100) // also not working
+    })
+  }
+
   // focusOnLoad && inputElRef.current?.focus() // not working
 
   return (
