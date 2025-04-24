@@ -3,9 +3,9 @@ import { Input } from '@mui/material'
 import { Roboto } from 'next/font/google'
 import { PropsWithChildren, useRef, useState } from 'react'
 import { ThemeProvider } from '@emotion/react'
-import { theme } from './.theme/theme'
+import { theme } from '../theme'
 import InlineInputEditActions from './InlineInputEditActions'
-import { sharedMiniButtonStyles } from '../utils/sharedMiniButtonStyles'
+import { sharedMiniButtonStyles } from '../../../utils/sharedMiniButtonStyles'
 
 interface InlineInputProps extends PropsWithChildren {
   label: string
