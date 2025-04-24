@@ -1,4 +1,4 @@
-import { collection, doc, updateDoc } from 'firebase/firestore'
+import { collection, doc, setDoc, updateDoc } from 'firebase/firestore'
 import { db } from './firebase'
 import { Recipe } from '@/app/lib/types'
 
@@ -7,6 +7,9 @@ export const recipes = (userId: string) => {
 
   return {
     ref: recipesRef,
+    set: async (value: Recipe) => {
+      await setDoc(doc(recipesRef, value.id), value)
+    },
     update: async (id: string, update: Partial<Recipe>) => {
       await updateDoc(doc(recipesRef, id), update)
     }
