@@ -104,7 +104,7 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
             </InlineInput>
           </div>
           <ThemedButton
-            color="mvc-gray"
+            color="mvc-green"
             variant="text"
             size="small"
             className="shrink-0 ml-8"
@@ -120,7 +120,7 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
             }>
             <span>Add Recipe</span>
           </ThemedButton>
-          <div className="relative h-4 w-10">
+          <div className="relative h-4 w-6">
             <DeleteRoundedIcon
               sx={sharedMiniButtonStyles}
               onClick={onShowDeleteDialog}

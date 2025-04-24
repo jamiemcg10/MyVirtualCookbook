@@ -75,7 +75,7 @@ export default function Cookbook() {
       {cookbook ? (
         <>
           <ThemedButton
-            color="mvc-white"
+            color="mvc-green"
             className="my-4 ml-8"
             startIcon={
               <AddIcon
