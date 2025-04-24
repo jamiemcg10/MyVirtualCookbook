@@ -51,6 +51,7 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
 
     await users(user.id).recipes.set(newRecipe)
     await users(user.id).chapters.update(chapter.id, { recipeOrder: arrayUnion(newRecipe.id) })
+    await users(user.id).notes.set({ notes: '', id: newRecipe.id })
   }
 
   async function saveTitle(newTitle: string) {
@@ -96,7 +97,7 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
           expandIcon={<ExpandCircleDownIcon />}>
           <div className="ml-4 basis-full">
             <InlineInput
-              label={chapter?.name || ''}
+              label={chapter.name || ''}
               onSave={saveTitle}
               focusOnLoad={!chapter?.name}
               onCancel={cancelEdit}>
@@ -108,7 +109,10 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
             variant="text"
             size="small"
             className="shrink-0 ml-8"
-            onClick={() => {}}
+            onClick={(e) => {
+              e.stopPropagation()
+              addNewRecipe()
+            }}
             startIcon={
               <AddIcon
                 style={{
@@ -124,7 +128,7 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
             <DeleteRoundedIcon
               sx={sharedMiniButtonStyles}
               onClick={onShowDeleteDialog}
-              className="text-gray-500 hover:text-red-600 hover:bg-red-600/20 self-center absolute rounded"
+              className="text-gray-500 hover:text-red-600 hover:bg-red-600/20 absolute rounded"
             />
           </div>
         </AccordionSummary>
