@@ -26,8 +26,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/ui/.theme/inputs/InlineInputEditActions.tsx",
-    "src/app/ui/.theme/inputs/InlineInput.tsx"
+    "src/app/ui/inputs/InlineInputEditActions.tsx",
+    "src/app/ui/inputs/InlineInput.tsx"
   ],
   "exclude": ["node_modules"]
 }
