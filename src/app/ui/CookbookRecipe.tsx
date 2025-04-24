@@ -11,6 +11,7 @@ import { RecipeWithNotes } from '../lib/types'
 import InlineInput from './InlineInput'
 import { users } from '../utils/firebase'
 import { SessionContext } from '../utils/Session'
+import { arrayRemove } from 'firebase/firestore'
 
 const chilanka = Chilanka({ weight: '400', preload: false })
 
@@ -25,7 +26,12 @@ export default function CookbookRecipe({ recipe }: CookbookRecipeProps) {
     }
   }
 
-  function cancelEdit() {}
+  async function cancelTitleEdit() {
+    if (user && !recipe.name) {
+      await users(user.id).chapters.update(recipe.id, { recipeOrder: arrayRemove(recipe.id) })
+      await users(user.id).recipes.delete(recipe.id)
+    }
+  }
 
   const user = useContext(SessionContext)
 
@@ -53,7 +59,7 @@ export default function CookbookRecipe({ recipe }: CookbookRecipeProps) {
           '.Mui-expanded': { margin: '6px 0' }
         }}
         expandIcon={<ExpandMoreIcon className="text-mvc-green" />}>
-        <InlineInput label={recipe.name} onSave={saveTitle} onCancel={cancelEdit}>
+        <InlineInput label={recipe.name} onSave={saveTitle} onCancel={cancelTitleEdit}>
           <a href={link} className="underline text-mvc-green">
             {name}
           </a>
