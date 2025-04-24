@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore'
+import { collection, deleteDoc, doc, FieldValue, setDoc, updateDoc } from 'firebase/firestore'
 import { db } from './firebase'
 import { Chapter } from '@/app/lib/types'
 
@@ -7,10 +7,10 @@ export const chapters = (userId: string) => {
 
   return {
     ref: chaptersRef,
-    set: async (id: string, value: Chapter) => {
-      await setDoc(doc(chaptersRef, id), value)
+    set: async (value: Chapter) => {
+      await setDoc(doc(chaptersRef, value.id), value)
     },
-    update: async (id: string, update: Partial<Chapter>) => {
+    update: async (id: string, update: Partial<Chapter> | Record<string, FieldValue>) => {
       await updateDoc(doc(chaptersRef, id), update)
     },
     delete: async (id: string) => {
