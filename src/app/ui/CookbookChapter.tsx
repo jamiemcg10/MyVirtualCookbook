@@ -8,12 +8,12 @@ import { users } from '../utils/firebase'
 import { useContext } from 'react'
 import { SessionContext } from '../utils/Session'
 import InlineInput from './InlineInput'
-import { arrayRemove } from 'firebase/firestore'
+import { arrayRemove, arrayUnion } from 'firebase/firestore'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import { sharedMiniButtonStyles } from '../utils/sharedMiniButtonStyles'
 import ThemedButton from './buttons/ThemedButton'
 import AddIcon from '@mui/icons-material/Add'
-import { Button, IconButton } from '@mui/material'
+import { uid } from 'uid'
 
 interface CookbookChapterProps {
   chapter: ChapterWithRecipeNotes
@@ -39,6 +39,20 @@ const mapRecipes = (recipes: RecipeWithNotes[]) => {
 }
 
 export default function CookbookChapter({ chapter, setShowDeleteDialog }: CookbookChapterProps) {
+  async function addNewRecipe() {
+    // move to new file
+    if (!user) return
+
+    const newRecipe = {
+      id: uid(8),
+      name: '',
+      link: ''
+    }
+
+    await users(user.id).recipes.set(newRecipe)
+    await users(user.id).chapters.update(chapter.id, { recipeOrder: arrayUnion(newRecipe.id) })
+  }
+
   async function saveTitle(newTitle: string) {
     if (!user?.id) return
 
