@@ -72,16 +72,19 @@ export default function Cookbook() {
     <div className="flex h-full flex-col">
       {cookbook ? (
         <>
-          <ThemedButton color="mvc-white" className="my-4 ml-8" onClick={() => addNewChapter()}>
-            <AddIcon
-              style={{
-                verticalAlign: 'top',
-                height: 20,
-                width: 20,
-                marginLeft: -10,
-                marginTop: -2
-              }}></AddIcon>
-            <span>Add Chapter</span>
+          <ThemedButton
+            color="mvc-white"
+            className="my-4 ml-8"
+            startIcon={
+              <AddIcon
+                fontSize="small"
+                style={{
+                  marginRight: -7
+                }}
+              />
+            }
+            onClick={() => addNewChapter()}>
+            Add Chapter
           </ThemedButton>
           <div className="px-8 flex flex-col space-y-2 grow">
             {cookbook.length &&

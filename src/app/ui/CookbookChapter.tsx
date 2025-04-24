@@ -13,7 +13,7 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import { sharedMiniButtonStyles } from '../utils/sharedMiniButtonStyles'
 import ThemedButton from './buttons/ThemedButton'
 import AddIcon from '@mui/icons-material/Add'
-import { Button } from '@mui/material'
+import { Button, IconButton } from '@mui/material'
 
 interface CookbookChapterProps {
   chapter: ChapterWithRecipeNotes
@@ -89,9 +89,8 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
               <h1 className="text-gray-700">{chapter?.name}</h1>
             </InlineInput>
           </div>
-          {/* TODO: Implement start icon prop in themed button */}
           <ThemedButton
-            color="mvc-green"
+            color="mvc-gray"
             variant="text"
             size="small"
             className="shrink-0 ml-8"
@@ -107,11 +106,13 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
             }>
             <span>Add Recipe</span>
           </ThemedButton>
-          <DeleteRoundedIcon
-            sx={sharedMiniButtonStyles}
-            onClick={onShowDeleteDialog}
-            className="text-gray-500 hover:text-red-600 hover:bg-red-600/20 self-center"
-          />
+          <div className="relative h-4 w-10">
+            <DeleteRoundedIcon
+              sx={sharedMiniButtonStyles}
+              onClick={onShowDeleteDialog}
+              className="text-gray-500 hover:text-red-600 hover:bg-red-600/20 self-center absolute rounded"
+            />
+          </div>
         </AccordionSummary>
         <AccordionDetails className="p-0 pb-2">{recipes}</AccordionDetails>
       </Accordion>

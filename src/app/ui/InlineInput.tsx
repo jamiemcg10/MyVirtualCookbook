@@ -40,7 +40,7 @@ export default function InlineInput({
         <>
           {children}
           <EditRoundedIcon
-            className="text-gray-500 hover:text-mvc-green hover:bg-mvc-green/20 hover:text-base transition-all rounded-sm"
+            className="text-gray-500 hover:text-mvc-green hover:bg-mvc-green/20 transition-all rounded-sm"
             sx={sharedMiniButtonStyles}
             onClick={(e) => {
               e.stopPropagation()
