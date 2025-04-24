@@ -41,6 +41,7 @@ export default function Cookbook() {
   }
 
   async function deleteActiveChapter() {
+    // TODO: Cascade delete recipes in chapter
     if (!user || !chapterToDelete) return
 
     await users(user.id).update({ chapterOrder: arrayRemove(chapterToDelete) })
@@ -49,6 +50,7 @@ export default function Cookbook() {
   }
 
   async function addNewChapter() {
+    // move to new file
     if (!user) return
 
     const newChapter = {
@@ -58,7 +60,7 @@ export default function Cookbook() {
       recipeOrder: []
     }
 
-    await users(user.id).chapters.set(newChapter.id, newChapter)
+    await users(user.id).chapters.set(newChapter)
     await users(user.id).update({ chapterOrder: arrayUnion(newChapter.id) })
   }
 
