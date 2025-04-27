@@ -7,6 +7,9 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
   --mvc-yellow: #ffd966;
+  --mvc-green: #6aa84f;
+  --mvc-white: #ffffff;
+  --mvc-gray: #808080;
 }
 
 @media (prefers-color-scheme: dark) {

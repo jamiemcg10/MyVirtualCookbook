@@ -11,7 +11,9 @@ const config: Config = {
       colors: {
         mvc: {
           green: '#6aa84f',
-          yellow: '#ffd966'
+          yellow: '#ffd966',
+          gray: '#808080',
+          white: '#fff'
         }
       },
       backgroundImage: {
