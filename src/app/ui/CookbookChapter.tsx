@@ -37,21 +37,6 @@ const mapRecipes = (recipes: RecipeWithNotes[]) => {
 }
 
 export default function CookbookChapter({ chapter, setShowDeleteDialog }: CookbookChapterProps) {
-  async function addNewRecipe() {
-    // move to new file
-    if (!user) return
-
-    const newRecipe = {
-      id: uid(8),
-      name: '',
-      link: ''
-    }
-
-    await users(user.id).recipes.set(newRecipe)
-    await users(user.id).chapters.update(chapter.id, { recipeOrder: arrayUnion(newRecipe.id) })
-    await users(user.id).notes.set({ notes: '', id: newRecipe.id })
-  }
-
   async function saveTitle(newTitle: string) {
     if (!user?.id) return
 
