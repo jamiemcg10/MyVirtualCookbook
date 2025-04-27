@@ -5,11 +5,11 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  IconButton,
-  TextField
+  IconButton
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import ThemedButton from '../buttons/ThemedButton'
+import ThemedTextField from '../inputs/ThemedTextField'
 
 interface AddRecipeDialogProps {
   showAddRecipeDialog: boolean
@@ -21,15 +21,14 @@ interface AddRecipeDialogProps {
 export default function AddRecipeDialog({
   showAddRecipeDialog,
   closeAddRecipeDialog,
-  deleteActiveRecipe,
   setShowAddRecipeDialog
 }: AddRecipeDialogProps) {
   return (
     <Dialog
       open={showAddRecipeDialog}
       onClose={() => closeAddRecipeDialog()}
-      sx={{ '.MuiDialog-paper': { backgroundColor: '#e1e1e1', width: 400} }}>
-      <DialogTitle className="text-gray-700">Add Recipe</DialogTitle>
+      sx={{ '.MuiDialog-paper': { backgroundColor: '#e1e1e1', width: 400 } }}>
+      <DialogTitle className="text-mvc-gray">Add Recipe</DialogTitle>
       <IconButton
         onClick={() => closeAddRecipeDialog()}
         aria-label="close"
@@ -43,8 +42,8 @@ export default function AddRecipeDialog({
       </IconButton>
       <DialogContent>
         <div className="flex flex-col space-y-4 mb-4 text-xs">
-        <TextField variant="standard" size="small" label="Recipe Name" required/>
-        <TextField variant="standard" size="small" label="Recipe Link" required />
+          <ThemedTextField size="small" label="Recipe name" required autoFocus />
+          <ThemedTextField size="small" label="Recipe link" required />
         </div>
       </DialogContent>
       <DialogActions>
