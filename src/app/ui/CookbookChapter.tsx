@@ -105,26 +105,6 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
               <h1 className="text-gray-700">{chapter?.name}</h1>
             </InlineInput>
           </div>
-          <ThemedButton
-            color="mvc-green"
-            variant="text"
-            size="small"
-            className="shrink-0 ml-8"
-            onClick={(e) => {
-              e.stopPropagation()
-              addNewRecipe()
-            }}
-            startIcon={
-              <AddIcon
-                style={{
-                  height: 20,
-                  width: 20,
-                  marginRight: '-7'
-                }}
-              />
-            }>
-            <span>Add Recipe</span>
-          </ThemedButton>
           <div className="relative h-4 w-6">
             <DeleteRoundedIcon
               sx={sharedMiniButtonStyles}
