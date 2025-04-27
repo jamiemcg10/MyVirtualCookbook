@@ -11,8 +11,6 @@ import InlineInput from './inputs/InlineInput'
 import { arrayRemove, arrayUnion } from 'firebase/firestore'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import { sharedMiniButtonStyles } from '../utils/sharedMiniButtonStyles'
-import ThemedButton from './buttons/ThemedButton'
-import AddIcon from '@mui/icons-material/Add'
 import { uid } from 'uid'
 
 interface CookbookChapterProps {
