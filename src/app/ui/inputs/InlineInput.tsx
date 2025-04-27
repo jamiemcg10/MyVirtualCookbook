@@ -12,6 +12,7 @@ interface InlineInputProps extends PropsWithChildren {
   onSave: (newLabel: string) => Promise<void>
   onCancel: () => Promise<void> | void
   focusOnLoad?: boolean
+  autoFocus?: boolean
 }
 
 const roboto = Roboto({ weight: '700', subsets: ['latin'] })
@@ -21,7 +22,8 @@ export default function InlineInput({
   label,
   onSave,
   onCancel,
-  focusOnLoad
+  focusOnLoad,
+  autoFocus = false
 }: InlineInputProps) {
   const [editing, setEditing] = useState(!!focusOnLoad)
   const inputElRef = useRef<HTMLElement>()
@@ -32,11 +34,11 @@ export default function InlineInput({
     return (inputElRef?.current?.children[0] as HTMLInputElement).value
   }
 
-  if (focusOnLoad) {
-    requestAnimationFrame(() => {
-      setTimeout(() => inputElRef.current?.focus(), 100) // also not working
-    })
-  }
+  // if (focusOnLoad) {
+  //   requestAnimationFrame(() => {
+  //     setTimeout(() => inputElRef.current?.focus(), 100) // also not working
+  //   })
+  // }
 
   // focusOnLoad && inputElRef.current?.focus() // not working
 
@@ -59,6 +61,7 @@ export default function InlineInput({
           <ThemeProvider theme={theme}>
             <Input
               ref={inputElRef}
+              autoFocus={autoFocus}
               sx={{
                 ...roboto.style,
                 color: 'rgb(55, 65, 81)',
