@@ -99,6 +99,7 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
             <InlineInput
               label={chapter.name || ''}
               onSave={saveTitle}
+              autoFocus={!chapter?.name}
               focusOnLoad={!chapter?.name}
               onCancel={cancelEdit}>
               <h1 className="text-gray-700">{chapter?.name}</h1>
