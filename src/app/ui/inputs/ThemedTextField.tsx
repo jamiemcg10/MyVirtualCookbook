@@ -1,4 +1,3 @@
-import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import { Input, TextField } from '@mui/material'
 import { Roboto } from 'next/font/google'
 import { PropsWithChildren, useRef, useState } from 'react'
@@ -26,16 +25,16 @@ const roboto = Roboto({ weight: '700', subsets: ['latin'] })
 
 export default function ThemedTextField({
   label,
-  size="medium",
-  variant="standard",
-  required=false,
-  autoFocus=false,
+  size = 'medium',
+  variant = 'standard',
+  required = false,
+  autoFocus = false
 }: ThemedTextFieldProps) {
   return (
     <div className="flex items-center">
-        <>
-          <ThemeProvider theme={theme}>
-            <TextField 
+      <>
+        <ThemeProvider theme={theme}>
+          <TextField
             autoFocus={autoFocus}
             fullWidth
             variant={variant}
@@ -47,10 +46,10 @@ export default function ThemedTextField({
               '.MuiInputBase-root:hover:not(.Mui-disabled, .Mui-error)::before': {
                 borderBottom: '2px solid var(--mvc-yellow)'
               }
-            }}/>
-  
-          </ThemeProvider>
-        </>
+            }}
+          />
+        </ThemeProvider>
+      </>
     </div>
   )
 }
