@@ -1,6 +1,6 @@
 import { MenuItem, TextField } from '@mui/material'
 import { Roboto } from 'next/font/google'
-import { PropsWithChildren, useRef, useState } from 'react'
+import { PropsWithChildren } from 'react'
 import { ThemeProvider } from '@emotion/react'
 import { theme } from '../.theme/theme'
 import { ChapterBase } from '@/app/lib/types'
@@ -21,11 +21,11 @@ interface ThemedTextFieldProps extends PropsWithChildren {
   required?: boolean
   autoFocus?: boolean
   select?: boolean
-  children?: React.ReactNode
   options?: ChapterBase[] // this needs a better type
+  enableAdd?: boolean
+  onInput?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
-
-const roboto = Roboto({ weight: '700', subsets: ['latin'] })
 
 export default function ThemedTextField({
   label,
@@ -34,17 +34,29 @@ export default function ThemedTextField({
   required = false,
   autoFocus = false,
   select = false,
-  options
+  options = [],
+  enableAdd,
+  onInput,
+  onChange
 }: ThemedTextFieldProps) {
-  const [selectedValue, setSelectedValue] = useState('')
+  function getOptionsMenuItems() {
+    const optionsMenuItems = options.map((opt) => {
+      return (
+        <MenuItem value={opt.id} key={opt.id}>
+          {opt.name}
+        </MenuItem>
+      )
+    })
 
-  const optionsMenuItems = options?.map((opt) => {
-    return (
-      <MenuItem value={opt.id} key={opt.id}>
-        {opt.name}
-      </MenuItem>
-    )
-  })
+    return !enableAdd
+      ? optionsMenuItems
+      : [
+          ...optionsMenuItems,
+          <MenuItem value="add" key="add" sx={{ fontStyle: 'italic' }}>
+            + Add New
+          </MenuItem>
+        ]
+  }
 
   return (
     <div className="flex items-center">
@@ -60,12 +72,14 @@ export default function ThemedTextField({
             select={select}
             defaultValue=""
             color="mvc-green"
+            onInput={onInput}
+            onChange={onChange}
             sx={{
               '.MuiInputBase-root:hover:not(.Mui-disabled, .Mui-error)::before': {
                 borderBottom: '2px solid var(--mvc-yellow)'
               }
             }}>
-            {optionsMenuItems}
+            {getOptionsMenuItems()}
           </TextField>
         </ThemeProvider>
       </>
