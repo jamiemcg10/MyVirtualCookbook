@@ -1,7 +1,7 @@
 import { collectionData, docData } from 'rxfire/firestore'
 import { users } from './firebase/users'
 import { combineLatest, map, shareReplay } from 'rxjs'
-import { Chapter } from '../lib/types'
+import { Chapter, ChapterWithRecipeNotes } from '../lib/types'
 import { DocumentData } from 'rxfire/firestore/interfaces'
 
 export const getCookbook = (userId: string) => {
@@ -21,7 +21,7 @@ export const getCookbook = (userId: string) => {
         chapters.find((c: DocumentData) => c.id === cid)
       )
 
-      const fullChapters = _chapters.map((chapter: Chapter) => {
+      const fullChapters: ChapterWithRecipeNotes[] = _chapters.map((chapter: Chapter) => {
         const _recipes = chapter.recipeOrder.map((rid: string) => {
           const recipe = recipes.find((r: DocumentData) => r.id === rid)
           const recipeWithNotes = { ...recipe, notes: notes.find((r) => r.id === rid)?.notes }
@@ -31,6 +31,7 @@ export const getCookbook = (userId: string) => {
         return {
           id: chapter.id,
           name: chapter.name,
+          recipeOrder: chapter.recipeOrder,
           recipes: _recipes
         }
       })

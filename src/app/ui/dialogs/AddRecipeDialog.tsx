@@ -1,28 +1,24 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  IconButton
-} from '@mui/material'
+import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import ThemedButton from '../buttons/ThemedButton'
 import ThemedTextField from '../inputs/ThemedTextField'
+import { ChapterBase } from '@/app/lib/types'
 
 interface AddRecipeDialogProps {
   showAddRecipeDialog: boolean
   closeAddRecipeDialog: () => void
-  deleteActiveRecipe: () => void
   setShowAddRecipeDialog: (v: boolean) => void
+  chapters: ChapterBase[]
 }
 
 export default function AddRecipeDialog({
   showAddRecipeDialog,
   closeAddRecipeDialog,
-  setShowAddRecipeDialog
+  setShowAddRecipeDialog,
+  chapters
 }: AddRecipeDialogProps) {
+  console.log({ chapters })
+
   return (
     <Dialog
       open={showAddRecipeDialog}
@@ -42,7 +38,8 @@ export default function AddRecipeDialog({
       </IconButton>
       <DialogContent>
         <div className="flex flex-col space-y-4 mb-4 text-xs">
-          <ThemedTextField size="small" label="Recipe name" required autoFocus />
+          <ThemedTextField size="small" label="Chapter" options={chapters} select />
+          <ThemedTextField size="small" label="Recipe name" required />
           <ThemedTextField size="small" label="Recipe link" required />
         </div>
       </DialogContent>

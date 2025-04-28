@@ -1,8 +1,9 @@
-import { TextField } from '@mui/material'
+import { MenuItem, TextField } from '@mui/material'
 import { Roboto } from 'next/font/google'
 import { PropsWithChildren, useRef, useState } from 'react'
 import { ThemeProvider } from '@emotion/react'
 import { theme } from '../.theme/theme'
+import { ChapterBase } from '@/app/lib/types'
 
 declare module '@mui/material/TextField' {
   // eslint-disable-next-line no-unused-vars
@@ -19,6 +20,9 @@ interface ThemedTextFieldProps extends PropsWithChildren {
   variant?: 'filled' | 'outlined' | 'standard'
   required?: boolean
   autoFocus?: boolean
+  select?: boolean
+  children?: React.ReactNode
+  options?: ChapterBase[] // this needs a better type
 }
 
 const roboto = Roboto({ weight: '700', subsets: ['latin'] })
@@ -28,8 +32,20 @@ export default function ThemedTextField({
   size = 'medium',
   variant = 'standard',
   required = false,
-  autoFocus = false
+  autoFocus = false,
+  select = false,
+  options
 }: ThemedTextFieldProps) {
+  const [selectedValue, setSelectedValue] = useState('')
+
+  const optionsMenuItems = options?.map((opt) => {
+    return (
+      <MenuItem value={opt.id} key={opt.id}>
+        {opt.name}
+      </MenuItem>
+    )
+  })
+
   return (
     <div className="flex items-center">
       <>
@@ -41,13 +57,16 @@ export default function ThemedTextField({
             size={size}
             label={label}
             required={required}
+            select={select}
+            defaultValue=""
             color="mvc-green"
             sx={{
               '.MuiInputBase-root:hover:not(.Mui-disabled, .Mui-error)::before': {
                 borderBottom: '2px solid var(--mvc-yellow)'
               }
-            }}
-          />
+            }}>
+            {optionsMenuItems}
+          </TextField>
         </ThemeProvider>
       </>
     </div>
