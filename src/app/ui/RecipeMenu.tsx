@@ -8,7 +8,12 @@ import { useState } from 'react'
 import Paper from '@mui/material/Paper'
 import { ClickAwayListener } from '@mui/material'
 
-export default function RecipeMenu() {
+interface RecipeMenuProps {
+	onRename: () => void
+	onDelete: () => Promise<void>
+}
+
+export default function RecipeMenu({ onRename, onDelete }: RecipeMenuProps) {
 	const [open, setOpen] = useState(false)
 
 	return (
@@ -24,13 +29,13 @@ export default function RecipeMenu() {
 				</IconButton>
 				{open ? (
 					<Paper sx={{ position: 'absolute', zIndex: 1, right: 0 }}>
-						<MenuItem onClick={() => {}}>
+						<MenuItem onClick={() => onRename()}>
 							<ListItemIcon>
 								<EditRoundedIcon fontSize="small" />
 							</ListItemIcon>
 							Rename
 						</MenuItem>
-						<MenuItem onClick={() => {}}>
+						<MenuItem onClick={async () => await onDelete()}>
 							<ListItemIcon>
 								<DeleteRoundedIcon fontSize="small" />
 							</ListItemIcon>

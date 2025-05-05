@@ -11,58 +11,67 @@ import CookbookNotes from './CookbookNotes'
 import RecipeMenu from './RecipeMenu'
 
 interface CookbookRecipeProps {
-  recipe: RecipeWithNotes
+	chapterId: string
+	recipe: RecipeWithNotes
 }
 
-export default function CookbookRecipe({ recipe }: CookbookRecipeProps) {
-  async function saveTitle(newTitle: string) {
-    if (user && recipe.name !== newTitle) {
-      await users(user.id).recipes.update(recipe.id, { name: newTitle })
-    }
-  }
+export default function CookbookRecipe({ recipe, chapterId }: CookbookRecipeProps) {
+	async function saveTitle(newTitle: string) {
+		if (user && recipe.name !== newTitle) {
+			await users(user.id).recipes.update(recipe.id, { name: newTitle })
+		}
+	}
 
-  async function cancelTitleEdit() {
-    if (user && !recipe.name) {
-      await users(user.id).chapters.update(recipe.id, { recipeOrder: arrayRemove(recipe.id) })
-      await users(user.id).recipes.delete(recipe.id)
-    }
-  }
+	async function cancelTitleEdit() {
+		if (user && !recipe.name) {
+			await users(user.id).chapters.update(recipe.id, { recipeOrder: arrayRemove(recipe.id) })
+			await users(user.id).recipes.delete(recipe.id)
+		}
+	}
 
-  async function saveNotes(newNotes: string) {
-    if (user && recipe.notes !== newNotes) {
-      await users(user.id).notes.update(recipe.id, newNotes)
-    }
-  }
+	async function saveNotes(newNotes: string) {
+		if (user && recipe.notes !== newNotes) {
+			await users(user.id).notes.update(recipe.id, newNotes)
+		}
+	}
 
-  const user = useContext(SessionContext)
+	async function deleteRecipe() {
+		if (user) {
+			await users(user.id).chapters.update(chapterId, { recipeOrder: arrayRemove(recipe.id) })
+			await users(user.id).recipes.delete(recipe.id)
+			await users(user.id).notes.delete(recipe.id)
+		}
+	}
 
-  const { name, link, notes } = recipe
+	const user = useContext(SessionContext)
 
-  return (
-    <Accordion
-      className="recipe"
-      sx={{
-        backgroundColor: '#cfcfcfb9',
-        margin: '6px 0',
-        '.MuiAccordionSummary-root.Mui-expanded': { margin: 0, minHeight: '36px' }
-      }}>
-      <AccordionSummary
-        sx={{
-          minHeight: '36px',
-          '.MuiAccordionSummary-content': { margin: '0' },
-          '.Mui-expanded': { margin: '6px 0' }
-        }}
-        expandIcon={<ExpandMoreIcon className="text-mvc-green" />}>
-        <div className="flex justify-between items-center w-full">
-          <InlineInput label={recipe.name} onSave={saveTitle} onCancel={cancelTitleEdit}>
-            <a href={link} className="underline text-mvc-green">
-              {name}
-            </a>
-          </InlineInput>
-          <RecipeMenu />
-        </div>
-      </AccordionSummary>
-      <CookbookNotes notes={notes} onSave={saveNotes} />
-    </Accordion>
-  )
+	const { name, link, notes } = recipe
+
+	return (
+		<Accordion
+			className="recipe"
+			sx={{
+				backgroundColor: '#cfcfcfb9',
+				margin: '6px 0',
+				'.MuiAccordionSummary-root.Mui-expanded': { margin: 0, minHeight: '36px' }
+			}}>
+			<AccordionSummary
+				sx={{
+					minHeight: '36px',
+					'.MuiAccordionSummary-content': { margin: '0' },
+					'.Mui-expanded': { margin: '6px 0' }
+				}}
+				expandIcon={<ExpandMoreIcon className="text-mvc-green" />}>
+				<div className="flex justify-between items-center w-full">
+					<InlineInput label={recipe.name} onSave={saveTitle} onCancel={cancelTitleEdit}>
+						<a href={link} className="underline text-mvc-green">
+							{name}
+						</a>
+					</InlineInput>
+					<RecipeMenu onRename={() => {}} onDelete={async () => deleteRecipe()} />
+				</div>
+			</AccordionSummary>
+			<CookbookNotes notes={notes} onSave={saveNotes} />
+		</Accordion>
+	)
 }

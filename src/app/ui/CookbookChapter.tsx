@@ -13,90 +13,90 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import { sharedMiniButtonStyles } from '../utils/sharedMiniButtonStyles'
 
 interface CookbookChapterProps {
-  chapter: ChapterWithRecipeNotes
-  setShowDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>
-  key: string
+	chapter: ChapterWithRecipeNotes
+	setShowDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>
+	key: string
 }
 
 // this isn't being used
 declare module '@mui/material/InputBase' {
-  // eslint-disable-next-line no-unused-vars
-  interface InputBasePropsColorOverrides {
-    'mvc-green': true
-    'mvc-yellow': true
-    'mvc-white': true
-    'mvc-gray': true
-  }
-}
-
-const mapRecipes = (recipes: RecipeWithNotes[]) => {
-  return recipes.map((recipe) => {
-    return <CookbookRecipe recipe={recipe} key={recipe.id} />
-  })
+	// eslint-disable-next-line no-unused-vars
+	interface InputBasePropsColorOverrides {
+		'mvc-green': true
+		'mvc-yellow': true
+		'mvc-white': true
+		'mvc-gray': true
+	}
 }
 
 export default function CookbookChapter({ chapter, setShowDeleteDialog }: CookbookChapterProps) {
-  async function saveTitle(newTitle: string) {
-    if (!user?.id) return
+	const mapRecipes = (recipes: RecipeWithNotes[]) => {
+		return recipes.map((recipe) => {
+			return <CookbookRecipe recipe={recipe} key={recipe.id} chapterId={chapter.id} />
+		})
+	}
 
-    if (chapter.name !== newTitle) {
-      await users(user.id).chapters.update(chapter.id, { name: newTitle })
-    }
-  }
+	async function saveTitle(newTitle: string) {
+		if (!user?.id) return
 
-  async function cancelEdit() {
-    if (user && !chapter.name) {
-      await users(user.id).update({ chapterOrder: arrayRemove(chapter.id) })
-      await users(user.id).chapters.delete(chapter.id)
-    }
-  }
+		if (chapter.name !== newTitle) {
+			await users(user.id).chapters.update(chapter.id, { name: newTitle })
+		}
+	}
 
-  function onShowDeleteDialog(e: React.MouseEvent<SVGSVGElement>) {
-    e.stopPropagation()
-    setShowDeleteDialog(true)
-  }
+	async function cancelEdit() {
+		if (user && !chapter.name) {
+			await users(user.id).update({ chapterOrder: arrayRemove(chapter.id) })
+			await users(user.id).chapters.delete(chapter.id)
+		}
+	}
 
-  const user = useContext(SessionContext)
+	function onShowDeleteDialog(e: React.MouseEvent<SVGSVGElement>) {
+		e.stopPropagation()
+		setShowDeleteDialog(true)
+	}
 
-  const recipes = mapRecipes(chapter?.recipes || [])
+	const user = useContext(SessionContext)
 
-  return (
-    <div className="rounded-md">
-      <Accordion
-        sx={{
-          backgroundColor: '#ffffffdd',
-          margin: '8px 0',
-          '.MuiAccordionSummary-root.Mui-expanded': { margin: 0, minHeight: '38px' }
-        }}>
-        <AccordionSummary
-          sx={{
-            minHeight: '38px',
-            flexDirection: 'row-reverse',
-            '.MuiAccordionSummary-content': { margin: '0', alignItems: 'center' },
-            '.Mui-expanded': { margin: '6px 0' }
-          }}
-          className="items-center"
-          expandIcon={<ExpandCircleDownIcon />}>
-          <div className="ml-4 basis-full">
-            <InlineInput
-              label={chapter.name || ''}
-              onSave={saveTitle}
-              autoFocus={!chapter?.name}
-              focusOnLoad={!chapter?.name}
-              onCancel={cancelEdit}>
-              <h1 className="text-gray-700">{chapter?.name}</h1>
-            </InlineInput>
-          </div>
-          <div className="relative h-4 w-6">
-            <DeleteRoundedIcon
-              sx={sharedMiniButtonStyles}
-              onClick={onShowDeleteDialog}
-              className="text-gray-500 hover:text-red-600 hover:bg-red-600/20 absolute rounded"
-            />
-          </div>
-        </AccordionSummary>
-        <AccordionDetails className="p-0 pb-2">{recipes}</AccordionDetails>
-      </Accordion>
-    </div>
-  )
+	const recipes = mapRecipes(chapter?.recipes || [])
+
+	return (
+		<div className="rounded-md">
+			<Accordion
+				sx={{
+					backgroundColor: '#ffffffdd',
+					margin: '8px 0',
+					'.MuiAccordionSummary-root.Mui-expanded': { margin: 0, minHeight: '38px' }
+				}}>
+				<AccordionSummary
+					sx={{
+						minHeight: '38px',
+						flexDirection: 'row-reverse',
+						'.MuiAccordionSummary-content': { margin: '0', alignItems: 'center' },
+						'.Mui-expanded': { margin: '6px 0' }
+					}}
+					className="items-center"
+					expandIcon={<ExpandCircleDownIcon />}>
+					<div className="ml-4 basis-full">
+						<InlineInput
+							label={chapter.name || ''}
+							onSave={saveTitle}
+							autoFocus={!chapter?.name}
+							focusOnLoad={!chapter?.name}
+							onCancel={cancelEdit}>
+							<h1 className="text-gray-700">{chapter?.name}</h1>
+						</InlineInput>
+					</div>
+					<div className="relative h-4 w-6">
+						<DeleteRoundedIcon
+							sx={sharedMiniButtonStyles}
+							onClick={onShowDeleteDialog}
+							className="text-gray-500 hover:text-red-600 hover:bg-red-600/20 absolute rounded"
+						/>
+					</div>
+				</AccordionSummary>
+				<AccordionDetails className="p-0 pb-2">{recipes}</AccordionDetails>
+			</Accordion>
+		</div>
+	)
 }
