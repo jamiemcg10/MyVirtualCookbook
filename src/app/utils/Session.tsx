@@ -12,30 +12,30 @@ import { DocumentData } from 'firebase/firestore'
 export const SessionContext = createContext<User | undefined>(undefined)
 
 export default function Session({ children }: PropsWithChildren) {
-  const [user, setUser] = useState<User | undefined>(undefined)
+	const [user, setUser] = useState<User | undefined>(undefined)
 
-  useEffect(() => {
-    let userSubscription: Subscription = new Subscription()
+	useEffect(() => {
+		let userSubscription: Subscription = new Subscription()
 
-    onAuthStateChanged(auth, (authUser) => {
-      if (authUser) {
-        const userRef = users(authUser.uid).ref
-        userSubscription = docData(userRef).subscribe(
-          // can add `{ idField: 'uid' }` as second arg
-          (_user: DocumentData | undefined) => {
-            console.log({ _user })
-            setUser(_user as User)
-          }
-        )
-      } else {
-        // User is signed out
-        userSubscription.unsubscribe()
-        setUser(undefined)
-      }
-    })
+		onAuthStateChanged(auth, (authUser) => {
+			if (authUser) {
+				const userRef = users(authUser.uid).ref
+				userSubscription = docData(userRef).subscribe(
+					// can add `{ idField: 'uid' }` as second arg
+					(_user: DocumentData | undefined) => {
+						console.log({ _user })
+						setUser(_user as User)
+					}
+				)
+			} else {
+				// User is signed out
+				userSubscription.unsubscribe()
+				setUser(undefined)
+			}
+		})
 
-    userSubscription.unsubscribe()
-  }, [])
+		userSubscription.unsubscribe()
+	}, [])
 
-  return <SessionContext.Provider value={user}>{children}</SessionContext.Provider>
+	return <SessionContext.Provider value={user}>{children}</SessionContext.Provider>
 }
