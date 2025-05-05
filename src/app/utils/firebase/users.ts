@@ -8,16 +8,16 @@ import { chapters } from './chapters'
 const usersRef = collection(db, 'users')
 
 export const users = (id: string) => {
-  return {
-    ref: doc(db, `users/${id}`),
-    set: async (user: User) => {
-      await setDoc(doc(usersRef, id), user)
-    },
-    update: async (update: Partial<User> | Record<string, FieldValue>) => {
-      await updateDoc(doc(usersRef, id), update)
-    },
-    chapters: chapters(id),
-    recipes: recipes(id),
-    notes: notes(id)
-  }
+	return {
+		ref: doc(db, `users/${id}`),
+		set: async (user: User) => {
+			await setDoc(doc(usersRef, id), user)
+		},
+		update: async (update: Partial<User> | Record<string, FieldValue>) => {
+			await updateDoc(doc(usersRef, id), update)
+		},
+		chapters: chapters(id),
+		recipes: recipes(id),
+		notes: notes(id)
+	}
 }
