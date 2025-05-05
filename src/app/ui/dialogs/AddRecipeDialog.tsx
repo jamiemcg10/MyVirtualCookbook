@@ -8,12 +8,20 @@ import { useState } from 'react'
 interface AddRecipeDialogProps {
   showAddRecipeDialog: boolean
   closeAddRecipeDialog: () => void
-  setShowAddRecipeDialog: (v: boolean) => void
   chapters: ChapterBase[]
+  saveRecipe: (recipe: NewRecipe) => Promise<void>
+}
+
+interface NewRecipe {
+  // save this elsewhere and reuse
+  chapterId: string
+  newChapterName?: string
+  recipeName: string
+  recipeLink: string
 }
 
 interface Inputs {
-  recipeChapter?: string
+  recipeChapterId?: string
   recipeName?: string
   recipeLink?: string
   newChapterName?: string
@@ -22,10 +30,10 @@ interface Inputs {
 export default function AddRecipeDialog({
   showAddRecipeDialog,
   closeAddRecipeDialog,
-  setShowAddRecipeDialog,
-  chapters
+  chapters,
+  saveRecipe
 }: AddRecipeDialogProps) {
-  const [recipeChapter, setRecipeChapter] = useState<string | null>(null)
+  const [recipeChapterId, setRecipeChapterId] = useState<string | null>(null)
   const [newChapterName, setNewChapterName] = useState<string>('')
   const [recipeName, setRecipeName] = useState('')
   const [recipeLink, setRecipeLink] = useState('')
@@ -34,8 +42,9 @@ export default function AddRecipeDialog({
 
   function onRecipeChapterChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value
-    setRecipeChapter(value)
-    checkValidity({ recipeChapter: value })
+    console.log({ value })
+    setRecipeChapterId(value)
+    checkValidity({ recipeChapterId: value })
   }
 
   function onNewChapterInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -58,7 +67,7 @@ export default function AddRecipeDialog({
   }
 
   function checkValidity(v: Inputs) {
-    const chapter = v.recipeChapter ?? recipeChapter
+    const chapter = v.recipeChapterId ?? recipeChapterId
     const newChapter = v.newChapterName ?? newChapterName
     const name = v.recipeName ?? recipeName
     const link = v.recipeLink ?? recipeLink
@@ -98,7 +107,7 @@ export default function AddRecipeDialog({
             required
             onChange={onRecipeChapterChange}
           />
-          {recipeChapter === 'add' && (
+          {recipeChapterId === 'add' && (
             <ThemedTextField
               size="small"
               label="New chapter name"
@@ -117,7 +126,7 @@ export default function AddRecipeDialog({
           color="mvc-gray"
           className="my-4 ml-8"
           onClick={() => {
-            setShowAddRecipeDialog(false)
+            closeAddRecipeDialog()
           }}>
           <span>Cancel</span>
         </ThemedButton>
@@ -126,7 +135,15 @@ export default function AddRecipeDialog({
           variant="contained"
           className="my-4 ml-8"
           disabled={saveDisabled}
-          onClick={() => {}}>
+          onClick={async () => {
+            setSaveDisabled(true)
+            await saveRecipe({
+              recipeName,
+              recipeLink,
+              chapterId: recipeChapterId || '', // perhaps initial value can be empty string instead
+              newChapterName
+            })
+          }}>
           Save
         </ThemedButton>
       </DialogActions>

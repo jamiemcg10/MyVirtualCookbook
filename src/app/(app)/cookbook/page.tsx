@@ -66,6 +66,49 @@ export default function Cookbook() {
     await users(user.id).chapters.set(newChapter)
     await users(user.id).update({ chapterOrder: arrayUnion(newChapter.id) })
   }
+  interface NewRecipe {
+    // save this elsewhere and reuse
+    chapterId: string
+    newChapterName?: string
+    recipeName: string
+    recipeLink: string
+  }
+
+  async function addNewRecipe(
+    values: NewRecipe // can reuse Inputs type here
+  ) {
+    if (!user) return
+
+    const { chapterId, recipeName, recipeLink, newChapterName } = values
+
+    const recipeId = uid(8)
+
+    const newRecipe = {
+      id: recipeId,
+      name: recipeName,
+      link: recipeLink
+    }
+
+    await users(user.id).recipes.set(newRecipe)
+    await users(user.id).notes.set({ id: recipeId, notes: '' })
+
+    if (chapterId === 'add' && newChapterName) {
+      const newChapter = {
+        id: uid(8),
+        name: newChapterName,
+        recipeOrder: [recipeId]
+      }
+
+      await users(user.id).chapters.set(newChapter)
+      await users(user.id).update({ chapterOrder: arrayUnion(newChapter.id) })
+    } else {
+      await users(user.id).chapters.update(chapterId, {
+        recipeOrder: arrayUnion(recipeId)
+      })
+    }
+
+    setShowAddRecipeDialog(false)
+  }
 
   useEffect(() => {
     window.history.replaceState(null, '', '/cookbook')
@@ -138,8 +181,8 @@ export default function Cookbook() {
           <AddRecipeDialog
             showAddRecipeDialog={showAddRecipeDialog}
             closeAddRecipeDialog={() => setShowAddRecipeDialog(false)}
-            setShowAddRecipeDialog={() => {}}
             chapters={cookbookChapters}
+            saveRecipe={addNewRecipe}
           />
         </>
       ) : (
