@@ -5,44 +5,44 @@ import { MouseEventHandler, PropsWithChildren } from 'react'
 import { theme } from '../.theme/theme'
 
 interface ThemedButtonProps extends PropsWithChildren, ButtonProps {
-  color: 'mvc-green' | 'mvc-yellow' | 'mvc-white' | 'mvc-gray'
-  className?: string
+	color: 'mvc-green' | 'mvc-yellow' | 'mvc-white' | 'mvc-gray'
+	className?: string
 }
 
 declare module '@mui/material/Button' {
-  // eslint-disable-next-line no-unused-vars
-  interface ButtonPropsColorOverrides {
-    'mvc-green': true
-    'mvc-yellow': true
-    'mvc-white': true
-    'mvc-gray': true
-  }
+	// eslint-disable-next-line no-unused-vars
+	interface ButtonPropsColorOverrides {
+		'mvc-green': true
+		'mvc-yellow': true
+		'mvc-white': true
+		'mvc-gray': true
+	}
 }
 
 export default function ThemedButton({
-  color,
-  className,
-  disabled = false,
-  variant = 'contained',
-  children,
-  size = 'medium',
-  startIcon = undefined,
-  endIcon = undefined,
-  onClick
+	color,
+	className,
+	disabled = false,
+	variant = 'contained',
+	children,
+	size = 'medium',
+	startIcon = undefined,
+	endIcon = undefined,
+	onClick
 }: ThemedButtonProps) {
-  return (
-    <ThemeProvider theme={theme}>
-      <Button
-        variant={variant}
-        color={color}
-        size={size}
-        className={`w-max ${className}`}
-        disabled={disabled}
-        onClick={onClick}
-        startIcon={startIcon}
-        endIcon={endIcon}>
-        {children}
-      </Button>
-    </ThemeProvider>
-  )
+	return (
+		<ThemeProvider theme={theme}>
+			<Button
+				variant={variant}
+				color={color}
+				size={size}
+				className={`w-max ${className}`}
+				disabled={disabled}
+				onClick={onClick}
+				startIcon={startIcon}
+				endIcon={endIcon}>
+				{children}
+			</Button>
+		</ThemeProvider>
+	)
 }
