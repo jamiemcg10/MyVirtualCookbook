@@ -8,6 +8,7 @@ import { users } from '../utils/firebase'
 import { SessionContext } from '../utils/Session'
 import { arrayRemove } from 'firebase/firestore'
 import CookbookNotes from './CookbookNotes'
+import RecipeMenu from './RecipeMenu'
 
 interface CookbookRecipeProps {
   recipe: RecipeWithNotes
@@ -52,11 +53,14 @@ export default function CookbookRecipe({ recipe }: CookbookRecipeProps) {
           '.Mui-expanded': { margin: '6px 0' }
         }}
         expandIcon={<ExpandMoreIcon className="text-mvc-green" />}>
-        <InlineInput label={recipe.name} onSave={saveTitle} onCancel={cancelTitleEdit}>
-          <a href={link} className="underline text-mvc-green">
-            {name}
-          </a>
-        </InlineInput>
+        <div className="flex justify-between items-center w-full">
+          <InlineInput label={recipe.name} onSave={saveTitle} onCancel={cancelTitleEdit}>
+            <a href={link} className="underline text-mvc-green">
+              {name}
+            </a>
+          </InlineInput>
+          <RecipeMenu />
+        </div>
       </AccordionSummary>
       <CookbookNotes notes={notes} onSave={saveNotes} />
     </Accordion>
