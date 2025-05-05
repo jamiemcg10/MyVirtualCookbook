@@ -29,7 +29,14 @@ export default function RecipeMenu({ onRename, onDelete }: RecipeMenuProps) {
 				</IconButton>
 				{open ? (
 					<Paper sx={{ position: 'absolute', zIndex: 1, right: 0 }}>
-						<MenuItem onClick={() => onRename()}>
+						<MenuItem
+							onClick={(e) => {
+								e.stopPropagation()
+								setOpen(false)
+								setTimeout(() => {
+									onRename()
+								}, 100)
+							}}>
 							<ListItemIcon>
 								<EditRoundedIcon fontSize="small" />
 							</ListItemIcon>

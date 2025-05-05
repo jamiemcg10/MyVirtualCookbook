@@ -1,7 +1,7 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { RecipeWithNotes } from '../lib/types'
 import InlineInput from './inputs/InlineInput'
 import { users } from '../utils/firebase'
@@ -45,6 +45,8 @@ export default function CookbookRecipe({ recipe, chapterId }: CookbookRecipeProp
 
 	const user = useContext(SessionContext)
 
+	const [rename, setRename] = useState(false)
+
 	const { name, link, notes } = recipe
 
 	return (
@@ -63,12 +65,18 @@ export default function CookbookRecipe({ recipe, chapterId }: CookbookRecipeProp
 				}}
 				expandIcon={<ExpandMoreIcon className="text-mvc-green" />}>
 				<div className="flex justify-between items-center w-full">
-					<InlineInput label={recipe.name} onSave={saveTitle} onCancel={cancelTitleEdit}>
+					<InlineInput
+						label={recipe.name}
+						onSave={saveTitle}
+						onCancel={cancelTitleEdit}
+						hideEditIcon
+						editing={rename}
+						setEditing={setRename}>
 						<a href={link} className="underline text-mvc-green">
 							{name}
 						</a>
 					</InlineInput>
-					<RecipeMenu onRename={() => {}} onDelete={async () => deleteRecipe()} />
+					<RecipeMenu onRename={() => setRename(true)} onDelete={async () => deleteRecipe()} />
 				</div>
 			</AccordionSummary>
 			<CookbookNotes notes={notes} onSave={saveNotes} />
