@@ -6,18 +6,18 @@ import React from 'react'
 const roboto = Roboto({ weight: '700', subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'My Virtual Cookbook',
-  description: 'Organize your recipes in one plac'
+	title: 'My Virtual Cookbook',
+	description: 'Organize your recipes in one plac'
 }
 
 export default function RootLayout({
-  children
+	children
 }: Readonly<{
-  children: React.ReactNode
+	children: React.ReactNode
 }>) {
-  return (
-    <html lang="en">
-      <body className={roboto.className}>{children}</body>
-    </html>
-  )
+	return (
+		<html lang="en">
+			<body className={roboto.className}>{children}</body>
+		</html>
+	)
 }
