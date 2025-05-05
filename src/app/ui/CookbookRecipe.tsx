@@ -27,6 +27,12 @@ export default function CookbookRecipe({ recipe }: CookbookRecipeProps) {
     }
   }
 
+  async function saveNotes(newNotes: string) {
+    if (user && recipe.notes !== newNotes) {
+      await users(user.id).notes.update(recipe.id, newNotes)
+    }
+  }
+
   const user = useContext(SessionContext)
 
   const { name, link, notes } = recipe
@@ -52,7 +58,7 @@ export default function CookbookRecipe({ recipe }: CookbookRecipeProps) {
           </a>
         </InlineInput>
       </AccordionSummary>
-      <CookbookNotes notes={notes} />
+      <CookbookNotes notes={notes} onSave={saveNotes} />
     </Accordion>
   )
 }

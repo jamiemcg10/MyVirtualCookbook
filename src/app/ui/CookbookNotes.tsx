@@ -6,23 +6,24 @@ import { Chilanka } from 'next/font/google'
 import { useEffect, useRef, useState } from 'react'
 
 interface CookbookNotesProps {
-    notes: string
-    onSave?: (notes: string) => void
+  notes: string
+  onSave: (notes: string) => void
 }
 
 const chilanka = Chilanka({ weight: '400', preload: false })
 
-export default function CookbookNotes({notes}: CookbookNotesProps) {
+export default function CookbookNotes({ notes, onSave }: CookbookNotesProps) {
   const [editing, setEditing] = useState(false)
-  
-    const notesElRef = useRef<HTMLTextAreaElement | null>(null)
 
-    useEffect(() => {
-        if (notesElRef.current) notesElRef.current.innerText = notes
-      }, [])
+  const notesElRef = useRef<HTMLTextAreaElement | null>(null)
 
-    return <>
-          <AccordionDetails className="py-0">
+  useEffect(() => {
+    if (notesElRef.current) notesElRef.current.innerText = notes
+  }, [])
+
+  return (
+    <>
+      <AccordionDetails className="py-0">
         <textarea
           rows={3}
           className={cs(
@@ -54,9 +55,9 @@ export default function CookbookNotes({notes}: CookbookNotesProps) {
               Cancel
             </ThemedButton>
             <ThemedButton
-              onClick={() => {
+              onClick={async () => {
                 setEditing(false)
-                // nothing is currently being saved
+                onSave(notesElRef.current?.value || '')
               }}
               color="mvc-green">
               Save
@@ -65,4 +66,5 @@ export default function CookbookNotes({notes}: CookbookNotesProps) {
         )}
       </AccordionActions>
     </>
+  )
 }

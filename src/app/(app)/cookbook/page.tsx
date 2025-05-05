@@ -30,7 +30,7 @@ export default function Cookbook() {
   const [cookbook, setCookbook] = useState<ChapterWithRecipeNotes[] | null>(null)
   const [cookbookChapters, setCookbookChapters] = useState<ChapterBase[]>([])
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const [showAddRecipeDialog, setShowAddRecipeDialog] = useState(true)
+  const [showAddRecipeDialog, setShowAddRecipeDialog] = useState(false)
   const [chapterToDelete, setChapterToDelete] = useState<string | null>(null)
 
   function openDeleteChapterDialog(id: string) {
