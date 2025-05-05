@@ -4,10 +4,10 @@ import Header from '../ui/Header'
 import { PropsWithChildren } from 'react'
 
 export default function App({ children }: PropsWithChildren) {
-  return (
-    <Session>
-      <Header />
-      {children}
-    </Session>
-  )
+	return (
+		<Session>
+			<Header />
+			{children}
+		</Session>
+	)
 }
