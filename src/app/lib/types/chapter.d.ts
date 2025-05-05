@@ -1,14 +1,14 @@
 import { RecipeWithNotes } from './recipe'
 
 export interface ChapterBase {
-  id: string
-  name: string
+	id: string
+	name: string
 }
 
 export interface Chapter extends ChapterBase {
-  recipeOrder: string[]
+	recipeOrder: string[]
 }
 
 export interface ChapterWithRecipeNotes extends Omit<Chapter, 'recipeIds'> {
-  recipes: RecipeWithNotes[]
+	recipes: RecipeWithNotes[]
 }

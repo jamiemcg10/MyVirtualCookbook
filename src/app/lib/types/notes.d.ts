@@ -1,4 +1,4 @@
 export interface Notes {
-    notes: string,
-    id: string
+	notes: string
+	id: string
 }
