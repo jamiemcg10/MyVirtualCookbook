@@ -8,10 +8,9 @@ import { users } from '../utils/firebase'
 import { useContext } from 'react'
 import { SessionContext } from '../utils/Session'
 import InlineInput from './inputs/InlineInput'
-import { arrayRemove, arrayUnion } from 'firebase/firestore'
+import { arrayRemove } from 'firebase/firestore'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import { sharedMiniButtonStyles } from '../utils/sharedMiniButtonStyles'
-import { uid } from 'uid'
 
 interface CookbookChapterProps {
   chapter: ChapterWithRecipeNotes
