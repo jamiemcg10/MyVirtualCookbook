@@ -106,8 +106,6 @@ export default function Cookbook() {
         recipeOrder: arrayUnion(recipeId)
       })
     }
-
-    setShowAddRecipeDialog(false)
   }
 
   useEffect(() => {

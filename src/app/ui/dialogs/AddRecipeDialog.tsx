@@ -37,6 +37,7 @@ export default function AddRecipeDialog({
   const [newChapterName, setNewChapterName] = useState<string>('')
   const [recipeName, setRecipeName] = useState('')
   const [recipeLink, setRecipeLink] = useState('')
+  const [saveStatus, setSaveStatus] = useState<'saving' | 'saved' | null>(null)
 
   const [saveDisabled, setSaveDisabled] = useState(true)
 
@@ -136,17 +137,30 @@ export default function AddRecipeDialog({
           className="my-4 ml-8"
           disabled={saveDisabled}
           onClick={async () => {
-            setSaveDisabled(true)
+            setSaveStatus('saving')
             await saveRecipe({
               recipeName,
               recipeLink,
               chapterId: recipeChapterId || '', // perhaps initial value can be empty string instead
               newChapterName
+            }).then(() => {
+              setSaveStatus('saved')
+              setTimeout(() => {
+                closeAddRecipeDialog()
+                setSaveStatus(null)
+              }, 500)
             })
           }}>
           Save
         </ThemedButton>
       </DialogActions>
+      <div
+        className={
+          'flex-col italic items-center justify-center bg-mvc-gray/75 h-full absolute w-full' +
+          (saveStatus ? ' flex' : ' hidden')
+        }>
+        {saveStatus === 'saved' ? 'Saved!' : 'Saving...'}
+      </div>
     </Dialog>
   )
 }
