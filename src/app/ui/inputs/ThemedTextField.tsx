@@ -1,5 +1,5 @@
 import { MenuItem, TextField } from '@mui/material'
-import { PropsWithChildren } from 'react'
+import React, { PropsWithChildren } from 'react'
 import { ThemeProvider } from '@emotion/react'
 import { theme } from '../.theme/theme'
 import { ChapterBase } from '@/app/lib/types'

@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import ThemedButton from '../buttons/ThemedButton'
 import ThemedTextField from '../inputs/ThemedTextField'
 import { ChapterBase } from '@/app/lib/types'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 interface AddRecipeDialogProps {
 	showAddRecipeDialog: boolean
