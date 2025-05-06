@@ -4,7 +4,7 @@ import CookbookChapter from '@/app/ui/CookbookChapter'
 import React, { useContext, useEffect, useState } from 'react'
 import { getCookbook } from '../../utils/cookbook'
 import { SessionContext } from '@/app/utils/Session'
-import { ChapterBase, ChapterWithRecipeNotes } from '@/app/lib/types'
+import { ChapterBase, ChapterWithRecipeNotes, NewRecipe } from '@/app/lib/types'
 import { CircularProgress, ThemeProvider } from '@mui/material'
 import { theme } from '@/app/ui/.theme/theme'
 import ThemedButton from '@/app/ui/buttons/ThemedButton'
@@ -66,17 +66,8 @@ export default function Cookbook() {
     await users(user.id).chapters.set(newChapter)
     await users(user.id).update({ chapterOrder: arrayUnion(newChapter.id) })
   }
-  interface NewRecipe {
-    // save this elsewhere and reuse
-    chapterId: string
-    newChapterName?: string
-    recipeName: string
-    recipeLink: string
-  }
 
-  async function addNewRecipe(
-    values: NewRecipe // can reuse Inputs type here
-  ) {
+  async function addNewRecipe(values: NewRecipe) {
     if (!user) return
 
     const { chapterId, recipeName, recipeLink, newChapterName } = values

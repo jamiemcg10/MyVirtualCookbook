@@ -7,3 +7,10 @@ export interface Recipe {
 export interface RecipeWithNotes extends Recipe {
   notes: string
 }
+
+export interface NewRecipe {
+  chapterId: string
+  newChapterName?: string
+  recipeName: string
+  recipeLink: string
+}
