@@ -1,21 +1,21 @@
-import { Theme, ThemeOptions } from '@mui/material/styles'
+import { Theme, ThemeOptions, PaletteColor } from '@mui/material/styles'
 
 declare module '@mui/material/styles' {
   interface CustomTheme extends Theme {
     palette: {
-      'mvc-green': any // change later
-      'mvc-yellow': any
-      'mvc-white': any
-      'mvc-gray': any
+      'mvc-green': PaletteColor
+      'mvc-yellow': PaletteColor
+      'mvc-white': PaletteColor
+      'mvc-gray': PaletteColor
     }
   }
-  // allow configuration using `createTheme`
+
   interface CustomThemeOptions extends ThemeOptions {
     palette?: {
-      'mvc-green'?: any
-      'mvc-yellow'?: any
-      'mvc-white': any
-      'mvc-gray': any
+      'mvc-green'?: PaletteColor
+      'mvc-yellow'?: PaletteColor
+      'mvc-white': PaletteColor
+      'mvc-gray': PaletteColor
     }
   }
 
