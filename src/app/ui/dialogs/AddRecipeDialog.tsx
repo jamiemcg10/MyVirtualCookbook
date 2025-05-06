@@ -54,7 +54,7 @@ export default function AddRecipeDialog({
 
   function onRecipeLinkInput(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value
-    // const isValid = value.match(/^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(:\d+)?(\/[^\s]*)?$/i)
+    // const isValidUrl = value.match(/^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(:\d+)?(\/[^\s]*)?$/i)
     setRecipeLink(value)
     checkValidity({ recipeLink: value })
   }
