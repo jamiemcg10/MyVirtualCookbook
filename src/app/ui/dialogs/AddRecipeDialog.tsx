@@ -3,13 +3,14 @@ import CloseIcon from '@mui/icons-material/Close'
 import ThemedButton from '../buttons/ThemedButton'
 import ThemedTextField from '../inputs/ThemedTextField'
 import { ChapterBase, NewRecipe } from '@/app/lib/types'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { SessionContext } from '@/app/utils/Session'
 
 interface AddRecipeDialogProps {
   showAddRecipeDialog: boolean
   closeAddRecipeDialog: () => void
   chapters: ChapterBase[]
-  saveRecipe: (recipe: NewRecipe) => Promise<void>
+  saveRecipe: (userId: string | undefined, recipe: NewRecipe) => Promise<void>
 }
 
 interface Inputs {
@@ -25,6 +26,8 @@ export default function AddRecipeDialog({
   chapters,
   saveRecipe
 }: AddRecipeDialogProps) {
+  const user = useContext(SessionContext)
+
   const [recipeChapterId, setRecipeChapterId] = useState<string | null>(null)
   const [newChapterName, setNewChapterName] = useState<string>('')
   const [recipeName, setRecipeName] = useState('')
@@ -130,7 +133,7 @@ export default function AddRecipeDialog({
           disabled={saveDisabled}
           onClick={async () => {
             setSaveStatus('saving')
-            await saveRecipe({
+            await saveRecipe(user?.id, {
               recipeName,
               recipeLink,
               chapterId: recipeChapterId || '', // perhaps initial value can be empty string instead

@@ -4,16 +4,17 @@ import CookbookChapter from '@/app/ui/CookbookChapter'
 import React, { useContext, useEffect, useState } from 'react'
 import { getCookbook } from '../../utils/cookbook'
 import { SessionContext } from '@/app/utils/Session'
-import { ChapterBase, ChapterWithRecipeNotes, NewRecipe } from '@/app/lib/types'
+import { ChapterBase, ChapterWithRecipeNotes } from '@/app/lib/types'
 import { CircularProgress, ThemeProvider } from '@mui/material'
 import { theme } from '@/app/ui/.theme/theme'
 import ThemedButton from '@/app/ui/buttons/ThemedButton'
 import AddIcon from '@mui/icons-material/Add'
-import { uid } from 'uid'
-import { arrayRemove, arrayUnion } from 'firebase/firestore'
+import { arrayRemove } from 'firebase/firestore'
 import { users } from '@/app/utils/firebase'
 import DeleteChapterDialog from '@/app/ui/dialogs/DeleteChapterDialog'
 import AddRecipeDialog from '@/app/ui/dialogs/AddRecipeDialog'
+import { addNewChapter } from '@/app/utils/addNewChapter'
+import { addNewRecipe } from '@/app/utils/addNewRecipe'
 
 declare module '@mui/material/CircularProgress' {
   // eslint-disable-next-line no-unused-vars
@@ -52,53 +53,6 @@ export default function Cookbook() {
     closeDeleteChapterDialog()
   }
 
-  async function addNewChapter() {
-    // move to new file
-    if (!user) return
-
-    const newChapter = {
-      id: uid(8),
-      name: '',
-      recipes: [],
-      recipeOrder: []
-    }
-
-    await users(user.id).chapters.set(newChapter)
-    await users(user.id).update({ chapterOrder: arrayUnion(newChapter.id) })
-  }
-
-  async function addNewRecipe(values: NewRecipe) {
-    if (!user) return
-
-    const { chapterId, recipeName, recipeLink, newChapterName } = values
-
-    const recipeId = uid(8)
-
-    const newRecipe = {
-      id: recipeId,
-      name: recipeName,
-      link: recipeLink
-    }
-
-    await users(user.id).recipes.set(newRecipe)
-    await users(user.id).notes.set({ id: recipeId, notes: '' })
-
-    if (chapterId === 'add' && newChapterName) {
-      const newChapter = {
-        id: uid(8),
-        name: newChapterName,
-        recipeOrder: [recipeId]
-      }
-
-      await users(user.id).chapters.set(newChapter)
-      await users(user.id).update({ chapterOrder: arrayUnion(newChapter.id) })
-    } else {
-      await users(user.id).chapters.update(chapterId, {
-        recipeOrder: arrayUnion(recipeId)
-      })
-    }
-  }
-
   useEffect(() => {
     window.history.replaceState(null, '', '/cookbook')
 
@@ -128,7 +82,7 @@ export default function Cookbook() {
                   }}
                 />
               }
-              onClick={() => addNewChapter()}>
+              onClick={() => addNewChapter(user?.id)}>
               Add Chapter
             </ThemedButton>
             <ThemedButton
