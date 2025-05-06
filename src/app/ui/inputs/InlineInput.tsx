@@ -11,7 +11,6 @@ interface InlineInputProps extends PropsWithChildren {
   label: string
   onSave: (newLabel: string) => Promise<void>
   onCancel: () => Promise<void> | void
-  focusOnLoad?: boolean
   autoFocus?: boolean
   hideEditIcon?: boolean
   editing?: boolean
@@ -25,13 +24,12 @@ export default function InlineInput({
   label,
   onSave,
   onCancel,
-  focusOnLoad, // this might be redundant
   autoFocus = false,
   hideEditIcon = false,
   editing,
   setEditing
 }: InlineInputProps) {
-  const [_editing, _setEditing] = useState(!!focusOnLoad)
+  const [_editing, _setEditing] = useState(!!autoFocus)
   const edit = editing || _editing
   const setEdit = setEditing || _setEditing
 
