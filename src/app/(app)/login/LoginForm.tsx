@@ -14,10 +14,11 @@ import {
 import Snackbar from '@mui/material/Snackbar'
 import LinkSignInButton from '../../ui/buttons/LinkSignInButton'
 import GoogleSignInButton from '../../ui/buttons/GoogleSignInButton'
-import { auth, users } from '../../utils/firebase'
+import { auth } from '../../utils/firebase'
 import { redirect } from 'next/navigation'
 import { SessionContext } from '../../utils/Session'
 import { FirebaseUser } from '@/app/lib/types'
+import { createUser } from '@/app/utils/createUser'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
@@ -64,29 +65,6 @@ export default function LoginForm() {
       .catch(({ message }) => {
         setErrorText(message)
       })
-  }
-
-  const createUser = async (user: FirebaseUser) => {
-    // move this to separate file
-    const id = user.user.uid
-
-    if (user.providerId === 'google.com' && user.profile) {
-      const displayName = user.profile.given_name
-      const pictureUrl = user.profile.picture
-
-      users(id).set({
-        id,
-        username: displayName,
-        pictureUrl,
-        chapterOrder: []
-      })
-    } else if (user.user.email) {
-      users(id).set({
-        id,
-        username: user.user.email,
-        chapterOrder: []
-      })
-    }
   }
 
   const submitBtnDisabled = email === ''
