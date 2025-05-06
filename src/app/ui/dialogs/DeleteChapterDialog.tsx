@@ -42,8 +42,10 @@ export default function DeleteChapterDialog({
 			</IconButton>
 			<DialogContent>
 				<DialogContentText>
-					"Are you sure? This chapter and the recipes in it will be permanently deleted. This can't
-					be undone."
+					<span>
+						Are you sure? This chapter and the recipes in it will be permanently deleted. This
+						can&apos;t be undone.
+					</span>
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>
