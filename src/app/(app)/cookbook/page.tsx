@@ -16,180 +16,180 @@ import DeleteChapterDialog from '@/app/ui/dialogs/DeleteChapterDialog'
 import AddRecipeDialog from '@/app/ui/dialogs/AddRecipeDialog'
 
 declare module '@mui/material/CircularProgress' {
-	// eslint-disable-next-line no-unused-vars
-	interface CircularProgressPropsColorOverrides {
-		'mvc-green': true
-		'mvc-yellow': true
-		'mvc-white': true
-		'mvc-gray': true
-	}
+  // eslint-disable-next-line no-unused-vars
+  interface CircularProgressPropsColorOverrides {
+    'mvc-green': true
+    'mvc-yellow': true
+    'mvc-white': true
+    'mvc-gray': true
+  }
 }
 
 export default function Cookbook() {
-	const user = useContext(SessionContext)
-	const [cookbook, setCookbook] = useState<ChapterWithRecipeNotes[] | null>(null)
-	const [cookbookChapters, setCookbookChapters] = useState<ChapterBase[]>([])
-	const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-	const [showAddRecipeDialog, setShowAddRecipeDialog] = useState(false)
-	const [chapterToDelete, setChapterToDelete] = useState<string | null>(null)
+  const user = useContext(SessionContext)
+  const [cookbook, setCookbook] = useState<ChapterWithRecipeNotes[] | null>(null)
+  const [cookbookChapters, setCookbookChapters] = useState<ChapterBase[]>([])
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [showAddRecipeDialog, setShowAddRecipeDialog] = useState(false)
+  const [chapterToDelete, setChapterToDelete] = useState<string | null>(null)
 
-	function openDeleteChapterDialog(id: string) {
-		setChapterToDelete(id)
-		setShowDeleteDialog(true)
-	}
+  function openDeleteChapterDialog(id: string) {
+    setChapterToDelete(id)
+    setShowDeleteDialog(true)
+  }
 
-	function closeDeleteChapterDialog() {
-		setChapterToDelete(null)
-		setShowDeleteDialog(false)
-	}
+  function closeDeleteChapterDialog() {
+    setChapterToDelete(null)
+    setShowDeleteDialog(false)
+  }
 
-	async function deleteActiveChapter() {
-		// TODO: Cascade delete recipes in chapter
-		if (!user || !chapterToDelete) return
+  async function deleteActiveChapter() {
+    // TODO: Cascade delete recipes in chapter
+    if (!user || !chapterToDelete) return
 
-		await users(user.id).update({ chapterOrder: arrayRemove(chapterToDelete) })
-		await users(user.id).chapters.delete(chapterToDelete)
-		closeDeleteChapterDialog()
-	}
+    await users(user.id).update({ chapterOrder: arrayRemove(chapterToDelete) })
+    await users(user.id).chapters.delete(chapterToDelete)
+    closeDeleteChapterDialog()
+  }
 
-	async function addNewChapter() {
-		// move to new file
-		if (!user) return
+  async function addNewChapter() {
+    // move to new file
+    if (!user) return
 
-		const newChapter = {
-			id: uid(8),
-			name: '',
-			recipes: [],
-			recipeOrder: []
-		}
+    const newChapter = {
+      id: uid(8),
+      name: '',
+      recipes: [],
+      recipeOrder: []
+    }
 
-		await users(user.id).chapters.set(newChapter)
-		await users(user.id).update({ chapterOrder: arrayUnion(newChapter.id) })
-	}
-	interface NewRecipe {
-		// save this elsewhere and reuse
-		chapterId: string
-		newChapterName?: string
-		recipeName: string
-		recipeLink: string
-	}
+    await users(user.id).chapters.set(newChapter)
+    await users(user.id).update({ chapterOrder: arrayUnion(newChapter.id) })
+  }
+  interface NewRecipe {
+    // save this elsewhere and reuse
+    chapterId: string
+    newChapterName?: string
+    recipeName: string
+    recipeLink: string
+  }
 
-	async function addNewRecipe(
-		values: NewRecipe // can reuse Inputs type here
-	) {
-		if (!user) return
+  async function addNewRecipe(
+    values: NewRecipe // can reuse Inputs type here
+  ) {
+    if (!user) return
 
-		const { chapterId, recipeName, recipeLink, newChapterName } = values
+    const { chapterId, recipeName, recipeLink, newChapterName } = values
 
-		const recipeId = uid(8)
+    const recipeId = uid(8)
 
-		const newRecipe = {
-			id: recipeId,
-			name: recipeName,
-			link: recipeLink
-		}
+    const newRecipe = {
+      id: recipeId,
+      name: recipeName,
+      link: recipeLink
+    }
 
-		await users(user.id).recipes.set(newRecipe)
-		await users(user.id).notes.set({ id: recipeId, notes: '' })
+    await users(user.id).recipes.set(newRecipe)
+    await users(user.id).notes.set({ id: recipeId, notes: '' })
 
-		if (chapterId === 'add' && newChapterName) {
-			const newChapter = {
-				id: uid(8),
-				name: newChapterName,
-				recipeOrder: [recipeId]
-			}
+    if (chapterId === 'add' && newChapterName) {
+      const newChapter = {
+        id: uid(8),
+        name: newChapterName,
+        recipeOrder: [recipeId]
+      }
 
-			await users(user.id).chapters.set(newChapter)
-			await users(user.id).update({ chapterOrder: arrayUnion(newChapter.id) })
-		} else {
-			await users(user.id).chapters.update(chapterId, {
-				recipeOrder: arrayUnion(recipeId)
-			})
-		}
-	}
+      await users(user.id).chapters.set(newChapter)
+      await users(user.id).update({ chapterOrder: arrayUnion(newChapter.id) })
+    } else {
+      await users(user.id).chapters.update(chapterId, {
+        recipeOrder: arrayUnion(recipeId)
+      })
+    }
+  }
 
-	useEffect(() => {
-		window.history.replaceState(null, '', '/cookbook')
+  useEffect(() => {
+    window.history.replaceState(null, '', '/cookbook')
 
-		user &&
-			getCookbook(user.id).subscribe((v) => {
-				setCookbook(v)
-				const chapters = v.map((chapter) => {
-					return { id: chapter.id, name: chapter.name }
-				})
-				setCookbookChapters(chapters)
-			})
-	}, [user])
+    user &&
+      getCookbook(user.id).subscribe((v) => {
+        setCookbook(v)
+        const chapters = v.map((chapter) => {
+          return { id: chapter.id, name: chapter.name }
+        })
+        setCookbookChapters(chapters)
+      })
+  }, [user])
 
-	return (
-		<div className="flex h-full flex-col">
-			{cookbook ? (
-				<>
-					<div>
-						<ThemedButton
-							color="mvc-green"
-							className="my-4 ml-8"
-							startIcon={
-								<AddIcon
-									fontSize="small"
-									style={{
-										marginRight: -7
-									}}
-								/>
-							}
-							onClick={() => addNewChapter()}>
-							Add Chapter
-						</ThemedButton>
-						<ThemedButton
-							color="mvc-yellow"
-							className="my-4 ml-8"
-							startIcon={
-								<AddIcon
-									fontSize="small"
-									style={{
-										marginRight: -7
-									}}
-								/>
-							}
-							onClick={() => setShowAddRecipeDialog(true)}>
-							Add Recipe
-						</ThemedButton>
-					</div>
-					<div className="px-8 flex flex-col space-y-2 grow">
-						{cookbook.length &&
-							cookbook.map((chapter) => {
-								return (
-									<CookbookChapter
-										chapter={chapter}
-										setShowDeleteDialog={() => openDeleteChapterDialog(chapter.id)}
-										key={chapter.id}
-									/>
-								)
-							})}
-						{!cookbook.length && (
-							<div>Your cookbook is empty. Add chapters and recipes to get started.</div>
-						)}
-					</div>
-					<DeleteChapterDialog
-						showDeleteDialog={showDeleteDialog}
-						closeDeleteChapterDialog={closeDeleteChapterDialog}
-						deleteActiveChapter={deleteActiveChapter}
-						setShowDeleteDialog={setShowDeleteDialog}
-					/>
-					<AddRecipeDialog
-						showAddRecipeDialog={showAddRecipeDialog}
-						closeAddRecipeDialog={() => setShowAddRecipeDialog(false)}
-						chapters={cookbookChapters}
-						saveRecipe={addNewRecipe}
-					/>
-				</>
-			) : (
-				<div className="grow justify-center items-center flex">
-					<ThemeProvider theme={theme}>
-						<CircularProgress size="65px" color="mvc-yellow" />
-					</ThemeProvider>
-				</div>
-			)}
-		</div>
-	)
+  return (
+    <div className="flex h-full flex-col">
+      {cookbook ? (
+        <>
+          <div>
+            <ThemedButton
+              color="mvc-green"
+              className="my-4 ml-8"
+              startIcon={
+                <AddIcon
+                  fontSize="small"
+                  style={{
+                    marginRight: -7
+                  }}
+                />
+              }
+              onClick={() => addNewChapter()}>
+              Add Chapter
+            </ThemedButton>
+            <ThemedButton
+              color="mvc-yellow"
+              className="my-4 ml-8"
+              startIcon={
+                <AddIcon
+                  fontSize="small"
+                  style={{
+                    marginRight: -7
+                  }}
+                />
+              }
+              onClick={() => setShowAddRecipeDialog(true)}>
+              Add Recipe
+            </ThemedButton>
+          </div>
+          <div className="px-8 flex flex-col space-y-2 grow">
+            {cookbook.length &&
+              cookbook.map((chapter) => {
+                return (
+                  <CookbookChapter
+                    chapter={chapter}
+                    setShowDeleteDialog={() => openDeleteChapterDialog(chapter.id)}
+                    key={chapter.id}
+                  />
+                )
+              })}
+            {!cookbook.length && (
+              <div>Your cookbook is empty. Add chapters and recipes to get started.</div>
+            )}
+          </div>
+          <DeleteChapterDialog
+            showDeleteDialog={showDeleteDialog}
+            closeDeleteChapterDialog={closeDeleteChapterDialog}
+            deleteActiveChapter={deleteActiveChapter}
+            setShowDeleteDialog={setShowDeleteDialog}
+          />
+          <AddRecipeDialog
+            showAddRecipeDialog={showAddRecipeDialog}
+            closeAddRecipeDialog={() => setShowAddRecipeDialog(false)}
+            chapters={cookbookChapters}
+            saveRecipe={addNewRecipe}
+          />
+        </>
+      ) : (
+        <div className="grow justify-center items-center flex">
+          <ThemeProvider theme={theme}>
+            <CircularProgress size="65px" color="mvc-yellow" />
+          </ThemeProvider>
+        </div>
+      )}
+    </div>
+  )
 }

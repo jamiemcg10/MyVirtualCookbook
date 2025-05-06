@@ -5,11 +5,11 @@ import { redirect } from 'next/navigation'
 import { useEffect } from 'react'
 
 export default function Logout() {
-	useEffect(() => {
-		const auth = getAuth()
-		signOut(auth)
+  useEffect(() => {
+    const auth = getAuth()
+    signOut(auth)
 
-		redirect('/login')
-	}, [])
-	return <></>
+    redirect('/login')
+  }, [])
+  return <></>
 }
