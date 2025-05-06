@@ -9,13 +9,13 @@ import { getAuth } from 'firebase/auth'
 
 // Your web app's Firebase configuration
 export const firebaseConfig = {
-	apiKey: 'AIzaSyDU2W7bspCNvDsWON17mPjggl2GGE0gBsA',
-	authDomain: 'my-virtual-cookbook.firebaseapp.com',
-	projectId: 'my-virtual-cookbook',
-	storageBucket: 'my-virtual-cookbook.appspot.com',
-	messagingSenderId: '248888218454',
-	appId: '1:248888218454:web:f5def7e35ab33bc70abcf7',
-	measurementId: 'G-TCJRM94DGC'
+  apiKey: 'AIzaSyDU2W7bspCNvDsWON17mPjggl2GGE0gBsA',
+  authDomain: 'my-virtual-cookbook.firebaseapp.com',
+  projectId: 'my-virtual-cookbook',
+  storageBucket: 'my-virtual-cookbook.appspot.com',
+  messagingSenderId: '248888218454',
+  appId: '1:248888218454:web:f5def7e35ab33bc70abcf7',
+  measurementId: 'G-TCJRM94DGC'
 }
 
 export const firebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0]
