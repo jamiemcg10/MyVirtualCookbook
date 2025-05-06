@@ -75,12 +75,7 @@ export default function LoginForm() {
     }
 
     if (isSignInWithEmailLink(auth, window.location.href)) {
-      let linkEmail = window.localStorage.getItem('emailForSignIn')
-
-      if (!linkEmail) {
-        // TODO: implement asking user to confirm email
-        linkEmail = ''
-      }
+      let linkEmail = window.localStorage.getItem('emailForSignIn') || ''
 
       signInWithEmailLink(auth, linkEmail, window.location.href)
         .then((result) => {
@@ -95,7 +90,6 @@ export default function LoginForm() {
         })
         .catch((error) => {
           setErrorText(error.message)
-          console.log({ error })
         })
     }
   }, [session])
