@@ -20,13 +20,9 @@ export default function Session({ children }: PropsWithChildren) {
     onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         const userRef = users(authUser.uid).ref
-        userSubscription = docData(userRef).subscribe(
-          // can add `{ idField: 'uid' }` as second arg
-          (_user: DocumentData | undefined) => {
-            console.log({ _user })
-            setUser(_user as User)
-          }
-        )
+        userSubscription = docData(userRef).subscribe((_user: DocumentData | undefined) => {
+          setUser(_user as User)
+        })
       } else {
         // User is signed out
         userSubscription.unsubscribe()
