@@ -45,7 +45,7 @@ export default function Cookbook() {
   }
 
   async function deleteActiveChapter() {
-    // TODO: Cascade delete recipes in chapter
+    // TODO: Cascade delete recipes in chapter - do on server side
     if (!user || !chapterToDelete) return
 
     await users(user.id).update({ chapterOrder: arrayRemove(chapterToDelete) })
