@@ -1,13 +1,8 @@
 'use client'
 
-import { Button, ButtonProps, ThemeProvider } from '@mui/material'
-import { PropsWithChildren } from 'react'
+import { Button, ThemeProvider } from '@mui/material'
 import { theme } from '../.theme/theme'
-
-interface ThemedButtonProps extends PropsWithChildren, ButtonProps {
-  color: 'mvc-green' | 'mvc-yellow' | 'mvc-white' | 'mvc-gray'
-  className?: string
-}
+import { ThemedButtonProps } from '@/app/lib/types/ui/buttons'
 
 export default function ThemedButton({
   color,
