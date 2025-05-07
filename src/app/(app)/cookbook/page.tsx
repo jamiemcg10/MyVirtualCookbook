@@ -16,16 +16,6 @@ import AddRecipeDialog from '@/app/ui/dialogs/AddRecipeDialog'
 import { addNewChapter } from '@/app/utils/addNewChapter'
 import { addNewRecipe } from '@/app/utils/addNewRecipe'
 
-declare module '@mui/material/CircularProgress' {
-  // eslint-disable-next-line no-unused-vars
-  interface CircularProgressPropsColorOverrides {
-    'mvc-green': true
-    'mvc-yellow': true
-    'mvc-white': true
-    'mvc-gray': true
-  }
-}
-
 export default function Cookbook() {
   const user = useContext(SessionContext)
   const [cookbook, setCookbook] = useState<ChapterWithRecipeNotes[] | null>(null)

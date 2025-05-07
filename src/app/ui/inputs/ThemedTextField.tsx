@@ -3,16 +3,6 @@ import React, { PropsWithChildren } from 'react'
 import { ThemeProvider } from '@emotion/react'
 import { theme } from '../.theme/theme'
 
-declare module '@mui/material/TextField' {
-  // eslint-disable-next-line no-unused-vars
-  interface TextFieldPropsColorOverrides {
-    'mvc-green': true
-    'mvc-yellow': true
-    'mvc-white': true
-    'mvc-gray': true
-  }
-}
-
 interface DropdownOption {
   id: string
   name: string

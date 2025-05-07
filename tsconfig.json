@@ -21,13 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "src/app/ui/inputs/InlineInputEditActions.tsx",
-    "src/app/ui/inputs/InlineInput.tsx"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "mui.d.ts"],
   "exclude": ["node_modules"]
 }

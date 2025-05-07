@@ -9,16 +9,6 @@ interface ThemedButtonProps extends PropsWithChildren, ButtonProps {
   className?: string
 }
 
-declare module '@mui/material/Button' {
-  // eslint-disable-next-line no-unused-vars
-  interface ButtonPropsColorOverrides {
-    'mvc-green': true
-    'mvc-yellow': true
-    'mvc-white': true
-    'mvc-gray': true
-  }
-}
-
 export default function ThemedButton({
   color,
   className,

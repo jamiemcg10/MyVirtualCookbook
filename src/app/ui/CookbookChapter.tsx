@@ -18,17 +18,6 @@ interface CookbookChapterProps {
   key: string
 }
 
-// this isn't being used
-declare module '@mui/material/InputBase' {
-  // eslint-disable-next-line no-unused-vars
-  interface InputBasePropsColorOverrides {
-    'mvc-green': true
-    'mvc-yellow': true
-    'mvc-white': true
-    'mvc-gray': true
-  }
-}
-
 export default function CookbookChapter({ chapter, setShowDeleteDialog }: CookbookChapterProps) {
   const mapRecipes = (recipes: RecipeWithNotes[]) => {
     return recipes.map((recipe) => {
