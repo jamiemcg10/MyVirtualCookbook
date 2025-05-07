@@ -3,9 +3,9 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown'
 import CookbookRecipe from './CookbookRecipe'
-import { RecipeWithNotes, ChapterWithRecipeNotes } from '../lib/types'
+import { RecipeWithNotes } from '../lib/types'
 import { users } from '../utils/firebase'
-import React, { useContext } from 'react'
+import { useContext, MouseEvent } from 'react'
 import { SessionContext } from '../utils/Session'
 import InlineInput from './inputs/InlineInput'
 import { arrayRemove } from 'firebase/firestore'
@@ -35,7 +35,7 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
     }
   }
 
-  function onShowDeleteDialog(e: React.MouseEvent<SVGSVGElement>) {
+  function onShowDeleteDialog(e: MouseEvent<SVGSVGElement>) {
     e.stopPropagation()
     setShowDeleteDialog(true)
   }

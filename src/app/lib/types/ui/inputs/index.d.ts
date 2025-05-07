@@ -1,6 +1,5 @@
-import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
+import type { Dispatch, ChangeEvent, PropsWithChildren, SetStateAction } from 'react'
 import type { SxProps } from '@mui/material/styles'
-import React from 'react'
 
 export interface InlineInputProps extends PropsWithChildren {
   label: string
@@ -29,8 +28,8 @@ export interface ThemedTextFieldProps extends PropsWithChildren {
   select?: boolean
   options?: DropdownOption[]
   enableAdd?: boolean
-  onInput?: (e: React.ChangeEvent<HTMLInputElement>) => void
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onInput?: (e: ChangeEvent<HTMLInputElement>) => void
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 interface DropdownOption {

@@ -2,7 +2,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@
 import CloseIcon from '@mui/icons-material/Close'
 import ThemedButton from '../buttons/ThemedButton'
 import ThemedTextField from '../inputs/ThemedTextField'
-import React, { useContext, useState } from 'react'
+import { ChangeEvent, useContext, useState } from 'react'
 import { SessionContext } from '@/app/utils/Session'
 import { AddRecipeDialogProps } from '@/app/lib/types/ui/dialogs'
 
@@ -29,26 +29,26 @@ export default function AddRecipeDialog({
 
   const [saveDisabled, setSaveDisabled] = useState(true)
 
-  function onRecipeChapterChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function onRecipeChapterChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value
     console.log({ value })
     setRecipeChapterId(value)
     checkValidity({ recipeChapterId: value })
   }
 
-  function onNewChapterInput(e: React.ChangeEvent<HTMLInputElement>) {
+  function onNewChapterInput(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value
     setNewChapterName(value)
     checkValidity({ newChapterName: value })
   }
 
-  function onRecipeNameInput(e: React.ChangeEvent<HTMLInputElement>) {
+  function onRecipeNameInput(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value
     setRecipeName(value)
     checkValidity({ recipeName: value })
   }
 
-  function onRecipeLinkInput(e: React.ChangeEvent<HTMLInputElement>) {
+  function onRecipeLinkInput(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value
     // const isValidUrl = value.match(/^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(:\d+)?(\/[^\s]*)?$/i)
     setRecipeLink(value)
