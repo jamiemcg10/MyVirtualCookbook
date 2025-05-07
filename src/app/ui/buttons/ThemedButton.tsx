@@ -1,7 +1,7 @@
 'use client'
 
 import { Button, ButtonProps, ThemeProvider } from '@mui/material'
-import { MouseEventHandler, PropsWithChildren } from 'react'
+import { PropsWithChildren } from 'react'
 import { theme } from '../.theme/theme'
 
 interface ThemedButtonProps extends PropsWithChildren, ButtonProps {
