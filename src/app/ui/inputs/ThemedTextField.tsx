@@ -1,25 +1,8 @@
 import { MenuItem, TextField } from '@mui/material'
-import React, { PropsWithChildren } from 'react'
+import React from 'react'
 import { ThemeProvider } from '@emotion/react'
 import { theme } from '../.theme/theme'
-
-interface DropdownOption {
-  id: string
-  name: string
-}
-
-interface ThemedTextFieldProps extends PropsWithChildren {
-  label: string
-  size?: 'small' | 'medium'
-  variant?: 'filled' | 'outlined' | 'standard'
-  required?: boolean
-  autoFocus?: boolean
-  select?: boolean
-  options?: DropdownOption[]
-  enableAdd?: boolean
-  onInput?: (e: React.ChangeEvent<HTMLInputElement>) => void
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
-}
+import type { ThemedTextFieldProps } from '@/app/lib/types/ui/inputs'
 
 export default function ThemedTextField({
   label,

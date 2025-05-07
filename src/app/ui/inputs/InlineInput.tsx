@@ -1,21 +1,12 @@
 import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import { ClickAwayListener, Input } from '@mui/material'
 import { Roboto } from 'next/font/google'
-import { Dispatch, PropsWithChildren, SetStateAction, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { ThemeProvider } from '@emotion/react'
 import { theme } from '../.theme/theme'
 import InlineInputEditActions from './InlineInputEditActions'
 import { sharedMiniButtonStyles } from '../../utils/sharedMiniButtonStyles'
-
-interface InlineInputProps extends PropsWithChildren {
-  label: string
-  onSave: (newLabel: string) => Promise<void>
-  onCancel: () => Promise<void> | void
-  autoFocus?: boolean
-  hideEditIcon?: boolean
-  editing?: boolean
-  setEditing?: Dispatch<SetStateAction<boolean>>
-}
+import type { InlineInputProps } from '@/app/lib/types/ui/inputs'
 
 const roboto = Roboto({ weight: '700', subsets: ['latin'] })
 

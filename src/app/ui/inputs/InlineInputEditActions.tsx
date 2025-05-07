@@ -1,16 +1,8 @@
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
-import { type Dispatch, type SetStateAction, useEffect } from 'react'
-import { SxProps } from '@mui/material/styles'
+import { useEffect } from 'react'
 import clsx from 'clsx'
-
-interface InlineInputEditActionsProps {
-  onSave: () => Promise<void>
-  onCancel: () => void
-  styles: SxProps
-  setEditing: Dispatch<SetStateAction<boolean>>
-  saveDisabled: boolean
-}
+import type { InlineInputEditActionsProps } from '@/app/lib/types/ui/inputs'
 
 export default function InlineInputEditActions({
   onSave,
