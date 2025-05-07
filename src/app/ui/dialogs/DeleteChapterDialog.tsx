@@ -9,13 +9,7 @@ import {
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import ThemedButton from '../buttons/ThemedButton'
-
-interface DeleteChapterDialogProps {
-  showDeleteDialog: boolean
-  closeDeleteChapterDialog: () => void
-  deleteActiveChapter: () => void
-  setShowDeleteDialog: (v: boolean) => void
-}
+import type { DeleteChapterDialogProps } from '@/app/lib/types/ui/dialogs'
 
 export default function DeleteChapterDialog({
   showDeleteDialog,

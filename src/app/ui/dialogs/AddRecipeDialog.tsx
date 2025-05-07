@@ -2,16 +2,9 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@
 import CloseIcon from '@mui/icons-material/Close'
 import ThemedButton from '../buttons/ThemedButton'
 import ThemedTextField from '../inputs/ThemedTextField'
-import { ChapterBase, NewRecipe } from '@/app/lib/types'
 import React, { useContext, useState } from 'react'
 import { SessionContext } from '@/app/utils/Session'
-
-interface AddRecipeDialogProps {
-  showAddRecipeDialog: boolean
-  closeAddRecipeDialog: () => void
-  chapters: ChapterBase[]
-  saveRecipe: (userId: string | undefined, recipe: NewRecipe) => Promise<void>
-}
+import { AddRecipeDialogProps } from '@/app/lib/types/ui/dialogs'
 
 interface Inputs {
   recipeChapterId?: string

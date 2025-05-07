@@ -1,5 +1,6 @@
 import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 import type { SxProps } from '@mui/material/styles'
+import React from 'react'
 
 export interface InlineInputProps extends PropsWithChildren {
   label: string
