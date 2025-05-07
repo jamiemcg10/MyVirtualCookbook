@@ -2,18 +2,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import { useContext, useState } from 'react'
-import { RecipeWithNotes } from '../lib/types'
 import InlineInput from './inputs/InlineInput'
 import { users } from '../utils/firebase'
 import { SessionContext } from '../utils/Session'
 import { arrayRemove } from 'firebase/firestore'
 import CookbookNotes from './CookbookNotes'
 import RecipeMenu from './RecipeMenu'
-
-interface CookbookRecipeProps {
-  chapterId: string
-  recipe: RecipeWithNotes
-}
+import { CookbookRecipeProps } from '../lib/types/ui'
 
 export default function CookbookRecipe({ recipe, chapterId }: CookbookRecipeProps) {
   async function saveTitle(newTitle: string) {

@@ -7,11 +7,7 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import { useState } from 'react'
 import Paper from '@mui/material/Paper'
 import { ClickAwayListener } from '@mui/material'
-
-interface RecipeMenuProps {
-  onRename: () => void
-  onDelete: () => Promise<void>
-}
+import { RecipeMenuProps } from '../lib/types/ui'
 
 export default function RecipeMenu({ onRename, onDelete }: RecipeMenuProps) {
   const [open, setOpen] = useState(false)

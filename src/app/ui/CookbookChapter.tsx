@@ -11,12 +11,7 @@ import InlineInput from './inputs/InlineInput'
 import { arrayRemove } from 'firebase/firestore'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import { sharedMiniButtonStyles } from '../utils/sharedMiniButtonStyles'
-
-interface CookbookChapterProps {
-  chapter: ChapterWithRecipeNotes
-  setShowDeleteDialog: React.Dispatch<React.SetStateAction<boolean>>
-  key: string
-}
+import { CookbookChapterProps } from '../lib/types/ui'
 
 export default function CookbookChapter({ chapter, setShowDeleteDialog }: CookbookChapterProps) {
   const mapRecipes = (recipes: RecipeWithNotes[]) => {

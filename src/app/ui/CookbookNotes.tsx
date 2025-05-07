@@ -4,11 +4,7 @@ import cs from 'clsx'
 import ThemedButton from './buttons/ThemedButton'
 import { Chilanka } from 'next/font/google'
 import { useEffect, useRef, useState } from 'react'
-
-interface CookbookNotesProps {
-  notes: string
-  onSave: (notes: string) => void
-}
+import { CookbookNotesProps } from '../lib/types/ui'
 
 const chilanka = Chilanka({ weight: '400', preload: false })
 
