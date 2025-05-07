@@ -2,7 +2,6 @@ import { getApps, initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 
-// Your web app's Firebase configuration
 export const firebaseConfig = {
   apiKey: 'AIzaSyDU2W7bspCNvDsWON17mPjggl2GGE0gBsA',
   authDomain: 'my-virtual-cookbook.firebaseapp.com',
