@@ -44,3 +44,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# secrets
+my-virtual-cookbook-firebase-adminsdk-7ati9-009eb6a835.json
