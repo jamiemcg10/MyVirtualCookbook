@@ -58,6 +58,7 @@ export default function CookbookRecipe({ recipe, chapterId }: CookbookRecipeProp
           '.MuiAccordionSummary-content': { margin: '0' },
           '.Mui-expanded': { margin: '6px 0' }
         }}
+        className="group"
         expandIcon={<ExpandMoreIcon className="text-mvc-green" />}>
         <div className="flex justify-between items-center w-full">
           <InlineInput
