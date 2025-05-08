@@ -57,10 +57,10 @@ export default function Cookbook() {
   }, [user])
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-col h-full overflow-hidden">
       {cookbook ? (
         <>
-          <div>
+          <div className="border-b-2 border-b-[#041a2d]">
             <ThemedButton
               color="mvc-green"
               className="my-4 ml-8"
@@ -90,7 +90,7 @@ export default function Cookbook() {
               Add Recipe
             </ThemedButton>
           </div>
-          <div className="px-8 flex flex-col space-y-2 grow">
+          <div className="flex flex-col space-y-2 grow px-8 overflow-y-scroll">
             {cookbook.length &&
               cookbook.map((chapter) => {
                 return (
