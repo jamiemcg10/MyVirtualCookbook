@@ -23,6 +23,8 @@ export interface ThemedTextFieldProps extends PropsWithChildren {
   label: string
   size?: 'small' | 'medium'
   variant?: 'filled' | 'outlined' | 'standard'
+  helperText?: string
+  error?: boolean
   required?: boolean
   autoFocus?: boolean
   select?: boolean

@@ -28,10 +28,10 @@ export default function AddRecipeDialog({
   const [saveStatus, setSaveStatus] = useState<'saving' | 'saved' | null>(null)
 
   const [saveDisabled, setSaveDisabled] = useState(true)
+  const [invalidUrl, setInvalidUrl] = useState(false)
 
   function onRecipeChapterChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value
-    console.log({ value })
     setRecipeChapterId(value)
     checkValidity({ recipeChapterId: value })
   }
@@ -50,9 +50,17 @@ export default function AddRecipeDialog({
 
   function onRecipeLinkInput(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value
-    // const isValidUrl = value.match(/^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(:\d+)?(\/[^\s]*)?$/i)
+
     setRecipeLink(value)
     checkValidity({ recipeLink: value })
+  }
+
+  function isValidUrl() {
+    const isValidUrl = recipeLink.match(
+      /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(:\d+)?(\/[^\s]*)?$/i
+    )
+    setInvalidUrl(isValidUrl ? false : true)
+    return isValidUrl
   }
 
   function checkValidity(v: Inputs) {
@@ -106,7 +114,14 @@ export default function AddRecipeDialog({
             />
           )}
           <ThemedTextField size="small" label="Recipe name" required onInput={onRecipeNameInput} />
-          <ThemedTextField size="small" label="Recipe link" required onInput={onRecipeLinkInput} />
+          <ThemedTextField
+            size="small"
+            label="Recipe link"
+            required
+            onInput={onRecipeLinkInput}
+            helperText={invalidUrl ? 'Invalid URL' : ''}
+            error={invalidUrl}
+          />
         </div>
       </DialogContent>
       <DialogActions>
@@ -125,6 +140,8 @@ export default function AddRecipeDialog({
           className="my-4 ml-8"
           disabled={saveDisabled}
           onClick={async () => {
+            if (!isValidUrl()) return
+
             setSaveStatus('saving')
             await saveRecipe(user?.id, {
               recipeName,

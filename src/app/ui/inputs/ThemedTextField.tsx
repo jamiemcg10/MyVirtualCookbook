@@ -8,6 +8,8 @@ export default function ThemedTextField({
   label,
   size = 'medium',
   variant = 'standard',
+  helperText,
+  error = false,
   required = false,
   autoFocus = false,
   select = false,
@@ -46,6 +48,8 @@ export default function ThemedTextField({
             size={size}
             label={label}
             required={required}
+            helperText={helperText}
+            error={error}
             select={select}
             defaultValue=""
             color="mvc-green"
