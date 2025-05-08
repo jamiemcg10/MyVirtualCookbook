@@ -21,7 +21,7 @@ export default function AddRecipeDialog({
 }: AddRecipeDialogProps) {
   const user = useContext(SessionContext)
 
-  const [recipeChapterId, setRecipeChapterId] = useState<string | null>(null)
+  const [recipeChapterId, setRecipeChapterId] = useState<string>('')
   const [newChapterName, setNewChapterName] = useState<string>('')
   const [recipeName, setRecipeName] = useState('')
   const [recipeLink, setRecipeLink] = useState('')
@@ -146,7 +146,7 @@ export default function AddRecipeDialog({
             await saveRecipe(user?.id, {
               recipeName,
               recipeLink,
-              chapterId: recipeChapterId || '', // perhaps initial value can be empty string instead
+              chapterId: recipeChapterId,
               newChapterName
             }).then(() => {
               setSaveStatus('saved')
