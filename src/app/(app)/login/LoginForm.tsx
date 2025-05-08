@@ -51,13 +51,13 @@ export default function LoginForm() {
     const provider = new GoogleAuthProvider()
 
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
         const user = { ...result, ...(getAdditionalUserInfo(result) || {}) } as FirebaseUser
 
         const isNewUser = user.isNewUser
 
         if (isNewUser) {
-          createUser(user)
+          await createUser(user)
         }
 
         redirect('/cookbook')
