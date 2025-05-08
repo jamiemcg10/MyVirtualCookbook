@@ -9,12 +9,11 @@ import { CircularProgress, ThemeProvider } from '@mui/material'
 import { theme } from '@/app/ui/.theme/theme'
 import ThemedButton from '@/app/ui/buttons/ThemedButton'
 import AddIcon from '@mui/icons-material/Add'
-import { arrayRemove } from 'firebase/firestore'
-import { users } from '@/app/utils/firebase'
 import DeleteChapterDialog from '@/app/ui/dialogs/DeleteChapterDialog'
 import AddRecipeDialog from '@/app/ui/dialogs/AddRecipeDialog'
 import { addNewChapter } from '@/app/utils/addNewChapter'
 import { addNewRecipe } from '@/app/utils/addNewRecipe'
+import { deleteChapter } from '@/app/utils/deleteChapter'
 
 export default function Cookbook() {
   const user = useContext(SessionContext)
@@ -35,14 +34,16 @@ export default function Cookbook() {
   }
 
   async function deleteActiveChapter() {
-    // TODO: Cascade delete recipes in chapter - do on server side
     if (!user || !chapterToDelete) return
 
-    await users(user.id).update({ chapterOrder: arrayRemove(chapterToDelete) })
-    await users(user.id).chapters.delete(chapterToDelete)
+    const childrenToDelete = cookbook?.find(
+      (chapter) => chapter.id === chapterToDelete
+    )?.recipeOrder
+
+    deleteChapter(user.id, chapterToDelete, childrenToDelete)
+
     closeDeleteChapterDialog()
   }
-
   useEffect(() => {
     window.history.replaceState(null, '', '/cookbook')
 
