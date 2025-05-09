@@ -5,5 +5,8 @@ export const sharedMiniButtonStyles = {
   padding: '2px',
   '&:hover': {
     fontSize: 18
+  },
+  '&:active': {
+    fontSize: 16
   }
 }
