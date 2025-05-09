@@ -13,7 +13,8 @@ export default function ThemedButton({
   size = 'medium',
   startIcon = undefined,
   endIcon = undefined,
-  onClick
+  onClick,
+  sx = {}
 }: ThemedButtonProps) {
   return (
     <ThemeProvider theme={theme}>
@@ -21,11 +22,15 @@ export default function ThemedButton({
         variant={variant}
         color={color}
         size={size}
-        className={`w-max ${className}`}
+        className={className}
         disabled={disabled}
         onClick={onClick}
         startIcon={startIcon}
-        endIcon={endIcon}>
+        endIcon={endIcon}
+        sx={{
+          width: 'max-content',
+          ...sx
+        }}>
         {children}
       </Button>
     </ThemeProvider>

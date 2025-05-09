@@ -5,8 +5,8 @@ export default function LinkSignInButton({ disabled, onClick }: LinkSignInButton
   return (
     <ThemedButton
       color="mvc-yellow"
-      className="min-w-full mb-2 w-full"
       disabled={disabled}
+      sx={{ minWidth: '100%', marginBottom: '0.5rem' }}
       onClick={onClick}>
       Send Log in link
     </ThemedButton>
