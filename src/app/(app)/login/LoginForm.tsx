@@ -59,8 +59,6 @@ export default function LoginForm() {
         if (isNewUser) {
           await createUser(user)
         }
-
-        redirect('/cookbook')
       })
       .catch(({ message }) => {
         setErrorText(message)
