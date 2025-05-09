@@ -61,7 +61,7 @@ export default function Cookbook() {
     <div className="flex flex-col h-full overflow-hidden">
       {cookbook ? (
         <>
-          <div className="border-b-2 border-b-[#041a2d]">
+          <div className="bg-linear-175 from-[#061f3533] to-transparent ">
             <ThemedButton
               color="mvc-green"
               className="my-4 ml-8"
