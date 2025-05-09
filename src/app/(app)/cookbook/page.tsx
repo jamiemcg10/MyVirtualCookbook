@@ -61,7 +61,12 @@ export default function Cookbook() {
     <div className="flex flex-col h-full overflow-hidden">
       {cookbook ? (
         <>
-          <div className="bg-linear-175 from-[#061f3533] to-transparent ">
+          <div
+            style={{
+              background: 'linear-gradient(180deg, #061f35, #061f3580 85%, transparent)',
+              zIndex: 1,
+              height: '86px'
+            }}>
             <ThemedButton
               color="mvc-green"
               className="my-4 ml-8"
@@ -91,7 +96,7 @@ export default function Cookbook() {
               Add Recipe
             </ThemedButton>
           </div>
-          <div className="flex flex-col space-y-2 grow px-8 overflow-y-scroll">
+          <div className="flex flex-col space-y-2 grow px-8 pt-2.5 -mt-2.5 overflow-y-scroll">
             {cookbook.length &&
               cookbook.map((chapter) => {
                 return (
