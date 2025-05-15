@@ -1,5 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react'
 import type { RecipeWithNotes } from '../lib/types'
+import { ChapterWithRecipeNotes } from '../lib/types'
 
 export interface CookbookChapterProps {
   chapter: ChapterWithRecipeNotes
