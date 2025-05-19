@@ -47,7 +47,7 @@ export default function Cookbook() {
   useEffect(() => {
     window.history.replaceState(null, '', '/cookbook')
 
-    user &&
+    if (user) {
       getCookbook(user.id).subscribe((v) => {
         setCookbook(v)
         const chapters = v.map((chapter) => {
@@ -55,6 +55,7 @@ export default function Cookbook() {
         })
         setCookbookChapters(chapters)
       })
+    }
   }, [user])
 
   return (
