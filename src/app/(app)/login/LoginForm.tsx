@@ -73,7 +73,7 @@ export default function LoginForm() {
     }
 
     if (isSignInWithEmailLink(auth, window.location.href)) {
-      let linkEmail = window.localStorage.getItem('emailForSignIn') || ''
+      const linkEmail = window.localStorage.getItem('emailForSignIn') || ''
 
       signInWithEmailLink(auth, linkEmail, window.location.href)
         .then((result) => {
