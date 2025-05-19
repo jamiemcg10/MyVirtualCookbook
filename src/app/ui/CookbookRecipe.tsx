@@ -9,6 +9,7 @@ import { arrayRemove } from 'firebase/firestore'
 import CookbookNotes from './CookbookNotes'
 import RecipeMenu from './RecipeMenu'
 import { CookbookRecipeProps } from '../lib/types/ui'
+import Link from 'next/link'
 
 export default function CookbookRecipe({ recipe, chapterId }: CookbookRecipeProps) {
   async function saveTitle(newTitle: string) {
@@ -68,9 +69,14 @@ export default function CookbookRecipe({ recipe, chapterId }: CookbookRecipeProp
             hideEditIcon
             editing={rename}
             setEditing={setRename}>
-            <a href={link} className="underline text-mvc-green">
-              {name}
-            </a>
+            <Link
+              href={link}
+              target="_blank"
+              onClick={(e) => {
+                e.stopPropagation()
+              }}>
+              <span className="underline text-mvc-green">{name}</span>
+            </Link>
           </InlineInput>
           <RecipeMenu onRename={() => setRename(true)} onDelete={async () => deleteRecipe()} />
         </div>

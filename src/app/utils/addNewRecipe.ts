@@ -2,6 +2,7 @@ import { uid } from 'uid'
 import { users } from './firebase'
 import { arrayUnion } from 'firebase/firestore'
 import { NewRecipe } from '../lib/types'
+import normalizeUrl from 'normalize-url'
 
 export async function addNewRecipe(userId: string | undefined, values: NewRecipe) {
   if (!userId) return
@@ -13,7 +14,7 @@ export async function addNewRecipe(userId: string | undefined, values: NewRecipe
   const newRecipe = {
     id: recipeId,
     name: recipeName,
-    link: recipeLink
+    link: normalizeUrl(recipeLink)
   }
 
   await users(userId).recipes.set(newRecipe)
