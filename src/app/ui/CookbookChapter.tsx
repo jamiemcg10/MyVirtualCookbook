@@ -5,15 +5,13 @@ import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown'
 import CookbookRecipe from './CookbookRecipe'
 import { RecipeWithNotes } from '../lib/types'
 import { users } from '../utils/firebase'
-import { useContext, MouseEvent, useRef, useState, useEffect } from 'react'
+import { useContext, MouseEvent } from 'react'
 import { SessionContext } from '../utils/Session'
 import InlineInput from './inputs/InlineInput'
 import { arrayRemove } from 'firebase/firestore'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import { sharedMiniButtonStyles } from '../utils/sharedMiniButtonStyles'
 import { CookbookChapterProps } from '../lib/types/ui'
-import invariant from 'tiny-invariant'
-import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
 
 export default function CookbookChapter({ chapter, setShowDeleteDialog }: CookbookChapterProps) {
   const mapRecipes = (recipes: RecipeWithNotes[]) => {
@@ -46,26 +44,9 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
 
   const recipes = mapRecipes(chapter?.recipes || [])
 
-  // drag and drop
-  type HoveredState = 'idle' | 'validMove' | 'invalidMove'
-
-  const ref = useRef(null)
-  const [state, setState] = useState<HoveredState>('idle')
-
-  useEffect(() => {
-    const el = ref.current
-    invariant(el)
-
-    return dropTargetForElements({
-      element: el,
-      getData: () => ({ location: { id: chapter.id, name: chapter.name } }) // probably dont need name
-    })
-  }, [])
-
   return (
     <div className="rounded-md">
       <Accordion
-        ref={ref}
         sx={{
           backgroundColor: '#ffffffdd',
           margin: '8px 0',
