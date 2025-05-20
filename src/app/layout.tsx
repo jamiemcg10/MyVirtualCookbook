@@ -7,7 +7,7 @@ const roboto = Roboto({ weight: '700', subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'My Virtual Cookbook',
-  description: 'Organize your recipes in one plac'
+  description: 'Organize your recipes in one place'
 }
 
 export default function RootLayout({
