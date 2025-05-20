@@ -14,6 +14,7 @@ import AddRecipeDialog from '@/app/ui/dialogs/AddRecipeDialog'
 import { addNewChapter } from '@/app/utils/addNewChapter'
 import { addNewRecipe } from '@/app/utils/addNewRecipe'
 import { deleteChapter } from '@/app/utils/deleteChapter'
+import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
 
 export default function Cookbook() {
   const user = useContext(SessionContext)
@@ -57,6 +58,26 @@ export default function Cookbook() {
       })
     }
   }, [user])
+
+  useEffect(() => {
+    return monitorForElements({
+      onDrop({ source, location }) {
+        const destination = location.current.dropTargets[0]
+
+        console.log({ destination })
+
+        if (!destination) {
+          return
+        }
+
+        const destinationLocation = destination.data.location
+        const sourceLocation = source.data.location
+        // can also get data from source
+
+        console.log({ destinationLocation, sourceLocation, source })
+      }
+    })
+  }, [])
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
