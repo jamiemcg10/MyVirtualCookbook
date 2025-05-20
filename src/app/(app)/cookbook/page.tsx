@@ -54,6 +54,12 @@ export default function Cookbook() {
 
     const newCookbook = cookbook
 
+    // if dropping into a chapter chapter
+    if (destination.droppableId.startsWith('chapter-')) {
+      const newChapterId = destination.droppableId.split('-')[1]
+      destination.droppableId = newChapterId
+    }
+
     // make quick update for ui
     const sourceIndex = cookbook?.findIndex((chapter) => chapter.id === source.droppableId)
     const destinationIndex = cookbook?.findIndex(
