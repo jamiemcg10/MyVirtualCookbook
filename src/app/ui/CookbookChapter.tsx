@@ -89,7 +89,7 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
         </AccordionSummary>
         <AccordionDetails className="p-0 pb-2">
           <Droppable droppableId={chapter.id} key={chapter.id}>
-            {(provided, snapshot) => (
+            {(provided, _snapshot) => (
               <div ref={provided.innerRef}>
                 {recipes}
                 {provided.placeholder}
