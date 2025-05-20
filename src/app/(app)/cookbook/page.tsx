@@ -52,7 +52,7 @@ export default function Cookbook() {
 
     if (!user || !cookbook || !destination) return
 
-    let newCookbook = cookbook
+    const newCookbook = cookbook
 
     // make quick update for ui
     const sourceIndex = cookbook?.findIndex((chapter) => chapter.id === source.droppableId)
