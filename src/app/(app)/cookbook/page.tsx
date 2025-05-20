@@ -14,8 +14,9 @@ import AddRecipeDialog from '@/app/ui/dialogs/AddRecipeDialog'
 import { addNewChapter } from '@/app/utils/addNewChapter'
 import { addNewRecipe } from '@/app/utils/addNewRecipe'
 import { deleteChapter } from '@/app/utils/deleteChapter'
-import { DragDropContext, DropResult } from '@hello-pangea/dnd'
+import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd'
 import { users } from '@/app/utils/firebase'
+import clsx from 'clsx'
 
 export default function Cookbook() {
   const user = useContext(SessionContext)
@@ -54,7 +55,21 @@ export default function Cookbook() {
 
     const newCookbook = cookbook
 
-    // if dropping into a chapter chapter
+    // if dragging chapter
+    if (destination.droppableId === 'cookbook') {
+      const movedChapter = newCookbook.splice(source.index, 1)
+      newCookbook.splice(destination.index, 0, ...movedChapter)
+
+      setCookbook([...newCookbook])
+
+      const chapterOrder = newCookbook.map((chapter) => chapter.id)
+
+      await users(user.id).update({ chapterOrder })
+
+      return
+    }
+
+    // if dropping into a chapter - fix destination
     if (destination.droppableId.startsWith('chapter-')) {
       const newChapterId = destination.droppableId.split('-')[1]
       destination.droppableId = newChapterId
@@ -152,21 +167,42 @@ export default function Cookbook() {
             </ThemedButton>
           </div>
           <DragDropContext onDragEnd={onDragEnd}>
-            <div className="flex flex-col space-y-2 grow px-8 pt-2.5 -mt-2.5 overflow-y-scroll">
-              {cookbook.length &&
-                cookbook.map((chapter) => {
-                  return (
-                    <CookbookChapter
-                      chapter={chapter}
-                      setShowDeleteDialog={() => openDeleteChapterDialog(chapter.id)}
-                      key={chapter.id}
-                    />
-                  )
-                })}
-              {!cookbook.length && (
-                <div>Your cookbook is empty. Add chapters and recipes to get started.</div>
-              )}
-            </div>
+            <Droppable droppableId="cookbook" key="cookbook">
+              {(provided, snapshot) => {
+                return (
+                  <div
+                    ref={provided.innerRef}
+                    className={clsx(
+                      'flex flex-col space-y-2 grow px-8 pt-2.5 -mt-2.5 overflow-y-scroll',
+                      snapshot.isDraggingOver && 'bg-mvc-yellow/30'
+                    )}>
+                    {cookbook.length &&
+                      cookbook.map((chapter, i) => {
+                        return (
+                          <Draggable key={chapter.id} draggableId={chapter.id} index={i}>
+                            {(provided, _snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}>
+                                <CookbookChapter
+                                  chapter={chapter}
+                                  setShowDeleteDialog={() => openDeleteChapterDialog(chapter.id)}
+                                  key={chapter.id}
+                                />
+                              </div>
+                            )}
+                          </Draggable>
+                        )
+                      })}
+                    {provided.placeholder}
+                    {!cookbook.length && (
+                      <div>Your cookbook is empty. Add chapters and recipes to get started.</div>
+                    )}
+                  </div>
+                )
+              }}
+            </Droppable>
           </DragDropContext>
           <DeleteChapterDialog
             showDeleteDialog={showDeleteDialog}
