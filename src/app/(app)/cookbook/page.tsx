@@ -14,6 +14,8 @@ import AddRecipeDialog from '@/app/ui/dialogs/AddRecipeDialog'
 import { addNewChapter } from '@/app/utils/addNewChapter'
 import { addNewRecipe } from '@/app/utils/addNewRecipe'
 import { deleteChapter } from '@/app/utils/deleteChapter'
+import { DragDropContext, DropResult } from '@hello-pangea/dnd'
+import { users } from '@/app/utils/firebase'
 
 export default function Cookbook() {
   const user = useContext(SessionContext)
@@ -44,9 +46,55 @@ export default function Cookbook() {
 
     closeDeleteChapterDialog()
   }
+
+  async function onDragEnd(result: DropResult) {
+    const { source, destination, draggableId } = result
+
+    if (!user || !cookbook || !destination) return
+
+    let newCookbook = cookbook
+
+    // make quick update for ui
+    const sourceIndex = cookbook?.findIndex((chapter) => chapter.id === source.droppableId)
+    const destinationIndex = cookbook?.findIndex(
+      (chapter) => chapter.id === destination?.droppableId
+    )
+
+    if (
+      sourceIndex === null ||
+      sourceIndex < 0 ||
+      destinationIndex === null ||
+      destinationIndex < 0
+    )
+      return
+
+    const recipe = newCookbook[sourceIndex].recipes.splice(source.index, 1)
+
+    newCookbook[destinationIndex].recipes.splice(destination?.index, 0, ...recipe)
+
+    setCookbook([...newCookbook])
+
+    // update db
+    const oldRecipeOrder = cookbook[sourceIndex].recipeOrder
+
+    oldRecipeOrder.splice(source.index, 1)
+
+    if (source.droppableId !== destination.droppableId) {
+      const newRecipeOrder = cookbook[destinationIndex].recipeOrder
+      newRecipeOrder.splice(destination.index, 0, draggableId)
+
+      await Promise.all([
+        users(user.id).chapters.update(source.droppableId, { recipeOrder: oldRecipeOrder }),
+        users(user.id).chapters.update(destination.droppableId, { recipeOrder: newRecipeOrder })
+      ])
+    } else {
+      oldRecipeOrder.splice(destination.index, 0, draggableId)
+      await users(user.id).chapters.update(source.droppableId, { recipeOrder: oldRecipeOrder })
+    }
+  }
+
   useEffect(() => {
     window.history.replaceState(null, '', '/cookbook')
-
     if (user) {
       getCookbook(user.id).subscribe((v) => {
         setCookbook(v)
@@ -97,21 +145,23 @@ export default function Cookbook() {
               Add Recipe
             </ThemedButton>
           </div>
-          <div className="flex flex-col space-y-2 grow px-8 pt-2.5 -mt-2.5 overflow-y-scroll">
-            {cookbook.length &&
-              cookbook.map((chapter) => {
-                return (
-                  <CookbookChapter
-                    chapter={chapter}
-                    setShowDeleteDialog={() => openDeleteChapterDialog(chapter.id)}
-                    key={chapter.id}
-                  />
-                )
-              })}
-            {!cookbook.length && (
-              <div>Your cookbook is empty. Add chapters and recipes to get started.</div>
-            )}
-          </div>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <div className="flex flex-col space-y-2 grow px-8 pt-2.5 -mt-2.5 overflow-y-scroll">
+              {cookbook.length &&
+                cookbook.map((chapter) => {
+                  return (
+                    <CookbookChapter
+                      chapter={chapter}
+                      setShowDeleteDialog={() => openDeleteChapterDialog(chapter.id)}
+                      key={chapter.id}
+                    />
+                  )
+                })}
+              {!cookbook.length && (
+                <div>Your cookbook is empty. Add chapters and recipes to get started.</div>
+              )}
+            </div>
+          </DragDropContext>
           <DeleteChapterDialog
             showDeleteDialog={showDeleteDialog}
             closeDeleteChapterDialog={closeDeleteChapterDialog}

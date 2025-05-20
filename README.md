@@ -12,7 +12,7 @@ New users must first create an account. You can register using an email address 
 
 ### Using the cookbook
 
-Once you create an account, you can add recipes and chapters to your cookbook using the _Add Chapter_ and _Add Recipe_ buttons at the top of the screen. Recipes can be added to an existing chapter or to a new chapter, but each recipe must belong to a chapter. Chapters can be expanded or collapsed by clicking them. Clicking a chapter's trash icon will delete that chapter. Clicking the edit icon by the chapter name will let you edit the name of the chapter. Each recipe has a menu with options to rename or delete that recipe.
+Once you create an account, you can add recipes and chapters to your cookbook using the _Add Chapter_ and _Add Recipe_ buttons at the top of the screen. Recipes can be added to an existing chapter or to a new chapter, but each recipe must belong to a chapter. Chapters can be expanded or collapsed by clicking them. Clicking a chapter's trash icon will delete that chapter. Clicking the edit icon by the chapter name will let you edit the name of the chapter. Each recipe has a menu with options to rename or delete that recipe. You can drag and drop recipes to re-order them within the chapter and also to move them into other chapters.
 
 <br>
 

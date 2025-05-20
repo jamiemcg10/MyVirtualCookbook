@@ -12,11 +12,20 @@ import { arrayRemove } from 'firebase/firestore'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import { sharedMiniButtonStyles } from '../utils/sharedMiniButtonStyles'
 import { CookbookChapterProps } from '../lib/types/ui'
+import { Droppable, Draggable } from '@hello-pangea/dnd'
 
 export default function CookbookChapter({ chapter, setShowDeleteDialog }: CookbookChapterProps) {
   const mapRecipes = (recipes: RecipeWithNotes[]) => {
-    return recipes.map((recipe) => {
-      return <CookbookRecipe recipe={recipe} key={recipe.id} chapterId={chapter.id} />
+    return recipes.map((recipe, i) => {
+      return (
+        <Draggable key={recipe.id} draggableId={recipe.id} index={i}>
+          {(provided, _snapshot) => (
+            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+              <CookbookRecipe recipe={recipe} key={recipe.id} chapterId={chapter.id} />
+            </div>
+          )}
+        </Draggable>
+      )
     })
   }
 
@@ -78,7 +87,16 @@ export default function CookbookChapter({ chapter, setShowDeleteDialog }: Cookbo
             />
           </div>
         </AccordionSummary>
-        <AccordionDetails className="p-0 pb-2">{recipes}</AccordionDetails>
+        <AccordionDetails className="p-0 pb-2">
+          <Droppable droppableId={chapter.id} key={chapter.id}>
+            {(provided, snapshot) => (
+              <div ref={provided.innerRef}>
+                {recipes}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </AccordionDetails>
       </Accordion>
     </div>
   )
