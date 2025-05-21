@@ -135,7 +135,7 @@ export default function Cookbook() {
             style={{
               background: 'linear-gradient(180deg, #061f35, #061f3580 85%, transparent)',
               zIndex: 1,
-              height: '86px'
+              height: '80px'
             }}>
             <ThemedButton
               color="mvc-green"
