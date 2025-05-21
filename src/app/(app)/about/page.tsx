@@ -5,8 +5,8 @@ export default function About() {
         <h1 className="page-title">How it works</h1>
         <ol className="px-5 text-white list-decimal flex flex-col space-y-4">
           <li>
-            Sign up for an account. You can create an account using your email address and a
-            password you create or using your Gmail account
+            Sign up for an account. You can create an account using your email address or using your
+            Gmail account
           </li>
           <li>
             Add recipes to your chapters in your virtual cookbook. You can create as many chapters
@@ -17,17 +17,8 @@ export default function About() {
             decide how your recipes will be organized
           </li>
           <li>
-            There are notes attached to each recipe. You can access them from the table of contents
-            or from each recipe page. You can add notes on what works, what doesn’t work, what you
-            changed, or whatever you want!
-          </li>
-          <li>
-            Your recipes will automatically open in a new tab. A separate window will pop-up for
-            your notes
-          </li>
-          <li>
-            Some recipes will automatically open in a new tab. When this happens, a separate window
-            will pop-up for your notes
+            Each recipe has its own notes. You can add notes on what works, what doesn’t work, what
+            you changed, or whatever you want!
           </li>
         </ol>
       </div>
