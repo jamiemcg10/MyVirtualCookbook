@@ -16,12 +16,20 @@ export default function Home() {
       </div>
       <div className="flex flex-wrap justify-center">
         <Link href="/about">
-          <ThemedButton color="mvc-green" className="mt-5 mb-10 mx-20">
+          <ThemedButton
+            color="mvc-green"
+            sx={{
+              margin: '1.25rem 5rem 2.5rem'
+            }}>
             Learn more
           </ThemedButton>
         </Link>
         <Link href="/login">
-          <ThemedButton color="mvc-yellow" className="mt-5 mb-10 mx-20">
+          <ThemedButton
+            color="mvc-yellow"
+            sx={{
+              margin: '1.25rem 5rem 2.5rem'
+            }}>
             Log in
           </ThemedButton>
         </Link>
