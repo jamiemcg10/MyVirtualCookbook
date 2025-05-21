@@ -167,7 +167,7 @@ export default function Cookbook() {
             </ThemedButton>
           </div>
           <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="cookbook" key="cookbook">
+            <Droppable droppableId="cookbook" key="cookbook" type="CookbookChapter">
               {(provided, snapshot) => {
                 return (
                   <div
