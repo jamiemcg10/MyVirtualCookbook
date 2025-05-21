@@ -17,7 +17,7 @@ export default function RecipeMenu({ onRename, onDelete }: RecipeMenuProps) {
       <div className="relative" onMouseLeave={() => setOpen(false)}>
         <IconButton
           size="small"
-          className="invisible group-hover:visible"
+          className="invisible group-hover:visible [@media(hover:none)]:visible"
           onClick={(e) => {
             e.stopPropagation()
             setOpen(!open)
