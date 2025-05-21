@@ -139,7 +139,9 @@ export default function Cookbook() {
             }}>
             <ThemedButton
               color="mvc-green"
-              className="my-4 ml-8"
+              sx={{
+                margin: '1rem 0 1rem 2rem'
+              }}
               startIcon={
                 <AddIcon
                   fontSize="small"
@@ -153,7 +155,9 @@ export default function Cookbook() {
             </ThemedButton>
             <ThemedButton
               color="mvc-yellow"
-              className="my-4 ml-8"
+              sx={{
+                margin: '1rem 0 1rem 2rem'
+              }}
               startIcon={
                 <AddIcon
                   fontSize="small"
