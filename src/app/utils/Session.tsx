@@ -13,6 +13,15 @@ export const SessionContext = createContext<User | undefined>(undefined)
 
 export default function Session({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | undefined>(undefined)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
+    }
+    setLoading(false)
+  }, [])
 
   useEffect(() => {
     let userSubscription: Subscription = new Subscription()
@@ -22,16 +31,18 @@ export default function Session({ children }: PropsWithChildren) {
         const userRef = users(authUser.uid).ref
         userSubscription = docData(userRef).subscribe((_user: DocumentData | undefined) => {
           setUser(_user as User)
+          localStorage.setItem('user', JSON.stringify(_user))
         })
       } else {
         // User is signed out
         userSubscription.unsubscribe()
         setUser(undefined)
+        localStorage.removeItem('user')
       }
     })
 
     userSubscription.unsubscribe()
   }, [])
 
-  return <SessionContext.Provider value={user}>{children}</SessionContext.Provider>
+  return <SessionContext.Provider value={user}>{!loading && children}</SessionContext.Provider>
 }
