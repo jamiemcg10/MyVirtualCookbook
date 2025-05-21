@@ -21,14 +21,14 @@ export default function Header() {
         <Logo small />
       </Link>
       {loggedIn ? (
-        <div className="text-white">
+        <div className="text-white text-sm sm:text-base">
           {greeting} |
           <a href="/logout" className="ml-1">
             Log Out
           </a>
         </div>
       ) : (
-        <div className="text-white">
+        <div className="text-white text-sm sm:text-base">
           <a href="./login" className="hover:overline">
             Log In
           </a>
