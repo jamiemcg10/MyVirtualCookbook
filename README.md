@@ -1,28 +1,30 @@
 # **MyVirtualCookbook**
 
-## An app for collecting and organizing recipe bookmarks online. 
+## An app for collecting and organizing recipe bookmarks online.
+
 www.myvirtualcookbook.com
 
-<br>
+### User Accounts
 
-### User Accounts  
-New users must first create an account. You can register using an email address and password or by linking to your Google account.
-
-<br>  
-
-### Using the Virtual Cookbook
-Once an account has been created, you can add recipes and chapters to your cookbook using the *Add Recipe* and *Add Chapter* buttons at the bottom of the screen. Recipes can be added to an existing chapter or to a new chapter. Each recipe must belong to a chapter. Chapters can be opened or closed by clicking them. Recipes can be moved between chapters by dragging them from one chapter to another. Right-clicking a chapter or recipe brings up a menu with options to rename or delete that recipe or chapter.
+New users must first create an account. You can register using an email address or by linking to your Google account.
 
 <br>
 
-### Viewing Recipes and Recipe Notes
-Next to each recipe is an icon for notes. When this icon is clicked, a box will appear underneath the recipe where users can view or edit notes for that recipe. Changes to notes save automatically. Clicking the icon again will hide the notes box. Recipes can be opened by clicking on their titles. There are two types of recipe pages. 
+### Using the cookbook
 
-- Recipes that are underlined will open in a new tab with a separate pop-up window with the notes for that recipe. 
-- Recipes that are not underlined will open in a new tab and will have the notes in a pane on the side of the page.
+Once you create an account, you can add recipes and chapters to your cookbook using the _Add Chapter_ and _Add Recipe_ buttons at the top of the screen. Recipes can be added to an existing chapter or to a new chapter, but each recipe must belong to a chapter.
 
-Notes can only be edited in one place at a time, so if a recipe is open, you can't edit notes in the table of contents.    
-  
-  
+Chapters can be expanded or collapsed by clicking them. Clicking a chapter's trash icon will delete that chapter. Clicking the edit icon by the chapter name will let you edit the name of the chapter. You can drag and drop chapters to reorder them.
+
+Each recipe has a menu with options to rename or delete that recipe. You can drag and drop recipes to re-order them within the chapter and also to move them into other chapters.
+
+<br>
+
+### Viewing recipes and recipe notes
+
+Recipes can be opened by clicking on their titles. When a recipe is expanded, a box is shown where you can view or edit notes for that recipe.
+
 <br>    
-<br>  
+<br>
+
+This is a Next.js app deployed using Vercel
