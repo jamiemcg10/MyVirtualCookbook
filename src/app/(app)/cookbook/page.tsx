@@ -10,7 +10,7 @@ import { theme } from '@/app/ui/.theme/theme'
 import ThemedButton from '@/app/ui/buttons/ThemedButton'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteChapterDialog from '@/app/ui/dialogs/DeleteChapterDialog'
-import AddRecipeDialog from '@/app/ui/dialogs/AddRecipeDialog'
+import EditRecipeDialog from '@/app/ui/dialogs/EditRecipeDialog'
 import { addNewChapter } from '@/app/utils/addNewChapter'
 import { addNewRecipe } from '@/app/utils/addNewRecipe'
 import { deleteChapter } from '@/app/utils/deleteChapter'
@@ -23,7 +23,7 @@ export default function Cookbook() {
   const [cookbook, setCookbook] = useState<ChapterWithRecipeNotes[] | null>(null)
   const [cookbookChapters, setCookbookChapters] = useState<ChapterBase[]>([])
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const [showAddRecipeDialog, setShowAddRecipeDialog] = useState(false)
+  const [showEditRecipeDialog, setShowEditRecipeDialog] = useState(false)
   const [chapterToDelete, setChapterToDelete] = useState<string | null>(null)
 
   function openDeleteChapterDialog(id: string) {
@@ -166,7 +166,7 @@ export default function Cookbook() {
                   }}
                 />
               }
-              onClick={() => setShowAddRecipeDialog(true)}>
+              onClick={() => setShowEditRecipeDialog(true)}>
               Add Recipe
             </ThemedButton>
           </div>
@@ -214,9 +214,9 @@ export default function Cookbook() {
             deleteActiveChapter={deleteActiveChapter}
             setShowDeleteDialog={setShowDeleteDialog}
           />
-          <AddRecipeDialog
-            showAddRecipeDialog={showAddRecipeDialog}
-            closeAddRecipeDialog={() => setShowAddRecipeDialog(false)}
+          <EditRecipeDialog
+            showEditRecipeDialog={showEditRecipeDialog}
+            closeEditRecipeDialog={() => setShowEditRecipeDialog(false)}
             chapters={cookbookChapters}
             saveRecipe={addNewRecipe}
           />

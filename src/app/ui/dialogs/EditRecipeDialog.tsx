@@ -4,7 +4,7 @@ import ThemedButton from '../buttons/ThemedButton'
 import ThemedTextField from '../inputs/ThemedTextField'
 import { ChangeEvent, useContext, useState } from 'react'
 import { SessionContext } from '@/app/utils/Session'
-import { AddRecipeDialogProps } from '@/app/lib/types/ui/dialogs'
+import { EditRecipeDialogProps } from '@/app/lib/types/ui/dialogs'
 
 interface Inputs {
   recipeChapterId?: string
@@ -13,12 +13,12 @@ interface Inputs {
   newChapterName?: string
 }
 
-export default function AddRecipeDialog({
-  showAddRecipeDialog,
-  closeAddRecipeDialog,
+export default function EditRecipeDialog({
+  showEditRecipeDialog,
+  closeEditRecipeDialog,
   chapters,
   saveRecipe
-}: AddRecipeDialogProps) {
+}: EditRecipeDialogProps) {
   const user = useContext(SessionContext)
 
   const [recipeChapterId, setRecipeChapterId] = useState<string>('')
@@ -78,12 +78,12 @@ export default function AddRecipeDialog({
 
   return (
     <Dialog
-      open={showAddRecipeDialog}
-      onClose={() => closeAddRecipeDialog()}
+      open={showEditRecipeDialog}
+      onClose={() => closeEditRecipeDialog()}
       sx={{ '.MuiDialog-paper': { backgroundColor: '#e1e1e1', width: 400 } }}>
       <DialogTitle className="text-mvc-gray">Add Recipe</DialogTitle>
       <IconButton
-        onClick={() => closeAddRecipeDialog()}
+        onClick={() => closeEditRecipeDialog()}
         aria-label="close"
         sx={(theme) => ({
           position: 'absolute',
@@ -130,7 +130,7 @@ export default function AddRecipeDialog({
           color="mvc-gray"
           className="my-4 ml-8"
           onClick={() => {
-            closeAddRecipeDialog()
+            closeEditRecipeDialog()
           }}>
           <span>Cancel</span>
         </ThemedButton>
@@ -151,7 +151,7 @@ export default function AddRecipeDialog({
             }).then(() => {
               setSaveStatus('saved')
               setTimeout(() => {
-                closeAddRecipeDialog()
+                closeEditRecipeDialog()
                 setSaveStatus(null)
               }, 500)
             })
