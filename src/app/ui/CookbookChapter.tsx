@@ -32,7 +32,8 @@ export default function CookbookChapter({
                   showEditRecipeDialog({
                     chapterId: chapter.id,
                     name: recipe.name,
-                    link: recipe.link
+                    link: recipe.link,
+                    recipeId: recipe.id
                   })
                 }
                 key={recipe.id}

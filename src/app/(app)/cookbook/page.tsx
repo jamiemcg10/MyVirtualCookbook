@@ -24,6 +24,7 @@ export default function Cookbook() {
   const [cookbookChapters, setCookbookChapters] = useState<ChapterBase[]>([])
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [showEditRecipeDialog, setShowEditRecipeDialog] = useState(false)
+  const [editDialogRecipe, setEditDialogRecipe] = useState<Recipe | null>(null)
   const [chapterToDelete, setChapterToDelete] = useState<string | null>(null)
 
   function openDeleteChapterDialog(id: string) {
@@ -192,6 +193,7 @@ export default function Cookbook() {
                                 <CookbookChapter
                                   chapter={chapter}
                                   showEditRecipeDialog={(v: Recipe) => {
+                                    setEditDialogRecipe(v)
                                     setShowEditRecipeDialog(true)
                                   }}
                                   setShowDeleteDialog={() => openDeleteChapterDialog(chapter.id)}
@@ -218,8 +220,12 @@ export default function Cookbook() {
             setShowDeleteDialog={setShowDeleteDialog}
           />
           <EditRecipeDialog
+            recipe={editDialogRecipe}
             showEditRecipeDialog={showEditRecipeDialog}
-            closeEditRecipeDialog={() => setShowEditRecipeDialog(false)}
+            closeEditRecipeDialog={() => {
+              setEditDialogRecipe(null)
+              setShowEditRecipeDialog(false)
+            }}
             chapters={cookbookChapters}
             saveRecipe={addNewRecipe}
           />
