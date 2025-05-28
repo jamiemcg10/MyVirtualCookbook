@@ -5,6 +5,7 @@ import { ChapterWithRecipeNotes } from '../lib/types'
 export interface CookbookChapterProps {
   chapter: ChapterWithRecipeNotes
   setShowDeleteDialog: Dispatch<SetStateAction<boolean>>
+  showEditRecipeDialog: (v: NewRecipe) => void
   key: string
 }
 
@@ -16,9 +17,10 @@ export interface CookbookNotesProps {
 export interface CookbookRecipeProps {
   chapterId: string
   recipe: RecipeWithNotes
+  onEdit: () => void
 }
 
 export interface RecipeMenuProps {
-  onRename: () => void
+  onEdit: () => void
   onDelete: () => Promise<void>
 }

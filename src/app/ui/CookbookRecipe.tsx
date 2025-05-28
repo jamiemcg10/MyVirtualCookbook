@@ -11,7 +11,7 @@ import RecipeMenu from './RecipeMenu'
 import { CookbookRecipeProps } from '../lib/types/ui'
 import Link from 'next/link'
 
-export default function CookbookRecipe({ recipe, chapterId }: CookbookRecipeProps) {
+export default function CookbookRecipe({ recipe, chapterId, onEdit }: CookbookRecipeProps) {
   async function saveTitle(newTitle: string) {
     if (user && recipe.name !== newTitle) {
       await users(user.id).recipes.update(recipe.id, { name: newTitle })
@@ -41,8 +41,6 @@ export default function CookbookRecipe({ recipe, chapterId }: CookbookRecipeProp
 
   const user = useContext(SessionContext)
 
-  const [rename, setRename] = useState(false)
-
   const { name, link, notes } = recipe
 
   return (
@@ -66,9 +64,7 @@ export default function CookbookRecipe({ recipe, chapterId }: CookbookRecipeProp
             label={recipe.name}
             onSave={saveTitle}
             onCancel={cancelTitleEdit}
-            hideEditIcon
-            editing={rename}
-            setEditing={setRename}>
+            hideEditIcon>
             <Link
               href={link}
               target="_blank"
@@ -78,7 +74,7 @@ export default function CookbookRecipe({ recipe, chapterId }: CookbookRecipeProp
               <span className="underline text-mvc-green">{name}</span>
             </Link>
           </InlineInput>
-          <RecipeMenu onRename={() => setRename(true)} onDelete={async () => deleteRecipe()} />
+          <RecipeMenu onEdit={onEdit} onDelete={async () => deleteRecipe()} />
         </div>
       </AccordionSummary>
       <CookbookNotes notes={notes} onSave={saveNotes} />

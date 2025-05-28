@@ -12,4 +12,5 @@ export interface EditRecipeDialogProps {
   closeEditRecipeDialog: () => void
   chapters: ChapterBase[]
   saveRecipe: (userId: string | undefined, recipe: NewRecipe) => Promise<void>
+  edit?: boolean // might not need to be optional
 }

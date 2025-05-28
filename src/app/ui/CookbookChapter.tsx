@@ -15,14 +15,29 @@ import { CookbookChapterProps } from '../lib/types/ui'
 import { Droppable, Draggable } from '@hello-pangea/dnd'
 import clsx from 'clsx'
 
-export default function CookbookChapter({ chapter, setShowDeleteDialog }: CookbookChapterProps) {
+export default function CookbookChapter({
+  chapter,
+  showEditRecipeDialog,
+  setShowDeleteDialog
+}: CookbookChapterProps) {
   const mapRecipes = (recipes: RecipeWithNotes[]) => {
     return recipes.map((recipe, i) => {
       return (
         <Draggable key={recipe.id} draggableId={recipe.id} index={i}>
           {(provided, _snapshot) => (
             <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-              <CookbookRecipe recipe={recipe} key={recipe.id} chapterId={chapter.id} />
+              <CookbookRecipe
+                recipe={recipe}
+                onEdit={() =>
+                  showEditRecipeDialog({
+                    chapterId: chapter.id,
+                    name: recipe.name,
+                    link: recipe.link
+                  })
+                }
+                key={recipe.id}
+                chapterId={chapter.id}
+              />
             </div>
           )}
         </Draggable>

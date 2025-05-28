@@ -4,7 +4,7 @@ import CookbookChapter from '@/app/ui/CookbookChapter'
 import React, { useContext, useEffect, useState } from 'react'
 import { getCookbook } from '../../utils/cookbook'
 import { SessionContext } from '@/app/utils/Session'
-import { ChapterBase, ChapterWithRecipeNotes } from '@/app/lib/types'
+import { ChapterBase, ChapterWithRecipeNotes, Recipe } from '@/app/lib/types'
 import { CircularProgress, ThemeProvider } from '@mui/material'
 import { theme } from '@/app/ui/.theme/theme'
 import ThemedButton from '@/app/ui/buttons/ThemedButton'
@@ -191,6 +191,9 @@ export default function Cookbook() {
                                 {...provided.dragHandleProps}>
                                 <CookbookChapter
                                   chapter={chapter}
+                                  showEditRecipeDialog={(v: Recipe) => {
+                                    setShowEditRecipeDialog(true)
+                                  }}
                                   setShowDeleteDialog={() => openDeleteChapterDialog(chapter.id)}
                                   key={chapter.id}
                                 />
