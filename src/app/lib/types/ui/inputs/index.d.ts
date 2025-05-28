@@ -30,6 +30,7 @@ export interface ThemedTextFieldProps extends PropsWithChildren {
   select?: boolean
   options?: DropdownOption[]
   enableAdd?: boolean
+  defaultValue?: string
   onInput?: (e: ChangeEvent<HTMLInputElement>) => void
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
