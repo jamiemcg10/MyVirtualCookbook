@@ -16,6 +16,7 @@ export default function ThemedTextField({
   options = [],
   defaultValue = '',
   enableAdd,
+  disabled = false,
   onInput,
   onChange
 }: ThemedTextFieldProps) {
@@ -54,6 +55,7 @@ export default function ThemedTextField({
             select={select}
             defaultValue={defaultValue}
             color="mvc-green"
+            disabled={disabled}
             onInput={onInput}
             onChange={onChange}
             sx={{
