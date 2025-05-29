@@ -21,6 +21,7 @@ import { FirebaseUser } from '@/app/lib/types'
 import { createUser } from '@/app/utils/createUser'
 
 export default function LoginForm() {
+  console.log('in LoginForm')
   const [email, setEmail] = useState('')
   const [errorText, setErrorText] = useState('')
   const [showNotification, setShowNotification] = useState(false)
@@ -68,6 +69,7 @@ export default function LoginForm() {
   const submitBtnDisabled = email === ''
 
   useEffect(() => {
+    console.log('in LoginForm useEffect')
     if (session) {
       console.log({ session })
       redirect('/cookbook')
