@@ -181,32 +181,35 @@ export default function Cookbook() {
                       'flex flex-col space-y-2 grow px-8 pt-2.5 -mt-2.5 overflow-y-scroll',
                       snapshot.isDraggingOver && 'bg-mvc-yellow/30'
                     )}>
-                    {cookbook.length &&
-                      cookbook.map((chapter, i) => {
-                        return (
-                          <Draggable key={chapter.id} draggableId={chapter.id} index={i}>
-                            {(provided, _snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}>
-                                <CookbookChapter
-                                  chapter={chapter}
-                                  showEditRecipeDialog={(v: Recipe) => {
-                                    setEditDialogRecipe(v)
-                                    setShowEditRecipeDialog(true)
-                                  }}
-                                  setShowDeleteDialog={() => openDeleteChapterDialog(chapter.id)}
-                                  key={chapter.id}
-                                />
-                              </div>
-                            )}
-                          </Draggable>
-                        )
-                      })}
+                    {cookbook.length
+                      ? cookbook.map((chapter, i) => {
+                          return (
+                            <Draggable key={chapter.id} draggableId={chapter.id} index={i}>
+                              {(provided, _snapshot) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}>
+                                  <CookbookChapter
+                                    chapter={chapter}
+                                    showEditRecipeDialog={(v: Recipe) => {
+                                      setEditDialogRecipe(v)
+                                      setShowEditRecipeDialog(true)
+                                    }}
+                                    setShowDeleteDialog={() => openDeleteChapterDialog(chapter.id)}
+                                    key={chapter.id}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          )
+                        })
+                      : null}
                     {provided.placeholder}
                     {!cookbook.length && (
-                      <div>Your cookbook is empty. Add chapters and recipes to get started.</div>
+                      <div className="text-mvc-yellow">
+                        Your cookbook is empty. Add chapters and recipes to get started.
+                      </div>
                     )}
                   </div>
                 )
