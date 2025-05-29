@@ -9,12 +9,12 @@ import Paper from '@mui/material/Paper'
 import { ClickAwayListener } from '@mui/material'
 import { RecipeMenuProps } from '../lib/types/ui'
 
-export default function RecipeMenu({ onRename, onDelete }: RecipeMenuProps) {
+export default function RecipeMenu({ onEdit, onDelete }: RecipeMenuProps) {
   const [open, setOpen] = useState(false)
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
-      <div className="relative" onMouseLeave={() => setOpen(false)}>
+      <div className="relative pl-4" onMouseLeave={() => setOpen(false)}>
         <IconButton
           size="small"
           className="invisible group-hover:visible [@media(hover:none)]:visible"
@@ -31,13 +31,13 @@ export default function RecipeMenu({ onRename, onDelete }: RecipeMenuProps) {
                 e.stopPropagation()
                 setOpen(false)
                 setTimeout(() => {
-                  onRename()
+                  onEdit()
                 }, 100)
               }}>
               <ListItemIcon>
                 <EditRoundedIcon fontSize="small" />
               </ListItemIcon>
-              Rename
+              Edit
             </MenuItem>
             <MenuItem onClick={async () => await onDelete()}>
               <ListItemIcon>

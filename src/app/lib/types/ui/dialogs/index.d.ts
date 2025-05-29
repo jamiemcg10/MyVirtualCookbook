@@ -7,9 +7,10 @@ export interface DeleteChapterDialogProps {
   setShowDeleteDialog: (v: boolean) => void
 }
 
-export interface AddRecipeDialogProps {
-  showAddRecipeDialog: boolean
-  closeAddRecipeDialog: () => void
+export interface EditRecipeDialogProps {
+  recipe: Recipe | null
+  showEditRecipeDialog: boolean
+  closeEditRecipeDialog: () => void
   chapters: ChapterBase[]
   saveRecipe: (userId: string | undefined, recipe: NewRecipe) => Promise<void>
 }

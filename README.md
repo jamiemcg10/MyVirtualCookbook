@@ -16,7 +16,7 @@ Once you create an account, you can add recipes and chapters to your cookbook us
 
 Chapters can be expanded or collapsed by clicking them. Clicking a chapter's trash icon will delete that chapter. Clicking the edit icon by the chapter name will let you edit the name of the chapter. You can drag and drop chapters to reorder them.
 
-Each recipe has a menu with options to rename or delete that recipe. You can drag and drop recipes to re-order them within the chapter and also to move them into other chapters.
+Each recipe has a menu with options to edit or delete that recipe. The name and the link for the recipe can be edited. You can drag and drop recipes to re-order them within the chapter and also to move them into other chapters.
 
 <br>
 

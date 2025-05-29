@@ -4,13 +4,13 @@ import CookbookChapter from '@/app/ui/CookbookChapter'
 import React, { useContext, useEffect, useState } from 'react'
 import { getCookbook } from '../../utils/cookbook'
 import { SessionContext } from '@/app/utils/Session'
-import { ChapterBase, ChapterWithRecipeNotes } from '@/app/lib/types'
+import { ChapterBase, ChapterWithRecipeNotes, Recipe } from '@/app/lib/types'
 import { CircularProgress, ThemeProvider } from '@mui/material'
 import { theme } from '@/app/ui/.theme/theme'
 import ThemedButton from '@/app/ui/buttons/ThemedButton'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteChapterDialog from '@/app/ui/dialogs/DeleteChapterDialog'
-import AddRecipeDialog from '@/app/ui/dialogs/AddRecipeDialog'
+import EditRecipeDialog from '@/app/ui/dialogs/EditRecipeDialog'
 import { addNewChapter } from '@/app/utils/addNewChapter'
 import { addNewRecipe } from '@/app/utils/addNewRecipe'
 import { deleteChapter } from '@/app/utils/deleteChapter'
@@ -23,7 +23,8 @@ export default function Cookbook() {
   const [cookbook, setCookbook] = useState<ChapterWithRecipeNotes[] | null>(null)
   const [cookbookChapters, setCookbookChapters] = useState<ChapterBase[]>([])
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const [showAddRecipeDialog, setShowAddRecipeDialog] = useState(false)
+  const [showEditRecipeDialog, setShowEditRecipeDialog] = useState(false)
+  const [editDialogRecipe, setEditDialogRecipe] = useState<Recipe | null>(null)
   const [chapterToDelete, setChapterToDelete] = useState<string | null>(null)
 
   function openDeleteChapterDialog(id: string) {
@@ -166,7 +167,7 @@ export default function Cookbook() {
                   }}
                 />
               }
-              onClick={() => setShowAddRecipeDialog(true)}>
+              onClick={() => setShowEditRecipeDialog(true)}>
               Add Recipe
             </ThemedButton>
           </div>
@@ -180,28 +181,35 @@ export default function Cookbook() {
                       'flex flex-col space-y-2 grow px-8 pt-2.5 -mt-2.5 overflow-y-scroll',
                       snapshot.isDraggingOver && 'bg-mvc-yellow/30'
                     )}>
-                    {cookbook.length &&
-                      cookbook.map((chapter, i) => {
-                        return (
-                          <Draggable key={chapter.id} draggableId={chapter.id} index={i}>
-                            {(provided, _snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}>
-                                <CookbookChapter
-                                  chapter={chapter}
-                                  setShowDeleteDialog={() => openDeleteChapterDialog(chapter.id)}
-                                  key={chapter.id}
-                                />
-                              </div>
-                            )}
-                          </Draggable>
-                        )
-                      })}
+                    {cookbook.length
+                      ? cookbook.map((chapter, i) => {
+                          return (
+                            <Draggable key={chapter.id} draggableId={chapter.id} index={i}>
+                              {(provided, _snapshot) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}>
+                                  <CookbookChapter
+                                    chapter={chapter}
+                                    showEditRecipeDialog={(v: Recipe) => {
+                                      setEditDialogRecipe(v)
+                                      setShowEditRecipeDialog(true)
+                                    }}
+                                    setShowDeleteDialog={() => openDeleteChapterDialog(chapter.id)}
+                                    key={chapter.id}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          )
+                        })
+                      : null}
                     {provided.placeholder}
                     {!cookbook.length && (
-                      <div>Your cookbook is empty. Add chapters and recipes to get started.</div>
+                      <div className="text-mvc-yellow">
+                        Your cookbook is empty. Add chapters and recipes to get started.
+                      </div>
                     )}
                   </div>
                 )
@@ -214,9 +222,13 @@ export default function Cookbook() {
             deleteActiveChapter={deleteActiveChapter}
             setShowDeleteDialog={setShowDeleteDialog}
           />
-          <AddRecipeDialog
-            showAddRecipeDialog={showAddRecipeDialog}
-            closeAddRecipeDialog={() => setShowAddRecipeDialog(false)}
+          <EditRecipeDialog
+            recipe={editDialogRecipe}
+            showEditRecipeDialog={showEditRecipeDialog}
+            closeEditRecipeDialog={() => {
+              setEditDialogRecipe(null)
+              setShowEditRecipeDialog(false)
+            }}
             chapters={cookbookChapters}
             saveRecipe={addNewRecipe}
           />

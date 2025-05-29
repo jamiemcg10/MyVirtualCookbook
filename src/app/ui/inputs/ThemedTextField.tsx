@@ -14,7 +14,9 @@ export default function ThemedTextField({
   autoFocus = false,
   select = false,
   options = [],
+  defaultValue = '',
   enableAdd,
+  disabled = false,
   onInput,
   onChange
 }: ThemedTextFieldProps) {
@@ -51,8 +53,9 @@ export default function ThemedTextField({
             helperText={helperText}
             error={error}
             select={select}
-            defaultValue=""
+            defaultValue={defaultValue}
             color="mvc-green"
+            disabled={disabled}
             onInput={onInput}
             onChange={onChange}
             sx={{

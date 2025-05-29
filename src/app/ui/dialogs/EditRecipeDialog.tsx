@@ -2,9 +2,9 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@
 import CloseIcon from '@mui/icons-material/Close'
 import ThemedButton from '../buttons/ThemedButton'
 import ThemedTextField from '../inputs/ThemedTextField'
-import { ChangeEvent, useContext, useState } from 'react'
+import { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { SessionContext } from '@/app/utils/Session'
-import { AddRecipeDialogProps } from '@/app/lib/types/ui/dialogs'
+import { EditRecipeDialogProps } from '@/app/lib/types/ui/dialogs'
 
 interface Inputs {
   recipeChapterId?: string
@@ -13,12 +13,13 @@ interface Inputs {
   newChapterName?: string
 }
 
-export default function AddRecipeDialog({
-  showAddRecipeDialog,
-  closeAddRecipeDialog,
+export default function EditRecipeDialog({
+  recipe,
+  showEditRecipeDialog,
+  closeEditRecipeDialog,
   chapters,
   saveRecipe
-}: AddRecipeDialogProps) {
+}: EditRecipeDialogProps) {
   const user = useContext(SessionContext)
 
   const [recipeChapterId, setRecipeChapterId] = useState<string>('')
@@ -63,6 +64,20 @@ export default function AddRecipeDialog({
     return isValidUrl
   }
 
+  function noChanges() {
+    if (!recipe) return false
+
+    if (
+      recipe.chapterId !== recipeChapterId ||
+      recipe.name !== recipeName ||
+      recipe.link !== recipeLink
+    ) {
+      return false
+    }
+
+    return true
+  }
+
   function checkValidity(v: Inputs) {
     const chapter = v.recipeChapterId ?? recipeChapterId
     const newChapter = v.newChapterName ?? newChapterName
@@ -76,14 +91,28 @@ export default function AddRecipeDialog({
     }
   }
 
+  useEffect(() => {
+    if (recipe) {
+      setRecipeChapterId(recipe.chapterId)
+      setRecipeName(recipe.name)
+      setRecipeLink(recipe.link)
+
+      checkValidity({
+        recipeChapterId: recipe.chapterId,
+        recipeName: recipe.name,
+        recipeLink: recipe.link
+      })
+    }
+  }, [recipe])
+
   return (
     <Dialog
-      open={showAddRecipeDialog}
-      onClose={() => closeAddRecipeDialog()}
+      open={showEditRecipeDialog}
+      onClose={() => closeEditRecipeDialog()}
       sx={{ '.MuiDialog-paper': { backgroundColor: '#e1e1e1', width: 400 } }}>
-      <DialogTitle className="text-mvc-gray">Add Recipe</DialogTitle>
+      <DialogTitle className="text-mvc-gray">{recipe ? 'Edit' : 'Add'} Recipe</DialogTitle>
       <IconButton
-        onClick={() => closeAddRecipeDialog()}
+        onClick={() => closeEditRecipeDialog()}
         aria-label="close"
         sx={(theme) => ({
           position: 'absolute',
@@ -102,6 +131,8 @@ export default function AddRecipeDialog({
             select
             enableAdd
             required
+            defaultValue={recipe?.chapterId || ''}
+            disabled={recipe}
             onChange={onRecipeChapterChange}
           />
           {recipeChapterId === 'add' && (
@@ -113,12 +144,19 @@ export default function AddRecipeDialog({
               onInput={onNewChapterInput}
             />
           )}
-          <ThemedTextField size="small" label="Recipe name" required onInput={onRecipeNameInput} />
+          <ThemedTextField
+            size="small"
+            label="Recipe name"
+            required
+            defaultValue={recipe?.name || ''}
+            onInput={onRecipeNameInput}
+          />
           <ThemedTextField
             size="small"
             label="Recipe link"
             required
             onInput={onRecipeLinkInput}
+            defaultValue={recipe?.link || ''}
             helperText={invalidUrl ? 'Invalid URL' : ''}
             error={invalidUrl}
           />
@@ -130,7 +168,7 @@ export default function AddRecipeDialog({
           color="mvc-gray"
           className="my-4 ml-8"
           onClick={() => {
-            closeAddRecipeDialog()
+            closeEditRecipeDialog()
           }}>
           <span>Cancel</span>
         </ThemedButton>
@@ -142,8 +180,14 @@ export default function AddRecipeDialog({
           onClick={async () => {
             if (!isValidUrl()) return
 
+            if (noChanges()) {
+              closeEditRecipeDialog()
+              return
+            }
+
             setSaveStatus('saving')
             await saveRecipe(user?.id, {
+              recipeId: recipe?.recipeId,
               recipeName,
               recipeLink,
               chapterId: recipeChapterId,
@@ -151,7 +195,7 @@ export default function AddRecipeDialog({
             }).then(() => {
               setSaveStatus('saved')
               setTimeout(() => {
-                closeAddRecipeDialog()
+                closeEditRecipeDialog()
                 setSaveStatus(null)
               }, 500)
             })
