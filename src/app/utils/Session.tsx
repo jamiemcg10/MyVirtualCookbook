@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  useEffect,
-  createContext,
-  useState,
-  PropsWithChildren,
-  SetStateAction,
-  Dispatch
-} from 'react'
+import { useEffect, createContext, useState, PropsWithChildren } from 'react'
 import { onAuthStateChanged } from 'firebase/auth'
 import { docData } from 'rxfire/firestore'
 import { auth } from './firebase/firebase'
