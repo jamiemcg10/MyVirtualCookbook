@@ -18,6 +18,7 @@ export default function Session({ children }: PropsWithChildren) {
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
     if (storedUser) {
+      console.log('setting stored user')
       setUser(JSON.parse(storedUser))
     }
     setLoading(false)
@@ -43,7 +44,7 @@ export default function Session({ children }: PropsWithChildren) {
       }
     })
 
-    userSubscription.unsubscribe()
+    // userSubscription.unsubscribe()
   }, [])
 
   return <SessionContext.Provider value={user}>{!loading && children}</SessionContext.Provider>

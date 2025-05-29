@@ -10,6 +10,7 @@ export default function Logout() {
 
     const _signOut = async () => {
       await signOut(auth)
+      console.log('should be signed out')
     }
 
     _signOut()
