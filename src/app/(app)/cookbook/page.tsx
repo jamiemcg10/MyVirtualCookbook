@@ -9,6 +9,7 @@ import { CircularProgress, ThemeProvider } from '@mui/material'
 import { theme } from '@/app/ui/.theme/theme'
 import ThemedButton from '@/app/ui/buttons/ThemedButton'
 import AddIcon from '@mui/icons-material/Add'
+import SearchIcon from '@mui/icons-material/Search'
 import DeleteChapterDialog from '@/app/ui/dialogs/DeleteChapterDialog'
 import EditRecipeDialog from '@/app/ui/dialogs/EditRecipeDialog'
 import { addNewChapter } from '@/app/utils/addNewChapter'
@@ -18,6 +19,7 @@ import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea
 import { users } from '@/app/utils/firebase'
 import clsx from 'clsx'
 import { redirect } from 'next/navigation'
+import ThemedIconButton from '@/app/ui/buttons/ThemedIconButton'
 
 export default function Cookbook() {
   const user = useContext(SessionContext)
@@ -155,12 +157,15 @@ export default function Cookbook() {
                 />
               }
               onClick={() => addNewChapter(user?.id)}>
-              Add Chapter
+              <span className="hidden sm:block">Add&nbsp;</span> Chapter
             </ThemedButton>
             <ThemedButton
               color="mvc-yellow"
               sx={{
-                margin: '1rem 0 1rem 2rem'
+                margin: {
+                  xs: '1rem 0 1rem 1rem',
+                  sm: '1rem 0 1rem 2rem'
+                }
               }}
               startIcon={
                 <AddIcon
@@ -171,8 +176,17 @@ export default function Cookbook() {
                 />
               }
               onClick={() => setShowEditRecipeDialog(true)}>
-              Add Recipe
+              <span className="hidden sm:block">Add&nbsp;</span> Recipe
             </ThemedButton>
+            <ThemedIconButton
+              color="mvc-white"
+              sx={{
+                marginY: '1rem',
+                right: { xs: '2rem', sm: '3rem' },
+                position: 'absolute'
+              }}>
+              <SearchIcon />
+            </ThemedIconButton>
           </div>
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="cookbook" key="cookbook" type="CookbookChapter">
