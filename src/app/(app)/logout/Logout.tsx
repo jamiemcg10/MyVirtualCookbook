@@ -7,9 +7,9 @@ import { useEffect } from 'react'
 export default function Logout() {
   useEffect(() => {
     const auth = getAuth()
-    signOut(auth)
-
-    redirect('/login')
+    signOut(auth).then(() => {
+      redirect('/login')
+    })
   }, [])
   return <></>
 }
