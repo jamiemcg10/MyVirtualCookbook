@@ -1,6 +1,13 @@
 'use client'
 
-import { useEffect, createContext, useState, PropsWithChildren } from 'react'
+import {
+  useEffect,
+  createContext,
+  useState,
+  PropsWithChildren,
+  SetStateAction,
+  Dispatch
+} from 'react'
 import { onAuthStateChanged } from 'firebase/auth'
 import { docData } from 'rxfire/firestore'
 import { auth } from './firebase/firebase'
@@ -10,10 +17,13 @@ import { Subscription } from 'rxjs'
 import { DocumentData } from 'firebase/firestore'
 
 export const SessionContext = createContext<User | undefined>(undefined)
+export let unsetUser: () => void
 
 export default function Session({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | undefined>(undefined)
   const [loading, setLoading] = useState(true)
+
+  unsetUser = () => setUser(undefined)
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
