@@ -32,15 +32,12 @@ export default function LoginForm() {
 
   const sendMagicLink = async () => {
     const actionCodeSettings = {
-      url: `${window.location.origin}`,
+      url: `${window.location.origin}/cookbook`,
       handleCodeInApp: true
     }
 
-    console.log({ actionCodeSettings })
-
     sendSignInLinkToEmail(auth, email, actionCodeSettings)
       .then(() => {
-        console.log('in then')
         window.localStorage.setItem('emailForSignIn', email)
         setEmail('')
         setShowNotification(true)
