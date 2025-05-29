@@ -1,7 +1,7 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import InlineInput from './inputs/InlineInput'
 import { users } from '../utils/firebase'
 import { SessionContext } from '../utils/Session'
