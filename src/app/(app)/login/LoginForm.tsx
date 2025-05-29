@@ -32,7 +32,7 @@ export default function LoginForm() {
 
   const sendMagicLink = async () => {
     const actionCodeSettings = {
-      url: `${window.location.origin}/cookbook`,
+      url: `${window.location.origin}`,
       handleCodeInApp: true
     }
 
