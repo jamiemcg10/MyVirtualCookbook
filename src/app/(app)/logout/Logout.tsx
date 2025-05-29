@@ -9,6 +9,7 @@ export default function Logout() {
     const auth = getAuth()
 
     const _signOut = async () => {
+      localStorage.removeItem('user')
       await signOut(auth)
     }
 
