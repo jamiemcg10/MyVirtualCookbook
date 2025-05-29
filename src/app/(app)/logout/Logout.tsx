@@ -8,9 +8,11 @@ export default function Logout() {
   useEffect(() => {
     const auth = getAuth()
 
-    ;async () => {
+    const _signOut = async () => {
       await signOut(auth)
     }
+
+    _signOut()
 
     redirect('/login')
   }, [])
