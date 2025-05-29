@@ -17,6 +17,7 @@ import { deleteChapter } from '@/app/utils/deleteChapter'
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd'
 import { users } from '@/app/utils/firebase'
 import clsx from 'clsx'
+import { redirect } from 'next/navigation'
 
 export default function Cookbook() {
   const user = useContext(SessionContext)
@@ -125,6 +126,8 @@ export default function Cookbook() {
         })
         setCookbookChapters(chapters)
       })
+    } else {
+      redirect('/login')
     }
   }, [user])
 

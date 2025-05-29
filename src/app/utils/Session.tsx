@@ -10,10 +10,13 @@ import { Subscription } from 'rxjs'
 import { DocumentData } from 'firebase/firestore'
 
 export const SessionContext = createContext<User | undefined>(undefined)
+export let unsetUser: () => void
 
 export default function Session({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | undefined>(undefined)
   const [loading, setLoading] = useState(true)
+
+  unsetUser = () => setUser(undefined)
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
@@ -35,8 +38,8 @@ export default function Session({ children }: PropsWithChildren) {
         })
       } else {
         // User is signed out
-        userSubscription.unsubscribe()
         setUser(undefined)
+        userSubscription.unsubscribe()
         localStorage.removeItem('user')
       }
     })
