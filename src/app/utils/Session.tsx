@@ -27,6 +27,7 @@ export default function Session({ children }: PropsWithChildren) {
     let userSubscription: Subscription = new Subscription()
 
     onAuthStateChanged(auth, (authUser) => {
+      console.log({ auth, authUser })
       if (authUser) {
         const userRef = users(authUser.uid).ref
         userSubscription = docData(userRef).subscribe((_user: DocumentData | undefined) => {
