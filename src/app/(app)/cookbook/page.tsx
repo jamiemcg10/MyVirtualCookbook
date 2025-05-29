@@ -5,7 +5,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import { getCookbook } from '../../utils/cookbook'
 import { SessionContext } from '@/app/utils/Session'
 import { ChapterBase, ChapterWithRecipeNotes, Recipe } from '@/app/lib/types'
-import { CircularProgress, ThemeProvider } from '@mui/material'
 import { theme } from '@/app/ui/.theme/theme'
 import ThemedButton from '@/app/ui/buttons/ThemedButton'
 import AddIcon from '@mui/icons-material/Add'
@@ -20,6 +19,7 @@ import { users } from '@/app/utils/firebase'
 import clsx from 'clsx'
 import { redirect } from 'next/navigation'
 import ThemedIconButton from '@/app/ui/buttons/ThemedIconButton'
+import LoadingIcon from '@/app/ui/LoadingIcon'
 
 export default function Cookbook() {
   const user = useContext(SessionContext)
@@ -251,11 +251,7 @@ export default function Cookbook() {
           />
         </>
       ) : (
-        <div className="grow justify-center items-center flex">
-          <ThemeProvider theme={theme}>
-            <CircularProgress size="65px" color="mvc-yellow" />
-          </ThemeProvider>
-        </div>
+        <LoadingIcon />
       )}
     </div>
   )
