@@ -15,7 +15,7 @@ export default function CookbookNotes({ notes, onSave }: CookbookNotesProps) {
 
   useEffect(() => {
     if (notesElRef.current) notesElRef.current.innerText = notes
-  }, [])
+  })
 
   return (
     <>
