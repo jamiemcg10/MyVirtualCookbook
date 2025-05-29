@@ -31,35 +31,31 @@ export default function CookbookNotes({ notes, onSave }: CookbookNotesProps) {
           ref={notesElRef}></textarea>
       </AccordionDetails>
       <AccordionActions className="pt-0">
-        {!editing ? (
+        {editing ? (
           <ThemedButton
-            color="mvc-yellow"
+            color="mvc-gray"
+            variant="outlined"
             onClick={() => {
-              setEditing(true)
-              notesElRef?.current?.focus()
+              setEditing(false)
             }}>
-            Edit
+            Cancel
           </ThemedButton>
-        ) : (
-          <>
-            <ThemedButton
-              color="mvc-gray"
-              variant="outlined"
-              onClick={() => {
-                setEditing(false)
-              }}>
-              Cancel
-            </ThemedButton>
-            <ThemedButton
-              onClick={async () => {
+        ) : null}
+        {
+          <ThemedButton
+            onClick={async () => {
+              if (editing) {
                 setEditing(false)
                 onSave(notesElRef.current?.value || '')
-              }}
-              color="mvc-green">
-              Save
-            </ThemedButton>
-          </>
-        )}
+              } else {
+                setEditing(true)
+                notesElRef?.current?.focus()
+              }
+            }}
+            color={editing ? 'mvc-green' : 'mvc-yellow'}>
+            {editing ? 'Save' : 'Edit'}
+          </ThemedButton>
+        }
       </AccordionActions>
     </>
   )
