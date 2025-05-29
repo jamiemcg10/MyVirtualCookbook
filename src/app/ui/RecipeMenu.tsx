@@ -14,7 +14,7 @@ export default function RecipeMenu({ onEdit, onDelete }: RecipeMenuProps) {
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
-      <div className="relative" onMouseLeave={() => setOpen(false)}>
+      <div className="relative pl-4" onMouseLeave={() => setOpen(false)}>
         <IconButton
           size="small"
           className="invisible group-hover:visible [@media(hover:none)]:visible"
