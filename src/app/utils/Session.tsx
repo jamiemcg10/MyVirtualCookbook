@@ -46,8 +46,11 @@ export default function Session({ children }: PropsWithChildren) {
         // User is signed out
         console.log('sign er out')
         userSubscription.unsubscribe()
+        console.log('userSubscription.unsubscribe()')
         setUser(undefined)
+        console.log('setUser(undefined)')
         localStorage.removeItem('user')
+        console.log('localStorage.removeItem(user)')
       }
     })
 
