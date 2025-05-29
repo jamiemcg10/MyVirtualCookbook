@@ -19,8 +19,8 @@ export default function Session({ children }: PropsWithChildren) {
     const storedUser = localStorage.getItem('user')
     if (storedUser) {
       setUser(JSON.parse(storedUser))
-      setLoading(false)
     }
+    setLoading(false)
   }, [])
 
   useEffect(() => {
