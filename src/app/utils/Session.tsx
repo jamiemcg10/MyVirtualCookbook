@@ -15,17 +15,24 @@ export default function Session({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | undefined>(undefined)
   const [loading, setLoading] = useState(true)
 
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem('user')
+  //   if (storedUser) {
+  //     console.log('setting stored user')
+  //     setUser(JSON.parse(storedUser))
+  //     setLoading(false)
+  //   }
+  // }, [])
+
   useEffect(() => {
+    let userSubscription: Subscription = new Subscription()
+
     const storedUser = localStorage.getItem('user')
     if (storedUser) {
       console.log('setting stored user')
       setUser(JSON.parse(storedUser))
+      setLoading(false)
     }
-    setLoading(false)
-  }, [])
-
-  useEffect(() => {
-    let userSubscription: Subscription = new Subscription()
 
     onAuthStateChanged(auth, (authUser) => {
       console.log({ auth, authUser })
