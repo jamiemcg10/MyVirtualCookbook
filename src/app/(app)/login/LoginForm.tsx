@@ -69,7 +69,6 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (session) {
-      console.log({ session })
       redirect('/cookbook')
     }
 
