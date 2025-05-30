@@ -19,6 +19,7 @@ export default function ThemedTextField({
   disabled = false,
   placeholder,
   InputProps,
+  hoverColor = 'yellow',
   onInput,
   onChange
 }: ThemedTextFieldProps) {
@@ -63,8 +64,12 @@ export default function ThemedTextField({
             onChange={onChange}
             InputProps={InputProps}
             sx={{
+              '.MuiInputBase-root': {
+                color: 'var(--mvc-green)',
+                borderBottom: '1px solid var(--mvc-green)'
+              },
               '.MuiInputBase-root:hover:not(.Mui-disabled, .Mui-error)::before': {
-                borderBottom: '2px solid var(--mvc-yellow)'
+                borderBottom: `2px solid var(--mvc-${hoverColor})`
               }
             }}>
             {getOptionsMenuItems()}

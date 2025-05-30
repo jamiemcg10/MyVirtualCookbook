@@ -82,7 +82,7 @@ export default function SearchDialog({
           position: 'absolute',
           right: 8,
           top: 8,
-          color: theme.palette.grey[500]
+          color: theme.palette.grey[600]
         })}>
         <CloseIcon />
       </IconButton>
@@ -92,9 +92,10 @@ export default function SearchDialog({
             placeholder="Search..."
             autoFocus
             onInput={onSearch}
+            hoverColor="white"
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start">
+                <InputAdornment position="start" sx={{ color: 'var(--mvc-green)' }}>
                   <SearchIcon />
                 </InputAdornment>
               )
@@ -103,25 +104,27 @@ export default function SearchDialog({
         </div>
       </DialogTitle>
       <DialogContent>
-        <div>
+        <div className="text-mvc-green">
           {searchValue
-            ? filteredRecipes?.map((recipe) => {
-                return (
-                  <CookbookRecipe
-                    chapterId={recipe.chapterId}
-                    recipe={recipe}
-                    onEdit={() =>
-                      showEditRecipeDialog({
-                        chapterId: recipe.chapterId,
-                        name: recipe.name,
-                        link: recipe.link,
-                        recipeId: recipe.id
-                      })
-                    }
-                    key={recipe.id}
-                  />
-                )
-              })
+            ? filteredRecipes?.length
+              ? filteredRecipes?.map((recipe) => {
+                  return (
+                    <CookbookRecipe
+                      chapterId={recipe.chapterId}
+                      recipe={recipe}
+                      onEdit={() =>
+                        showEditRecipeDialog({
+                          chapterId: recipe.chapterId,
+                          name: recipe.name,
+                          link: recipe.link,
+                          recipeId: recipe.id
+                        })
+                      }
+                      key={recipe.id}
+                    />
+                  )
+                })
+              : 'No recipes found'
             : 'Start typing to search'}
         </div>
       </DialogContent>
