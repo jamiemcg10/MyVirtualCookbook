@@ -5,7 +5,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import { getCookbook } from '../../utils/cookbook'
 import { SessionContext } from '@/app/utils/Session'
 import { ChapterBase, ChapterWithRecipeNotes, Recipe } from '@/app/lib/types'
-import { theme } from '@/app/ui/.theme/theme'
 import ThemedButton from '@/app/ui/buttons/ThemedButton'
 import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
@@ -20,6 +19,7 @@ import clsx from 'clsx'
 import { redirect } from 'next/navigation'
 import ThemedIconButton from '@/app/ui/buttons/ThemedIconButton'
 import LoadingIcon from '@/app/ui/LoadingIcon'
+import SearchDialog from '@/app/ui/dialogs/SearchDialog'
 
 export default function Cookbook() {
   const user = useContext(SessionContext)
@@ -249,6 +249,7 @@ export default function Cookbook() {
             chapters={cookbookChapters}
             saveRecipe={addNewRecipe}
           />
+          <SearchDialog />
         </>
       ) : (
         <LoadingIcon />
