@@ -10,7 +10,7 @@ function getLogoLink(loggedIn: boolean) {
 }
 
 export default function Header() {
-  const user = useContext(SessionContext)
+  const { user } = useContext(SessionContext)
   const loggedIn = !!user
 
   const greeting = user?.username ? `Hi ${user.username}!` : 'Hi!'

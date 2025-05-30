@@ -17,10 +17,9 @@ export default function EditRecipeDialog({
   recipe,
   showEditRecipeDialog,
   closeEditRecipeDialog,
-  chapters,
   saveRecipe
 }: EditRecipeDialogProps) {
-  const user = useContext(SessionContext)
+  const { user, chapters } = useContext(SessionContext)
 
   const [recipeChapterId, setRecipeChapterId] = useState<string>('')
   const [newChapterName, setNewChapterName] = useState<string>('')

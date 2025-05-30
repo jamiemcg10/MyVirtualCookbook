@@ -2,9 +2,8 @@
 
 import CookbookChapter from '@/app/ui/CookbookChapter'
 import React, { useContext, useEffect, useState } from 'react'
-import { getCookbook } from '../../utils/cookbook'
-import { SessionContext } from '@/app/utils/Session'
-import { ChapterBase, ChapterWithRecipeNotes, Recipe } from '@/app/lib/types'
+import { SessionContext, updateCookbook } from '@/app/utils/Session'
+import { Recipe } from '@/app/lib/types'
 import ThemedButton from '@/app/ui/buttons/ThemedButton'
 import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
@@ -22,9 +21,8 @@ import LoadingIcon from '@/app/ui/LoadingIcon'
 import SearchDialog from '@/app/ui/dialogs/SearchDialog'
 
 export default function Cookbook() {
-  const user = useContext(SessionContext)
-  const [cookbook, setCookbook] = useState<ChapterWithRecipeNotes[] | null>(null)
-  const [cookbookChapters, setCookbookChapters] = useState<ChapterBase[]>([])
+  const { user, cookbook } = useContext(SessionContext)
+
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [showEditRecipeDialog, setShowEditRecipeDialog] = useState(false)
   const [editDialogRecipe, setEditDialogRecipe] = useState<Recipe | null>(null)
@@ -64,7 +62,7 @@ export default function Cookbook() {
       const movedChapter = newCookbook.splice(source.index, 1)
       newCookbook.splice(destination.index, 0, ...movedChapter)
 
-      setCookbook([...newCookbook])
+      updateCookbook(newCookbook)
 
       const chapterOrder = newCookbook.map((chapter) => chapter.id)
 
@@ -97,7 +95,7 @@ export default function Cookbook() {
 
     newCookbook[destinationIndex].recipes.splice(destination?.index, 0, ...recipe)
 
-    setCookbook([...newCookbook])
+    updateCookbook(newCookbook)
 
     // update db
     const oldRecipeOrder = cookbook[sourceIndex].recipeOrder
@@ -120,18 +118,10 @@ export default function Cookbook() {
 
   useEffect(() => {
     window.history.replaceState(null, '', '/cookbook')
-    if (user) {
-      getCookbook(user.id).subscribe((v) => {
-        setCookbook(v)
-        const chapters = v.map((chapter) => {
-          return { id: chapter.id, name: chapter.name }
-        })
-        setCookbookChapters(chapters)
-      })
-    } else {
+    if (!user) {
       redirect('/login')
     }
-  }, [user])
+  }, [user, cookbook])
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -195,7 +185,7 @@ export default function Cookbook() {
                   <div
                     ref={provided.innerRef}
                     className={clsx(
-                      'flex flex-col space-y-2 grow px-8 pt-2.5 -mt-2.5 overflow-y-scroll',
+                      'flex flex-col space-y-2 grow px-8 pt-2.5 pb-8 -mt-2.5 overflow-y-scroll',
                       snapshot.isDraggingOver && 'bg-mvc-yellow/30'
                     )}>
                     {cookbook.length
@@ -246,7 +236,6 @@ export default function Cookbook() {
               setEditDialogRecipe(null)
               setShowEditRecipeDialog(false)
             }}
-            chapters={cookbookChapters}
             saveRecipe={addNewRecipe}
           />
           <SearchDialog />

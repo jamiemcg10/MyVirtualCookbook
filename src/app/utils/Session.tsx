@@ -5,23 +5,29 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { docData } from 'rxfire/firestore'
 import { auth } from './firebase/firebase'
 import { users } from './firebase/users'
-import { User } from '../lib/types'
+import { ChapterWithRecipeNotes, User, type Session } from '../lib/types'
 import { Subscription } from 'rxjs'
 import { DocumentData } from 'firebase/firestore'
+import { getCookbook } from './cookbook'
 
-export const SessionContext = createContext<User | undefined>(undefined)
-export let unsetUser: () => void
+const emptySession = { user: undefined, cookbook: undefined, chapters: undefined }
+
+export const SessionContext = createContext<Session>(emptySession)
+export let resetSession: () => void
+export let updateCookbook: (cookbook: ChapterWithRecipeNotes[]) => void
 
 export default function Session({ children }: PropsWithChildren) {
-  const [user, setUser] = useState<User | undefined>(undefined)
+  const [session, setSession] = useState<Session>(emptySession)
+
   const [loading, setLoading] = useState(true)
 
-  unsetUser = () => setUser(undefined)
+  resetSession = () => setSession(emptySession)
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
+    const storedSession = localStorage.getItem('session')
+    if (storedSession) {
+      console.log({ storedSession })
+      setSession(JSON.parse(storedSession))
     }
     setLoading(false)
   }, [])
@@ -33,19 +39,34 @@ export default function Session({ children }: PropsWithChildren) {
       if (authUser) {
         const userRef = users(authUser.uid).ref
         userSubscription = docData(userRef).subscribe((_user: DocumentData | undefined) => {
-          setUser(_user as User)
-          localStorage.setItem('user', JSON.stringify(_user))
+          if (_user) {
+            getCookbook(_user.id).subscribe((v) => {
+              const chapters = v.map((chapter) => {
+                return { id: chapter.id, name: chapter.name }
+              })
+
+              setSession({ user: _user as User, cookbook: v, chapters })
+              localStorage.setItem(
+                'session',
+                JSON.stringify({ user: _user, cookbook: v, chapters })
+              )
+
+              updateCookbook = (cookbook: ChapterWithRecipeNotes[]) => {
+                setSession({ user: _user as User, cookbook, chapters })
+              }
+            })
+          }
         })
       } else {
         // User is signed out
-        setUser(undefined)
+        setSession(emptySession)
         userSubscription.unsubscribe()
-        localStorage.removeItem('user')
+        localStorage.removeItem('session')
       }
     })
 
     userSubscription.unsubscribe()
   }, [])
 
-  return <SessionContext.Provider value={user}>{!loading && children}</SessionContext.Provider>
+  return <SessionContext.Provider value={session}>{!loading && children}</SessionContext.Provider>
 }

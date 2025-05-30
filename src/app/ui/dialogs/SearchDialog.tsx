@@ -25,7 +25,7 @@ export default function SearchDialog() {
   return (
     <>
       <Dialog
-        open={true}
+        open={false}
         fullScreen={fullScreen}
         sx={{ '.MuiDialog-paper': { backgroundColor: '#e1e1e1', width: '100%' } }}>
         <IconButton
