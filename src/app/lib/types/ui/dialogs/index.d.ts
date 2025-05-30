@@ -8,8 +8,14 @@ export interface DeleteChapterDialogProps {
 }
 
 export interface EditRecipeDialogProps {
-  recipe: Recipe | null
+  recipe: NewRecipe | null
   showEditRecipeDialog: boolean
   closeEditRecipeDialog: () => void
   saveRecipe: (userId: string | undefined, recipe: NewRecipe) => Promise<void>
+}
+
+export interface SearchDialogProps {
+  showSearchDialog: boolean
+  setShowSearchDialog: Dispatch<SetStateAction<boolean>>
+  showEditRecipeDialog: (v: NewRecipe) => void
 }

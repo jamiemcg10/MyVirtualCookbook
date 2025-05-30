@@ -131,7 +131,7 @@ export default function EditRecipeDialog({
             enableAdd
             required
             defaultValue={recipe?.chapterId || ''}
-            disabled={recipe}
+            disabled={!!recipe}
             onChange={onRecipeChapterChange}
           />
           {recipeChapterId === 'add' && (
@@ -187,8 +187,8 @@ export default function EditRecipeDialog({
             setSaveStatus('saving')
             await saveRecipe(user?.id, {
               recipeId: recipe?.recipeId,
-              recipeName,
-              recipeLink,
+              name: recipeName,
+              link: recipeLink,
               chapterId: recipeChapterId,
               newChapterName
             }).then(() => {

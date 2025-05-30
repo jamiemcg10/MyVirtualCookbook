@@ -7,18 +7,18 @@ import normalizeUrl from 'normalize-url'
 export async function addNewRecipe(userId: string | undefined, values: NewRecipe) {
   if (!userId) return
 
-  const { chapterId, recipeName, recipeLink, newChapterName, recipeId = uid(8) } = values
+  const { chapterId, name, link, newChapterName, recipeId = uid(8) } = values
 
   if (values.recipeId) {
     await users(userId).recipes.update(recipeId, {
-      name: recipeName,
-      link: normalizeUrl(recipeLink)
+      name,
+      link: normalizeUrl(link)
     })
   } else {
     const newRecipe = {
       id: recipeId,
-      name: recipeName,
-      link: normalizeUrl(recipeLink)
+      name,
+      link: normalizeUrl(link)
     }
 
     await users(userId).recipes.set(newRecipe)

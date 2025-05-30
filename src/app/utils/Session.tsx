@@ -26,7 +26,6 @@ export default function Session({ children }: PropsWithChildren) {
   useEffect(() => {
     const storedSession = localStorage.getItem('session')
     if (storedSession) {
-      console.log({ storedSession })
       setSession(JSON.parse(storedSession))
     }
     setLoading(false)

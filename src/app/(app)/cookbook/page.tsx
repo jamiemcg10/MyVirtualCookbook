@@ -3,10 +3,9 @@
 import CookbookChapter from '@/app/ui/CookbookChapter'
 import React, { useContext, useEffect, useState } from 'react'
 import { SessionContext, updateCookbook } from '@/app/utils/Session'
-import { Recipe } from '@/app/lib/types'
+import { NewRecipe } from '@/app/lib/types'
 import ThemedButton from '@/app/ui/buttons/ThemedButton'
 import AddIcon from '@mui/icons-material/Add'
-import SearchIcon from '@mui/icons-material/Search'
 import DeleteChapterDialog from '@/app/ui/dialogs/DeleteChapterDialog'
 import EditRecipeDialog from '@/app/ui/dialogs/EditRecipeDialog'
 import { addNewChapter } from '@/app/utils/addNewChapter'
@@ -16,16 +15,15 @@ import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea
 import { users } from '@/app/utils/firebase'
 import clsx from 'clsx'
 import { redirect } from 'next/navigation'
-import ThemedIconButton from '@/app/ui/buttons/ThemedIconButton'
 import LoadingIcon from '@/app/ui/LoadingIcon'
-import SearchDialog from '@/app/ui/dialogs/SearchDialog'
+import Search from '@/app/ui/Search'
 
 export default function Cookbook() {
   const { user, cookbook } = useContext(SessionContext)
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [showEditRecipeDialog, setShowEditRecipeDialog] = useState(false)
-  const [editDialogRecipe, setEditDialogRecipe] = useState<Recipe | null>(null)
+  const [editDialogRecipe, setEditDialogRecipe] = useState<NewRecipe | null>(null)
   const [chapterToDelete, setChapterToDelete] = useState<string | null>(null)
 
   function openDeleteChapterDialog(id: string) {
@@ -168,15 +166,10 @@ export default function Cookbook() {
               onClick={() => setShowEditRecipeDialog(true)}>
               <span className="hidden sm:block">Add&nbsp;</span> Recipe
             </ThemedButton>
-            <ThemedIconButton
-              color="mvc-white"
-              sx={{
-                marginY: '1rem',
-                right: { xs: '2rem', sm: '3rem' },
-                position: 'absolute'
-              }}>
-              <SearchIcon />
-            </ThemedIconButton>
+            <Search
+              setEditDialogRecipe={setEditDialogRecipe}
+              setShowEditRecipeDialog={setShowEditRecipeDialog}
+            />
           </div>
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="cookbook" key="cookbook" type="CookbookChapter">
@@ -199,7 +192,7 @@ export default function Cookbook() {
                                   {...provided.dragHandleProps}>
                                   <CookbookChapter
                                     chapter={chapter}
-                                    showEditRecipeDialog={(v: Recipe) => {
+                                    showEditRecipeDialog={(v: NewRecipe) => {
                                       setEditDialogRecipe(v)
                                       setShowEditRecipeDialog(true)
                                     }}
@@ -238,7 +231,6 @@ export default function Cookbook() {
             }}
             saveRecipe={addNewRecipe}
           />
-          <SearchDialog />
         </>
       ) : (
         <LoadingIcon />

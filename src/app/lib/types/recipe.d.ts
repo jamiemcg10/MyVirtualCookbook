@@ -12,6 +12,10 @@ export interface NewRecipe {
   recipeId?: string
   chapterId: string
   newChapterName?: string
-  recipeName: string
-  recipeLink: string
+  name: string
+  link: string
+}
+
+export interface SearchRecipe extends RecipeWithNotes {
+  chapterId: string
 }
