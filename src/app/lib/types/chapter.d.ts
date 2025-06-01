@@ -1,11 +1,8 @@
 import { RecipeWithNotes } from './recipe'
 
-export interface ChapterBase {
+export interface Chapter {
   id: string
   name: string
-}
-
-export interface Chapter extends ChapterBase {
   recipeOrder: string[]
 }
 
