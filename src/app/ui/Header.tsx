@@ -23,13 +23,14 @@ export default function Header() {
       </Link>
       {loggedIn ? (
         <div className="text-white text-sm sm:text-base">
-          {greeting} |
+          {greeting} |{/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a href="/logout" className="ml-1 hover:overline">
             Log Out
           </a>
         </div>
       ) : (
         <div className="text-white text-sm sm:text-base">
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a href="./login" className="hover:overline">
             Log In
           </a>
