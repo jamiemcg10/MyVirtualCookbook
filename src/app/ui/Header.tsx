@@ -23,15 +23,15 @@ export default function Header() {
       {loggedIn ? (
         <div className="text-white text-sm sm:text-base">
           {greeting} |
-          <Link href="/logout" className="ml-1 hover:overline">
+          <a href="/logout" className="ml-1 hover:overline">
             Log Out
-          </Link>
+          </a>
         </div>
       ) : (
         <div className="text-white text-sm sm:text-base">
-          <Link href="./login" className="hover:overline">
+          <a href="./login" className="hover:overline">
             Log In
-          </Link>
+          </a>
         </div>
       )}
     </div>
