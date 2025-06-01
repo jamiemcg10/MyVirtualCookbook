@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs'
 import { DocumentData } from 'firebase/firestore'
 import { getCookbook } from './cookbook'
 
-const emptySession = { user: undefined, cookbook: undefined, chapters: undefined }
+const emptySession = { user: undefined, cookbook: undefined }
 
 export const SessionContext = createContext<Session>(emptySession)
 export let resetSession: () => void
@@ -40,18 +40,11 @@ export default function Session({ children }: PropsWithChildren) {
         userSubscription = docData(userRef).subscribe((_user: DocumentData | undefined) => {
           if (_user) {
             getCookbook(_user.id).subscribe((v) => {
-              const chapters = v.map((chapter) => {
-                return { id: chapter.id, name: chapter.name }
-              })
-
-              setSession({ user: _user as User, cookbook: v, chapters })
-              localStorage.setItem(
-                'session',
-                JSON.stringify({ user: _user, cookbook: v, chapters })
-              )
+              setSession({ user: _user as User, cookbook: v })
+              localStorage.setItem('session', JSON.stringify({ user: _user, cookbook: v }))
 
               updateCookbook = (cookbook: ChapterWithRecipeNotes[]) => {
-                setSession({ user: _user as User, cookbook, chapters })
+                setSession({ user: _user as User, cookbook })
               }
             })
           }

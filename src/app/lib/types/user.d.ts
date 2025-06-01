@@ -18,5 +18,4 @@ export interface FirebaseUser extends UserCredential, Partial<AdditionalUserInfo
 export interface Session {
   user: User | undefined
   cookbook: ChapterWithRecipeNotes[] | undefined
-  chapters: ChapterBase[] | undefined // this isn't needed? just use the cookbook?
 }

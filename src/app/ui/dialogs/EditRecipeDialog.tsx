@@ -19,8 +19,9 @@ export default function EditRecipeDialog({
   closeEditRecipeDialog,
   saveRecipe
 }: EditRecipeDialogProps) {
-  const { user, chapters } = useContext(SessionContext)
+  const { user, cookbook } = useContext(SessionContext)
 
+  const [chapters, setChapters] = useState(getChapters())
   const [recipeChapterId, setRecipeChapterId] = useState<string>('')
   const [newChapterName, setNewChapterName] = useState<string>('')
   const [recipeName, setRecipeName] = useState('')
@@ -29,6 +30,14 @@ export default function EditRecipeDialog({
 
   const [saveDisabled, setSaveDisabled] = useState(true)
   const [invalidUrl, setInvalidUrl] = useState(false)
+
+  function getChapters() {
+    return (
+      cookbook?.map((chapter) => {
+        return { id: chapter.id, name: chapter.name }
+      }) || []
+    )
+  }
 
   function onRecipeChapterChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value
@@ -103,6 +112,10 @@ export default function EditRecipeDialog({
       })
     }
   }, [recipe])
+
+  useEffect(() => {
+    setChapters(getChapters())
+  }, [cookbook])
 
   return (
     <BaseDialog show={showEditRecipeDialog} closeFn={() => closeEditRecipeDialog()}>
