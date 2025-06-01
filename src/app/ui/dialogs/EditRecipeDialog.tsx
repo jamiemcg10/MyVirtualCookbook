@@ -202,7 +202,7 @@ export default function EditRecipeDialog({
       </DialogActions>
       <div
         className={
-          'flex-col italic items-center justify-center bg-[#fbe49e]/80 h-full absolute w-full text-mvc-green' +
+          'flex-col italic items-center justify-center bg-[#f6e7ba]/80 h-full absolute w-full text-mvc-green' +
           (saveStatus ? ' flex' : ' hidden')
         }>
         {saveStatus === 'saved' ? 'Saved!' : 'Saving...'}
