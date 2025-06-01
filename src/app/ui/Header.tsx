@@ -10,6 +10,7 @@ function getLogoLink(loggedIn: boolean) {
 }
 
 export default function Header() {
+  // NOTE: use a instead of Link for auth links to avoid prefetching
   const { user } = useContext(SessionContext)
   const loggedIn = !!user
 
