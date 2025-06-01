@@ -1,4 +1,4 @@
-import { MouseEventHandler, PropsWithChildren, Dispatch, SetStateAction } from 'react'
+import { PropsWithChildren, Dispatch, SetStateAction } from 'react'
 import { ButtonProps, IconButtonProps } from '@mui/material'
 
 export interface GoogleSignInButtonProps {
