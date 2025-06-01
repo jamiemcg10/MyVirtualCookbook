@@ -17,6 +17,9 @@ export default function ThemedTextField({
   defaultValue = '',
   enableAdd,
   disabled = false,
+  placeholder,
+  InputProps,
+  SelectProps,
   onInput,
   onChange
 }: ThemedTextFieldProps) {
@@ -49,6 +52,7 @@ export default function ThemedTextField({
             variant={variant}
             size={size}
             label={label}
+            placeholder={placeholder}
             required={required}
             helperText={helperText}
             error={error}
@@ -58,7 +62,19 @@ export default function ThemedTextField({
             disabled={disabled}
             onInput={onInput}
             onChange={onChange}
+            InputProps={InputProps}
+            SelectProps={SelectProps}
+            InputLabelProps={{
+              style: { opacity: 0.8 }
+            }}
             sx={{
+              '.MuiInputBase-root': {
+                color: 'var(--mvc-green)',
+                borderBottom: '1px solid var(--mvc-green)'
+              },
+              '.MuiInputBase-root:hover:not(.Mui-disabled, .Mui-error)': {
+                borderBottom: '1px solid transparent'
+              },
               '.MuiInputBase-root:hover:not(.Mui-disabled, .Mui-error)::before': {
                 borderBottom: '2px solid var(--mvc-yellow)'
               }

@@ -39,7 +39,7 @@ export default function CookbookRecipe({ recipe, chapterId, onEdit }: CookbookRe
     }
   }
 
-  const user = useContext(SessionContext)
+  const { user } = useContext(SessionContext)
 
   const { name, link, notes } = recipe
 

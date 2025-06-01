@@ -41,3 +41,14 @@ declare module '@mui/material/Button' {
     'mvc-gray': true
   }
 }
+
+import '@mui/material/IconButton'
+declare module '@mui/material/IconButton' {
+  // eslint-disable-next-line no-unused-vars
+  interface IconButtonPropsColorOverrides {
+    'mvc-green': true
+    'mvc-yellow': true
+    'mvc-white': true
+    'mvc-gray': true
+  }
+}

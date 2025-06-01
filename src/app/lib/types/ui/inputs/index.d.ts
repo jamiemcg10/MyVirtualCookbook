@@ -1,6 +1,6 @@
 import type { Dispatch, ChangeEvent, PropsWithChildren, SetStateAction } from 'react'
 import type { SxProps } from '@mui/material/styles'
-import { BaseTextFieldProps } from '@mui/material'
+import { StandardTextFieldProps } from '@mui/material'
 
 export interface InlineInputProps extends PropsWithChildren {
   label: string
@@ -20,7 +20,7 @@ export interface InlineInputEditActionsProps {
   saveDisabled: boolean
 }
 
-export interface ThemedTextFieldProps extends PropsWithChildren, BaseTextFieldProps {
+export interface ThemedTextFieldProps extends PropsWithChildren, StandardTextFieldProps {
   variant?: 'filled' | 'outlined' | 'standard'
   options?: DropdownOption[]
   enableAdd?: boolean

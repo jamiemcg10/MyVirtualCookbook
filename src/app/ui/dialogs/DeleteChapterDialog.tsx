@@ -1,6 +1,5 @@
 import {
   Button,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
@@ -10,6 +9,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import ThemedButton from '../buttons/ThemedButton'
 import type { DeleteChapterDialogProps } from '@/app/lib/types/ui/dialogs'
+import BaseDialog from './BaseDialog'
 
 export default function DeleteChapterDialog({
   showDeleteDialog,
@@ -18,11 +18,10 @@ export default function DeleteChapterDialog({
   setShowDeleteDialog
 }: DeleteChapterDialogProps) {
   return (
-    <Dialog
-      open={showDeleteDialog}
-      onClose={() => closeDeleteChapterDialog()}
-      sx={{ '.MuiDialog-paper': { backgroundColor: '#e1e1e1', padding: '0 15px' } }}>
-      <DialogTitle>Delete Chapter</DialogTitle>
+    <BaseDialog show={showDeleteDialog} closeFn={() => closeDeleteChapterDialog()}>
+      <DialogTitle>
+        <div className="text-mvc-green font-medium">Delete Chapter</div>
+      </DialogTitle>
       <IconButton
         onClick={() => closeDeleteChapterDialog()}
         aria-label="close"
@@ -60,6 +59,6 @@ export default function DeleteChapterDialog({
           Permanently Delete
         </Button>
       </DialogActions>
-    </Dialog>
+    </BaseDialog>
   )
 }

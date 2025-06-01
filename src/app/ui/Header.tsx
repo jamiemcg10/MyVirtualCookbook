@@ -10,7 +10,7 @@ function getLogoLink(loggedIn: boolean) {
 }
 
 export default function Header() {
-  const user = useContext(SessionContext)
+  const { user } = useContext(SessionContext)
   const loggedIn = !!user
 
   const greeting = user?.username ? `Hi ${user.username}!` : 'Hi!'
@@ -23,15 +23,15 @@ export default function Header() {
       {loggedIn ? (
         <div className="text-white text-sm sm:text-base">
           {greeting} |
-          <a href="/logout" className="ml-1">
+          <Link href="/logout" className="ml-1 hover:overline">
             Log Out
-          </a>
+          </Link>
         </div>
       ) : (
         <div className="text-white text-sm sm:text-base">
-          <a href="./login" className="hover:overline">
+          <Link href="./login" className="hover:overline">
             Log In
-          </a>
+          </Link>
         </div>
       )}
     </div>

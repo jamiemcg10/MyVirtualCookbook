@@ -24,7 +24,7 @@ export default function LoginForm() {
   const [email, setEmail] = useState('')
   const [errorText, setErrorText] = useState('')
   const [showNotification, setShowNotification] = useState(false)
-  const session = useContext(SessionContext)
+  const { user } = useContext(SessionContext)
 
   function handleSnackbarClose() {
     setShowNotification(false)
@@ -68,7 +68,7 @@ export default function LoginForm() {
   const submitBtnDisabled = email === ''
 
   useEffect(() => {
-    if (session) {
+    if (user) {
       redirect('/cookbook')
     }
 
@@ -90,7 +90,7 @@ export default function LoginForm() {
           setErrorText(error.message)
         })
     }
-  }, [session])
+  }, [user])
 
   return (
     <>

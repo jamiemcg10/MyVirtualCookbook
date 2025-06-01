@@ -66,7 +66,7 @@ export default function CookbookChapter({
     setShowDeleteDialog(true)
   }
 
-  const user = useContext(SessionContext)
+  const { user } = useContext(SessionContext)
 
   const recipes = mapRecipes(chapter?.recipes || [])
 

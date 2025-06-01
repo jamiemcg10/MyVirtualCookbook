@@ -24,3 +24,8 @@ export interface RecipeMenuProps {
   onEdit: () => void
   onDelete: () => Promise<void>
 }
+
+export interface SearchProps {
+  setShowEditRecipeDialog: Dispatch<React.SetStateAction<boolean>>
+  setEditDialogRecipe: (v: NewRecipe) => void
+}

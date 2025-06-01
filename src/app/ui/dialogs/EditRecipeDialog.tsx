@@ -1,10 +1,10 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close'
+import { DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import ThemedButton from '../buttons/ThemedButton'
 import ThemedTextField from '../inputs/ThemedTextField'
 import { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { SessionContext } from '@/app/utils/Session'
 import { EditRecipeDialogProps } from '@/app/lib/types/ui/dialogs'
+import BaseDialog from './BaseDialog'
 
 interface Inputs {
   recipeChapterId?: string
@@ -17,11 +17,11 @@ export default function EditRecipeDialog({
   recipe,
   showEditRecipeDialog,
   closeEditRecipeDialog,
-  chapters,
   saveRecipe
 }: EditRecipeDialogProps) {
-  const user = useContext(SessionContext)
+  const { user, cookbook } = useContext(SessionContext)
 
+  const [chapters, setChapters] = useState(getChapters())
   const [recipeChapterId, setRecipeChapterId] = useState<string>('')
   const [newChapterName, setNewChapterName] = useState<string>('')
   const [recipeName, setRecipeName] = useState('')
@@ -30,6 +30,14 @@ export default function EditRecipeDialog({
 
   const [saveDisabled, setSaveDisabled] = useState(true)
   const [invalidUrl, setInvalidUrl] = useState(false)
+
+  function getChapters() {
+    return (
+      cookbook?.map((chapter) => {
+        return { id: chapter.id, name: chapter.name }
+      }) || []
+    )
+  }
 
   function onRecipeChapterChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value
@@ -105,23 +113,15 @@ export default function EditRecipeDialog({
     }
   }, [recipe])
 
+  useEffect(() => {
+    setChapters(getChapters())
+  }, [cookbook])
+
   return (
-    <Dialog
-      open={showEditRecipeDialog}
-      onClose={() => closeEditRecipeDialog()}
-      sx={{ '.MuiDialog-paper': { backgroundColor: '#e1e1e1', width: 400 } }}>
-      <DialogTitle className="text-mvc-gray">{recipe ? 'Edit' : 'Add'} Recipe</DialogTitle>
-      <IconButton
-        onClick={() => closeEditRecipeDialog()}
-        aria-label="close"
-        sx={(theme) => ({
-          position: 'absolute',
-          right: 8,
-          top: 8,
-          color: theme.palette.grey[500]
-        })}>
-        <CloseIcon />
-      </IconButton>
+    <BaseDialog show={showEditRecipeDialog} closeFn={() => closeEditRecipeDialog()}>
+      <DialogTitle>
+        <div className="text-mvc-green font-medium">{recipe ? 'Edit' : 'Add'} Recipe</div>
+      </DialogTitle>
       <DialogContent>
         <div className="flex flex-col space-y-4 mb-4 text-xs">
           <ThemedTextField
@@ -132,8 +132,18 @@ export default function EditRecipeDialog({
             enableAdd
             required
             defaultValue={recipe?.chapterId || ''}
-            disabled={recipe}
+            disabled={!!recipe}
             onChange={onRecipeChapterChange}
+            SelectProps={{
+              MenuProps: {
+                PaperProps: {
+                  sx: {
+                    color: 'var(--mvc-green)',
+                    backgroundColor: 'var(--paper-bkg)'
+                  }
+                }
+              }
+            }}
           />
           {recipeChapterId === 'add' && (
             <ThemedTextField
@@ -188,8 +198,8 @@ export default function EditRecipeDialog({
             setSaveStatus('saving')
             await saveRecipe(user?.id, {
               recipeId: recipe?.recipeId,
-              recipeName,
-              recipeLink,
+              name: recipeName,
+              link: recipeLink,
               chapterId: recipeChapterId,
               newChapterName
             }).then(() => {
@@ -205,11 +215,11 @@ export default function EditRecipeDialog({
       </DialogActions>
       <div
         className={
-          'flex-col italic items-center justify-center bg-mvc-gray/75 h-full absolute w-full' +
+          'flex-col italic items-center justify-center bg-[#f6e7ba]/80 h-full absolute w-full text-mvc-green' +
           (saveStatus ? ' flex' : ' hidden')
         }>
         {saveStatus === 'saved' ? 'Saved!' : 'Saving...'}
       </div>
-    </Dialog>
+    </BaseDialog>
   )
 }
