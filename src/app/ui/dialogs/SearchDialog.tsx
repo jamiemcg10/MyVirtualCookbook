@@ -1,37 +1,18 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  InputAdornment,
-  useMediaQuery,
-  useTheme
-} from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close'
+import { DialogContent, DialogTitle, InputAdornment } from '@mui/material'
 import ThemedTextField from '../inputs/ThemedTextField'
 import SearchIcon from '@mui/icons-material/Search'
-import { ChangeEvent, useContext, useEffect, useState } from 'react'
+import { ChangeEvent, useContext, useState } from 'react'
 import { SessionContext } from '@/app/utils/Session'
 import { SearchRecipe } from '@/app/lib/types'
 import CookbookRecipe from '../CookbookRecipe'
 import { SearchDialogProps } from '@/app/lib/types/ui/dialogs'
+import BaseDialog from './BaseDialog'
 
 export default function SearchDialog({
   showEditRecipeDialog,
   showSearchDialog,
   setShowSearchDialog
 }: SearchDialogProps) {
-  useEffect(() => {
-    function closeOnEscape(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        setShowSearchDialog(false)
-      }
-    }
-    document.addEventListener('keyup', closeOnEscape)
-
-    return () => document.removeEventListener('keyup', closeOnEscape)
-  }, [])
-
   const { cookbook } = useContext(SessionContext)
   const recipes = cookbook?.flatMap((chapter) =>
     chapter.recipes.map((r) => {
@@ -61,38 +42,14 @@ export default function SearchDialog({
     setFilteredRecipes(filteredRecipes ? [...filteredRecipes] : undefined)
   }
 
-  const theme = useTheme()
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
-
   return (
-    <Dialog
-      open={showSearchDialog}
-      fullScreen={fullScreen}
-      sx={{
-        '.MuiDialog-paper': {
-          height: { sm: '100%' },
-          backgroundColor: 'var(--mvc-yellow)',
-          width: '100%'
-        }
-      }}>
-      <IconButton
-        onClick={() => setShowSearchDialog(false)}
-        aria-label="close"
-        sx={(theme) => ({
-          position: 'absolute',
-          right: 8,
-          top: 8,
-          color: theme.palette.grey[600]
-        })}>
-        <CloseIcon />
-      </IconButton>
+    <BaseDialog show={showSearchDialog} closeFn={() => setShowSearchDialog(false)} fullHeight>
       <DialogTitle>
-        <div className="w-11/12">
+        <div>
           <ThemedTextField
             placeholder="Search..."
             autoFocus
             onInput={onSearch}
-            hoverColor="white"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{ color: 'var(--mvc-green)' }}>
@@ -128,6 +85,6 @@ export default function SearchDialog({
             : 'Start typing to search'}
         </div>
       </DialogContent>
-    </Dialog>
+    </BaseDialog>
   )
 }

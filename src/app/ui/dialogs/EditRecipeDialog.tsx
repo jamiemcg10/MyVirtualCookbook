@@ -5,6 +5,8 @@ import ThemedTextField from '../inputs/ThemedTextField'
 import { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { SessionContext } from '@/app/utils/Session'
 import { EditRecipeDialogProps } from '@/app/lib/types/ui/dialogs'
+import BaseDialog from './BaseDialog'
+import { blue } from '@mui/material/colors'
 
 interface Inputs {
   recipeChapterId?: string
@@ -105,22 +107,10 @@ export default function EditRecipeDialog({
   }, [recipe])
 
   return (
-    <Dialog
-      open={showEditRecipeDialog}
-      onClose={() => closeEditRecipeDialog()}
-      sx={{ '.MuiDialog-paper': { backgroundColor: '#e1e1e1', width: 400 } }}>
-      <DialogTitle className="text-mvc-gray">{recipe ? 'Edit' : 'Add'} Recipe</DialogTitle>
-      <IconButton
-        onClick={() => closeEditRecipeDialog()}
-        aria-label="close"
-        sx={(theme) => ({
-          position: 'absolute',
-          right: 8,
-          top: 8,
-          color: theme.palette.grey[500]
-        })}>
-        <CloseIcon />
-      </IconButton>
+    <BaseDialog show={showEditRecipeDialog} closeFn={() => closeEditRecipeDialog()}>
+      <DialogTitle>
+        <div className="text-mvc-green font-medium">{recipe ? 'Edit' : 'Add'} Recipe</div>
+      </DialogTitle>
       <DialogContent>
         <div className="flex flex-col space-y-4 mb-4 text-xs">
           <ThemedTextField
@@ -133,6 +123,16 @@ export default function EditRecipeDialog({
             defaultValue={recipe?.chapterId || ''}
             disabled={!!recipe}
             onChange={onRecipeChapterChange}
+            SelectProps={{
+              MenuProps: {
+                PaperProps: {
+                  sx: {
+                    color: 'var(--mvc-green)',
+                    backgroundColor: 'var(--paper-bkg)'
+                  }
+                }
+              }
+            }}
           />
           {recipeChapterId === 'add' && (
             <ThemedTextField
@@ -209,6 +209,6 @@ export default function EditRecipeDialog({
         }>
         {saveStatus === 'saved' ? 'Saved!' : 'Saving...'}
       </div>
-    </Dialog>
+    </BaseDialog>
   )
 }

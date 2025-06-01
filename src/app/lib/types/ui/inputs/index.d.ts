@@ -24,7 +24,6 @@ export interface ThemedTextFieldProps extends PropsWithChildren, StandardTextFie
   variant?: 'filled' | 'outlined' | 'standard'
   options?: DropdownOption[]
   enableAdd?: boolean
-  hoverColor?: string
   onInput?: (e: ChangeEvent<HTMLInputElement>) => void
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }

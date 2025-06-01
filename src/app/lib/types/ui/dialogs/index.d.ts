@@ -1,4 +1,12 @@
 import { ChapterBase, NewRecipe } from '@/app/lib/types'
+import { ReactNode } from 'react'
+
+export interface BaseDialogProps {
+  children: ReactNode
+  show: boolean
+  fullHeight?: boolean
+  closeFn: () => void
+}
 
 export interface DeleteChapterDialogProps {
   showDeleteDialog: boolean
