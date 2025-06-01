@@ -76,7 +76,7 @@ export default function ThemedTextField({
                 borderBottom: '1px solid transparent'
               },
               '.MuiInputBase-root:hover:not(.Mui-disabled, .Mui-error)::before': {
-                borderBottom: `2px solid var(--mvc-yellow)`
+                borderBottom: '2px solid var(--mvc-yellow)'
               }
             }}>
             {getOptionsMenuItems()}
