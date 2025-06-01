@@ -9,6 +9,7 @@ function getLogoLink(loggedIn: boolean) {
   return loggedIn ? '/cookbook' : './'
 }
 
+/* eslint-disable @next/next/no-html-link-for-pages */
 export default function Header() {
   // NOTE: use a instead of Link for auth links to avoid prefetching
   const { user } = useContext(SessionContext)
@@ -23,14 +24,13 @@ export default function Header() {
       </Link>
       {loggedIn ? (
         <div className="text-white text-sm sm:text-base">
-          {greeting} |{/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          {greeting} |
           <a href="/logout" className="ml-1 hover:overline">
             Log Out
           </a>
         </div>
       ) : (
         <div className="text-white text-sm sm:text-base">
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a href="./login" className="hover:overline">
             Log In
           </a>
