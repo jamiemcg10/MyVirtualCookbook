@@ -1,13 +1,15 @@
-import { MouseEventHandler, PropsWithChildren } from 'react'
+import { MouseEventHandler, PropsWithChildren, Dispatch, SetStateAction } from 'react'
 import { ButtonProps, IconButtonProps } from '@mui/material'
 
 export interface GoogleSignInButtonProps {
-  onClick: MouseEventHandler
+  setErrorText: Dispatch<SetStateAction<string>>
 }
 
 export interface LinkSignInButtonProps {
+  email: string
+  setEmail: Dispatch<SetStateAction<string>>
   disabled: boolean
-  onClick: MouseEventHandler
+  setErrorText: Dispatch<SetStateAction<string>>
 }
 
 export interface ThemedButtonProps extends PropsWithChildren, ButtonProps {
