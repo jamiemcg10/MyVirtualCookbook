@@ -1,4 +1,4 @@
-import { ChapterBase, NewRecipe } from '@/app/lib/types'
+import { NewRecipe } from '@/app/lib/types'
 import { ReactNode } from 'react'
 
 export interface BaseDialogProps {

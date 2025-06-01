@@ -1,12 +1,10 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close'
+import { DialogActions, DialogContent, DialogTitle } from '@mui/material'
 import ThemedButton from '../buttons/ThemedButton'
 import ThemedTextField from '../inputs/ThemedTextField'
 import { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { SessionContext } from '@/app/utils/Session'
 import { EditRecipeDialogProps } from '@/app/lib/types/ui/dialogs'
 import BaseDialog from './BaseDialog'
-import { blue } from '@mui/material/colors'
 
 interface Inputs {
   recipeChapterId?: string
