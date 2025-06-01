@@ -43,7 +43,14 @@ export default function SearchDialog({
   }
 
   return (
-    <BaseDialog show={showSearchDialog} closeFn={() => setShowSearchDialog(false)} fullHeight>
+    <BaseDialog
+      show={showSearchDialog}
+      closeFn={() => {
+        setSearchValue('')
+        setFilteredRecipes(undefined)
+        setShowSearchDialog(false)
+      }}
+      fullHeight>
       <DialogTitle>
         <div>
           <ThemedTextField
