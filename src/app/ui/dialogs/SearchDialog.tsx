@@ -1,7 +1,7 @@
 import { DialogContent, DialogTitle, InputAdornment } from '@mui/material'
 import ThemedTextField from '../inputs/ThemedTextField'
 import SearchIcon from '@mui/icons-material/Search'
-import { ChangeEvent, useContext, useState } from 'react'
+import { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { SessionContext } from '@/app/utils/Session'
 import { SearchRecipe } from '@/app/lib/types'
 import CookbookRecipe from '../CookbookRecipe'
@@ -41,6 +41,10 @@ export default function SearchDialog({
 
     setFilteredRecipes(filteredRecipes ? [...filteredRecipes] : undefined)
   }
+
+  useEffect(() => {
+    filterRecipes(searchValue)
+  }, [cookbook])
 
   return (
     <BaseDialog
