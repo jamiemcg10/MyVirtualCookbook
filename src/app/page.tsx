@@ -17,14 +17,14 @@ export default function Home() {
       </div>
       <div className="flex flex-wrap justify-center mt-14 sm:mt-0">
         <div className="w-full xs:w-1/2 lg:w-1/3 px-4 sm:px-16 lg:pl-24 lg:pr-20">
-          <Link href="/about">
+          <Link href="/about" className="flex">
             <ThemedButton color="mvc-green" sx={homeButtonStyles}>
               Learn more
             </ThemedButton>
           </Link>
         </div>
         <div className="w-full xs:w-1/2 lg:w-1/3 px-4 sm:px-16 lg:pr-24 lg:pl-20">
-          <Link href="/login">
+          <Link href="/login" className="flex">
             <ThemedButton color="mvc-yellow" sx={homeButtonStyles}>
               Log in
             </ThemedButton>

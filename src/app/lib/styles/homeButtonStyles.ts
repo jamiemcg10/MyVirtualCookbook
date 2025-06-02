@@ -5,7 +5,7 @@ export const homeButtonStyles = {
     xs: '1.5rem',
     sm: '5rem'
   },
-  margin: {
-    sm: '1.25rem 5rem 2.5rem'
+  marginTop: {
+    sm: '1.25rem'
   }
 }
