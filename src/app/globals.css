@@ -32,6 +32,14 @@ body {
   flex-direction: column;
 }
 
+.scrollbar-track.scrollbar-track-y {
+  background: transparent;
+}
+
+.scrollbar-thumb.scrollbar-thumb-y {
+  background: var(--mvc-gray);
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

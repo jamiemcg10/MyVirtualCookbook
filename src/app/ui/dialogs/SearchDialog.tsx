@@ -7,6 +7,7 @@ import { SearchRecipe } from '@/app/lib/types'
 import CookbookRecipe from '../CookbookRecipe'
 import { SearchDialogProps } from '@/app/lib/types/ui/dialogs'
 import BaseDialog from './BaseDialog'
+import Scrollbar from 'react-smooth-scrollbar'
 
 export default function SearchDialog({
   showEditRecipeDialog,
@@ -71,30 +72,32 @@ export default function SearchDialog({
           />
         </div>
       </DialogTitle>
-      <DialogContent>
-        <div className="text-mvc-green">
-          {searchValue
-            ? filteredRecipes?.length
-              ? filteredRecipes?.map((recipe) => {
-                  return (
-                    <CookbookRecipe
-                      chapterId={recipe.chapterId}
-                      recipe={recipe}
-                      onEdit={() =>
-                        showEditRecipeDialog({
-                          chapterId: recipe.chapterId,
-                          name: recipe.name,
-                          link: recipe.link,
-                          recipeId: recipe.id
-                        })
-                      }
-                      key={recipe.id}
-                    />
-                  )
-                })
-              : 'No recipes found'
-            : 'Start typing to search'}
-        </div>
+      <DialogContent sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Scrollbar alwaysShowTracks={true}>
+          <div className="text-mvc-green overflow-y-scroll">
+            {searchValue
+              ? filteredRecipes?.length
+                ? filteredRecipes?.map((recipe) => {
+                    return (
+                      <CookbookRecipe
+                        chapterId={recipe.chapterId}
+                        recipe={recipe}
+                        onEdit={() =>
+                          showEditRecipeDialog({
+                            chapterId: recipe.chapterId,
+                            name: recipe.name,
+                            link: recipe.link,
+                            recipeId: recipe.id
+                          })
+                        }
+                        key={recipe.id}
+                      />
+                    )
+                  })
+                : 'No recipes found'
+              : 'Start typing to search'}
+          </div>
+        </Scrollbar>
       </DialogContent>
     </BaseDialog>
   )
