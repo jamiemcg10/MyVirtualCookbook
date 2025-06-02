@@ -4,11 +4,11 @@ import { useContext, useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { isSignInWithEmailLink, signInWithEmailLink, getAdditionalUserInfo } from 'firebase/auth'
 import GoogleSignInButton from '../../ui/buttons/GoogleSignInButton'
-import { auth } from '../../utils/firebase'
+import { auth } from '../../lib/utils/firebase'
 import { redirect } from 'next/navigation'
-import { SessionContext } from '../../utils/Session'
+import { SessionContext } from '../../lib/utils/Session'
 import { FirebaseUser } from '@/app/lib/types'
-import { createUser } from '@/app/utils/createUser'
+import { createUser } from '@/app/lib/utils/dbHelpers/createUser'
 
 export default function LoginForm() {
   const [errorText, setErrorText] = useState('')

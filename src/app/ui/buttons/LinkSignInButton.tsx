@@ -1,5 +1,5 @@
 import { sendSignInLinkToEmail } from 'firebase/auth'
-import { auth } from '../../utils/firebase'
+import { auth } from '../../lib/utils/firebase'
 import { LinkSignInButtonProps } from '@/app/lib/types/ui/buttons'
 import ThemedButton from './ThemedButton'
 import { Snackbar } from '@mui/material'

@@ -1,6 +1,6 @@
 'use client'
 
-import { resetSession } from '@/app/utils/Session'
+import { resetSession } from '@/app/lib/utils/Session'
 import { getAuth, signOut } from 'firebase/auth'
 import { redirect } from 'next/navigation'
 import { useEffect } from 'react'

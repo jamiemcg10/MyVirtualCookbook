@@ -5,7 +5,7 @@ import { useRef, useState } from 'react'
 import { ThemeProvider } from '@emotion/react'
 import { theme } from '../.theme/theme'
 import InlineInputEditActions from './InlineInputEditActions'
-import { sharedMiniButtonStyles } from '../../utils/sharedMiniButtonStyles'
+import { sharedMiniButtonStyles } from '../../lib/styles/sharedMiniButtonStyles'
 import type { InlineInputProps } from '@/app/lib/types/ui/inputs'
 
 const roboto = Roboto({ weight: '700', subsets: ['latin'] })

@@ -1,7 +1,7 @@
 import { collectionData, docData } from 'rxfire/firestore'
-import { users } from './firebase/users'
+import { users } from '../firebase/users'
 import { combineLatest, map, shareReplay } from 'rxjs'
-import { Chapter, ChapterWithRecipeNotes } from '../lib/types'
+import { Chapter, ChapterWithRecipeNotes } from '../../types'
 import { DocumentData } from 'rxfire/firestore/interfaces'
 
 export const getCookbook = (userId: string) => {

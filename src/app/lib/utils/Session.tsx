@@ -5,10 +5,10 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { docData } from 'rxfire/firestore'
 import { auth } from './firebase/firebase'
 import { users } from './firebase/users'
-import { ChapterWithRecipeNotes, User, type Session } from '../lib/types'
+import { ChapterWithRecipeNotes, User, type Session } from '../types'
 import { Subscription } from 'rxjs'
 import { DocumentData } from 'firebase/firestore'
-import { getCookbook } from './cookbook'
+import { getCookbook } from './dbHelpers/cookbook'
 
 const emptySession = { user: undefined, cookbook: undefined }
 
