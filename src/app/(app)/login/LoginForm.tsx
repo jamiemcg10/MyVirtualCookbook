@@ -1,18 +1,8 @@
 'use client'
 
-import { TextField } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import clsx from 'clsx'
-import {
-  sendSignInLinkToEmail,
-  isSignInWithEmailLink,
-  signInWithEmailLink,
-  getAdditionalUserInfo,
-  GoogleAuthProvider,
-  signInWithPopup
-} from 'firebase/auth'
-import Snackbar from '@mui/material/Snackbar'
-import LinkSignInButton from '../../ui/buttons/LinkSignInButton'
+import { isSignInWithEmailLink, signInWithEmailLink, getAdditionalUserInfo } from 'firebase/auth'
 import GoogleSignInButton from '../../ui/buttons/GoogleSignInButton'
 import { auth } from '../../utils/firebase'
 import { redirect } from 'next/navigation'
@@ -21,51 +11,8 @@ import { FirebaseUser } from '@/app/lib/types'
 import { createUser } from '@/app/utils/createUser'
 
 export default function LoginForm() {
-  const [email, setEmail] = useState('')
   const [errorText, setErrorText] = useState('')
-  const [showNotification, setShowNotification] = useState(false)
   const { user } = useContext(SessionContext)
-
-  function handleSnackbarClose() {
-    setShowNotification(false)
-  }
-
-  const sendMagicLink = async () => {
-    const actionCodeSettings = {
-      url: `${window.location.origin}/cookbook`,
-      handleCodeInApp: true
-    }
-
-    sendSignInLinkToEmail(auth, email, actionCodeSettings)
-      .then(() => {
-        window.localStorage.setItem('emailForSignIn', email)
-        setEmail('')
-        setShowNotification(true)
-      })
-      .catch(({ message }) => {
-        setErrorText(message)
-      })
-  }
-
-  const signInWithGoogle = () => {
-    const provider = new GoogleAuthProvider()
-
-    signInWithPopup(auth, provider)
-      .then(async (result) => {
-        const user = { ...result, ...(getAdditionalUserInfo(result) || {}) } as FirebaseUser
-
-        const isNewUser = user.isNewUser
-
-        if (isNewUser) {
-          await createUser(user)
-        }
-      })
-      .catch(({ message }) => {
-        setErrorText(message)
-      })
-  }
-
-  const submitBtnDisabled = email === ''
 
   useEffect(() => {
     if (user) {
@@ -79,7 +26,6 @@ export default function LoginForm() {
         .then((result) => {
           window.localStorage.removeItem('emailForSignIn')
           const user = { ...result, ...(getAdditionalUserInfo(result) || {}) } as FirebaseUser
-
           const isNewUser = getAdditionalUserInfo(result)?.isNewUser
 
           if (isNewUser) {
@@ -98,17 +44,7 @@ export default function LoginForm() {
         <h1 className="page-title">Log in</h1>
         <div className="w-[22rem] p-9 shadow-xl bg-gray-300 rounded-lg m-auto login-container">
           <h3 className="text-gray-700 text-center mb-6 text-xl">Log in to continue</h3>
-          <div>
-            <TextField
-              fullWidth
-              variant="outlined"
-              size="small"
-              className="mb-3"
-              id="email"
-              label="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+          <div className="pt-4">
             <p
               className={clsx(
                 'ml-0.5 mt-0.5 text-red-600 text-xs italic',
@@ -117,19 +53,11 @@ export default function LoginForm() {
               {errorText}
             </p>
             <div className="flex flex-col mt-4">
-              <LinkSignInButton disabled={submitBtnDisabled} onClick={sendMagicLink} />
-              <GoogleSignInButton onClick={signInWithGoogle} />
+              <GoogleSignInButton setErrorText={setErrorText} />
             </div>
           </div>
         </div>
       </div>
-      <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        autoHideDuration={3000}
-        message="Link sent to email"
-        open={showNotification}
-        onClose={handleSnackbarClose}
-      />
     </>
   )
 }

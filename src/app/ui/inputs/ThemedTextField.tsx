@@ -3,6 +3,7 @@ import React from 'react'
 import { ThemeProvider } from '@emotion/react'
 import { theme } from '../.theme/theme'
 import type { ThemedTextFieldProps } from '@/app/lib/types/ui/inputs'
+import { standardStyles, outlinedStyles } from '@/app/utils/themedTextFieldStyles'
 
 export default function ThemedTextField({
   label,
@@ -67,18 +68,7 @@ export default function ThemedTextField({
             InputLabelProps={{
               style: { opacity: 0.8 }
             }}
-            sx={{
-              '.MuiInputBase-root': {
-                color: 'var(--mvc-green)',
-                borderBottom: '1px solid var(--mvc-green)'
-              },
-              '.MuiInputBase-root:hover:not(.Mui-disabled, .Mui-error)': {
-                borderBottom: '1px solid transparent'
-              },
-              '.MuiInputBase-root:hover:not(.Mui-disabled, .Mui-error)::before': {
-                borderBottom: '2px solid var(--mvc-yellow)'
-              }
-            }}>
+            sx={variant === 'standard' ? standardStyles : outlinedStyles}>
             {getOptionsMenuItems()}
           </TextField>
         </ThemeProvider>
