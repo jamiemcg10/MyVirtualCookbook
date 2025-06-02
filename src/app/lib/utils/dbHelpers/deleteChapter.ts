@@ -1,6 +1,6 @@
 'use server'
 
-import { getDB } from './firebase/firebaseAdmin'
+import { getDB } from '../firebase/firebaseAdmin'
 
 export async function deleteChapter(
   userId: string,

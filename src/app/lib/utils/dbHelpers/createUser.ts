@@ -1,5 +1,5 @@
-import { FirebaseUser } from '../lib/types'
-import { users } from './firebase'
+import { FirebaseUser } from '../../types'
+import { users } from '../firebase'
 
 export const createUser = async (user: FirebaseUser) => {
   const id = user.user.uid

@@ -19,7 +19,7 @@ function Tile(props: { type: TileType }) {
 export default function HomePageTile(props: { type: TileType }) {
   return (
     <Card
-      className="flex flex-col shrink-0 items-center justify-around w-40 h-40 m-6"
+      className="flex flex-col shrink-0 items-center justify-end pb-1 xs:pb-4 w-32 h-32 xs:h-40 xs:w-40 m-4 md:m-6"
       sx={{
         color: 'white',
         backgroundColor: '#606060'

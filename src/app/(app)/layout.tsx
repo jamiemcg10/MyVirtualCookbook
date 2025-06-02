@@ -1,5 +1,5 @@
 'use client'
-import Session from '../utils/Session'
+import Session from '../lib/utils/Session'
 import Header from '../ui/Header'
 import { PropsWithChildren } from 'react'
 

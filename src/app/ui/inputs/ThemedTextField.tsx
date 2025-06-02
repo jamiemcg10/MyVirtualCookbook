@@ -3,7 +3,7 @@ import React from 'react'
 import { ThemeProvider } from '@emotion/react'
 import { theme } from '../.theme/theme'
 import type { ThemedTextFieldProps } from '@/app/lib/types/ui/inputs'
-import { standardStyles, outlinedStyles } from '@/app/utils/themedTextFieldStyles'
+import { standardStyles, outlinedStyles } from '@/app/lib/styles/themedTextFieldStyles'
 
 export default function ThemedTextField({
   label,

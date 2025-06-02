@@ -1,7 +1,7 @@
 import { uid } from 'uid'
-import { users } from './firebase'
+import { users } from '../firebase'
 import { arrayUnion } from 'firebase/firestore'
-import { NewRecipe } from '../lib/types'
+import { NewRecipe } from '../../types'
 import normalizeUrl from 'normalize-url'
 
 export async function addNewRecipe(userId: string | undefined, values: NewRecipe) {

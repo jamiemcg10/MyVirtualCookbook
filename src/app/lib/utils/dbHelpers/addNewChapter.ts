@@ -1,5 +1,5 @@
 import { uid } from 'uid'
-import { users } from './firebase'
+import { users } from '../firebase'
 import { arrayUnion } from 'firebase/firestore'
 
 export async function addNewChapter(userId: string | undefined) {

@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Logo from './Logo'
 import { useContext } from 'react'
-import { SessionContext } from '../utils/Session'
+import { SessionContext } from '../lib/utils/Session'
 
 function getLogoLink(loggedIn: boolean) {
   return loggedIn ? '/cookbook' : './'

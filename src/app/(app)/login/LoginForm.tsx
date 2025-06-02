@@ -4,11 +4,11 @@ import { useContext, useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { isSignInWithEmailLink, signInWithEmailLink, getAdditionalUserInfo } from 'firebase/auth'
 import GoogleSignInButton from '../../ui/buttons/GoogleSignInButton'
-import { auth } from '../../utils/firebase'
+import { auth } from '../../lib/utils/firebase'
 import { redirect } from 'next/navigation'
-import { SessionContext } from '../../utils/Session'
+import { SessionContext } from '../../lib/utils/Session'
 import { FirebaseUser } from '@/app/lib/types'
-import { createUser } from '@/app/utils/createUser'
+import { createUser } from '@/app/lib/utils/dbHelpers/createUser'
 
 export default function LoginForm() {
   const [errorText, setErrorText] = useState('')
@@ -42,7 +42,7 @@ export default function LoginForm() {
     <>
       <div className="px-5">
         <h1 className="page-title">Log in</h1>
-        <div className="w-[22rem] p-9 shadow-xl bg-gray-300 rounded-lg m-auto login-container">
+        <div className="w-[20rem] xs:w-[22rem] p-9 shadow-xl bg-gray-300 rounded-lg m-auto login-container">
           <h3 className="text-gray-700 text-center mb-6 text-xl">Log in to continue</h3>
           <div className="pt-4">
             <p
