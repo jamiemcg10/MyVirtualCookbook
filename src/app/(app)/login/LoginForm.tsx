@@ -42,7 +42,7 @@ export default function LoginForm() {
     <>
       <div className="px-5">
         <h1 className="page-title">Log in</h1>
-        <div className="w-[22rem] p-9 shadow-xl bg-gray-300 rounded-lg m-auto login-container">
+        <div className="w-[20rem] xs:w-[22rem] p-9 shadow-xl bg-gray-300 rounded-lg m-auto login-container">
           <h3 className="text-gray-700 text-center mb-6 text-xl">Log in to continue</h3>
           <div className="pt-4">
             <p
