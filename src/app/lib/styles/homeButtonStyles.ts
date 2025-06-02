@@ -1,4 +1,4 @@
-export let homeButtonStyles = {
+export const homeButtonStyles = {
   width: '100%',
   height: '3rem',
   marginBottom: {
