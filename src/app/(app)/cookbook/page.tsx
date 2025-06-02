@@ -176,7 +176,7 @@ export default function Cookbook() {
             <Droppable droppableId="cookbook" key="cookbook" type="CookbookChapter">
               {(provided, snapshot) => {
                 return (
-                  <Scrollbar alwaysShowTracks={false}>
+                  <Scrollbar alwaysShowTracks={true}>
                     <div
                       ref={provided.innerRef}
                       className={clsx(
