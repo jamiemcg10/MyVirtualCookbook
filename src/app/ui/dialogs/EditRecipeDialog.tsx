@@ -43,6 +43,7 @@ export default function EditRecipeDialog({
     setRecipeChapterId('')
     setNewChapterName('')
     setRecipeName('')
+    setSaveDisabled(true)
     setSaveStatus(null)
   }
 
@@ -104,6 +105,31 @@ export default function EditRecipeDialog({
     } else {
       setSaveDisabled(true)
     }
+  }
+
+  const save = async () => {
+    if (!isValidUrl()) return
+
+    if (noChanges()) {
+      resetRecipe()
+      closeEditRecipeDialog()
+      return
+    }
+
+    setSaveStatus('saving')
+    await saveRecipe(user?.id, {
+      recipeId: recipe?.recipeId,
+      name: recipeName,
+      link: recipeLink,
+      chapterId: recipeChapterId,
+      newChapterName
+    }).then(() => {
+      setSaveStatus('saved')
+      setTimeout(() => {
+        resetRecipe()
+        closeEditRecipeDialog()
+      }, 500)
+    })
   }
 
   useEffect(() => {
@@ -185,8 +211,8 @@ export default function EditRecipeDialog({
           color="mvc-gray"
           className="my-4 ml-8"
           onClick={() => {
-            closeEditRecipeDialog()
             resetRecipe()
+            closeEditRecipeDialog()
           }}>
           <span>Cancel</span>
         </ThemedButton>
@@ -195,30 +221,7 @@ export default function EditRecipeDialog({
           variant="contained"
           className="my-4 ml-8"
           disabled={saveDisabled}
-          onClick={async () => {
-            if (!isValidUrl()) return
-
-            if (noChanges()) {
-              closeEditRecipeDialog()
-              resetRecipe()
-              return
-            }
-
-            setSaveStatus('saving')
-            await saveRecipe(user?.id, {
-              recipeId: recipe?.recipeId,
-              name: recipeName,
-              link: recipeLink,
-              chapterId: recipeChapterId,
-              newChapterName
-            }).then(() => {
-              setSaveStatus('saved')
-              setTimeout(() => {
-                closeEditRecipeDialog()
-                resetRecipe()
-              }, 500)
-            })
-          }}>
+          onClick={() => save()}>
           Save
         </ThemedButton>
       </DialogActions>
