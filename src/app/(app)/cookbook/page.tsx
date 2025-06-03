@@ -37,7 +37,9 @@ export default function Cookbook() {
   }
 
   async function deleteActiveChapter() {
-    if (!user || !chapterToDelete) return
+    if (!user || !chapterToDelete || !cookbook) return
+
+    updateCookbook(cookbook.filter((c) => c.id !== chapterToDelete))
 
     const childrenToDelete = cookbook?.find(
       (chapter) => chapter.id === chapterToDelete
