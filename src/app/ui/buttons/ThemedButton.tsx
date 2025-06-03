@@ -27,6 +27,7 @@ export default function ThemedButton({
         onClick={onClick}
         startIcon={startIcon}
         endIcon={endIcon}
+        disableRipple
         sx={{
           width: 'max-content',
           ...sx

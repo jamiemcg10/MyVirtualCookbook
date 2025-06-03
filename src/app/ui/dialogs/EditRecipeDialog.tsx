@@ -151,87 +151,94 @@ export default function EditRecipeDialog({
   }, [cookbook])
 
   return (
-    <BaseDialog show={showEditRecipeDialog} closeFn={() => closeEditRecipeDialog()}>
-      <DialogTitle>
-        <div className="text-mvc-green font-medium">{recipe ? 'Edit' : 'Add'} Recipe</div>
-      </DialogTitle>
-      <DialogContent>
-        <div className="flex flex-col space-y-4 mb-4 text-xs">
-          <ThemedTextField
-            size="small"
-            label="Chapter"
-            options={chapters}
-            select
-            enableAdd
-            required
-            defaultValue={recipe?.chapterId || ''}
-            disabled={!!recipe}
-            onChange={onRecipeChapterChange}
-            SelectProps={{
-              MenuProps: {
-                PaperProps: {
-                  sx: {
-                    color: 'var(--mvc-green)',
-                    backgroundColor: 'var(--paper-bkg)'
-                  }
-                }
-              }
-            }}
-          />
-          {recipeChapterId === 'add' && (
+    <div
+      onKeyUp={(e) => {
+        if (e.key === 'Enter' && !saveDisabled) {
+          save()
+        }
+      }}>
+      <BaseDialog show={showEditRecipeDialog} closeFn={() => closeEditRecipeDialog()}>
+        <DialogTitle>
+          <div className="text-mvc-green font-medium">{recipe ? 'Edit' : 'Add'} Recipe</div>
+        </DialogTitle>
+        <DialogContent>
+          <div className="flex flex-col space-y-4 mb-4 text-xs">
             <ThemedTextField
               size="small"
-              label="New chapter name"
+              label="Chapter"
+              options={chapters}
+              select
+              enableAdd
               required
-              autoFocus
-              onInput={onNewChapterInput}
+              defaultValue={recipe?.chapterId || ''}
+              disabled={!!recipe}
+              onChange={onRecipeChapterChange}
+              SelectProps={{
+                MenuProps: {
+                  PaperProps: {
+                    sx: {
+                      color: 'var(--mvc-green)',
+                      backgroundColor: 'var(--paper-bkg)'
+                    }
+                  }
+                }
+              }}
             />
-          )}
-          <ThemedTextField
-            size="small"
-            label="Recipe name"
-            required
-            defaultValue={recipe?.name || ''}
-            onInput={onRecipeNameInput}
-          />
-          <ThemedTextField
-            size="small"
-            label="Recipe link"
-            required
-            onInput={onRecipeLinkInput}
-            defaultValue={recipe?.link || ''}
-            helperText={invalidUrl ? 'Invalid URL' : ''}
-            error={invalidUrl}
-          />
+            {recipeChapterId === 'add' && (
+              <ThemedTextField
+                size="small"
+                label="New chapter name"
+                required
+                autoFocus
+                onInput={onNewChapterInput}
+              />
+            )}
+            <ThemedTextField
+              size="small"
+              label="Recipe name"
+              required
+              defaultValue={recipe?.name || ''}
+              onInput={onRecipeNameInput}
+            />
+            <ThemedTextField
+              size="small"
+              label="Recipe link"
+              required
+              onInput={onRecipeLinkInput}
+              defaultValue={recipe?.link || ''}
+              helperText={invalidUrl ? 'Invalid URL' : ''}
+              error={invalidUrl}
+            />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <ThemedButton
+            variant="contained"
+            color="mvc-gray"
+            className="my-4 ml-8"
+            onClick={() => {
+              resetRecipe()
+              closeEditRecipeDialog()
+            }}>
+            <span>Cancel</span>
+          </ThemedButton>
+          <ThemedButton
+            color="mvc-green"
+            variant="contained"
+            className="my-4 ml-8"
+            disabled={saveDisabled}
+            onClick={() => save()}>
+            Save
+          </ThemedButton>
+        </DialogActions>
+        <div
+          className={
+            'flex-col italic items-center justify-center bg-[#f6e7ba]/80 h-full absolute top-0 left-0 w-full text-mvc-green' +
+            (saveStatus ? ' flex' : ' hidden')
+          }>
+          {saveStatus === 'saved' ? 'Saved!' : 'Saving...'}
         </div>
-      </DialogContent>
-      <DialogActions>
-        <ThemedButton
-          variant="contained"
-          color="mvc-gray"
-          className="my-4 ml-8"
-          onClick={() => {
-            resetRecipe()
-            closeEditRecipeDialog()
-          }}>
-          <span>Cancel</span>
-        </ThemedButton>
-        <ThemedButton
-          color="mvc-green"
-          variant="contained"
-          className="my-4 ml-8"
-          disabled={saveDisabled}
-          onClick={() => save()}>
-          Save
-        </ThemedButton>
-      </DialogActions>
-      <div
-        className={
-          'flex-col italic items-center justify-center bg-[#f6e7ba]/80 h-full absolute top-0 left-0 w-full text-mvc-green' +
-          (saveStatus ? ' flex' : ' hidden')
-        }>
-        {saveStatus === 'saved' ? 'Saved!' : 'Saving...'}
-      </div>
-    </BaseDialog>
+      </BaseDialog>
+    </div>
   )
 }
