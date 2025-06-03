@@ -13,7 +13,7 @@ export interface LinkSignInButtonProps {
 }
 
 export interface ThemedButtonProps extends PropsWithChildren, ButtonProps {
-  color: 'mvc-green' | 'mvc-yellow' | 'mvc-white' | 'mvc-gray'
+  color: 'mvc-green' | 'mvc-yellow' | 'mvc-white' | 'mvc-gray' | ButtonProps['color']
   className?: string
 }
 

@@ -5,10 +5,10 @@ import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown'
 import CookbookRecipe from './CookbookRecipe'
 import { RecipeWithNotes } from '../lib/types'
 import { users } from '../lib/utils/firebase'
-import { useContext, MouseEvent } from 'react'
-import { SessionContext } from '../lib/utils/Session'
+import { useContext, MouseEvent, useState } from 'react'
+import { SessionContext, updateCookbook } from '../lib/utils/Session'
 import InlineInput from './inputs/InlineInput'
-import { arrayRemove } from 'firebase/firestore'
+import { arrayUnion } from 'firebase/firestore'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import { sharedMiniButtonStyles } from '../lib/styles/sharedMiniButtonStyles'
 import { CookbookChapterProps } from '../lib/types/ui'
@@ -48,16 +48,21 @@ export default function CookbookChapter({
 
   async function saveTitle(newTitle: string) {
     if (!user?.id) return
+    setChapterDisplayName(newTitle)
 
-    if (chapter.name !== newTitle) {
+    if (!chapter.name) {
+      await Promise.all([
+        users(user.id).chapters.set({ id: chapter.id, recipeOrder: [], name: newTitle }),
+        users(user.id).update({ chapterOrder: arrayUnion(chapter.id) })
+      ])
+    } else if (chapter.name !== newTitle) {
       await users(user.id).chapters.update(chapter.id, { name: newTitle })
     }
   }
 
   async function cancelEdit() {
-    if (user && !chapter.name) {
-      await users(user.id).update({ chapterOrder: arrayRemove(chapter.id) })
-      await users(user.id).chapters.delete(chapter.id)
+    if (user && !chapter.name && cookbook) {
+      updateCookbook(cookbook.filter((c) => c.id !== chapter.id))
     }
   }
 
@@ -66,9 +71,11 @@ export default function CookbookChapter({
     setShowDeleteDialog(true)
   }
 
-  const { user } = useContext(SessionContext)
+  const { user, cookbook } = useContext(SessionContext)
 
-  const recipes = mapRecipes(chapter?.recipes || [])
+  const [chapterDisplayName, setChapterDisplayName] = useState(chapter.name)
+
+  const recipes = mapRecipes(chapter.recipes || [])
 
   return (
     <div className="rounded-md">
@@ -98,9 +105,14 @@ export default function CookbookChapter({
                     <InlineInput
                       label={chapter.name || ''}
                       onSave={saveTitle}
-                      autoFocus={!chapter?.name}
-                      onCancel={cancelEdit}>
-                      <h1 className="text-gray-700">{chapter?.name}</h1>
+                      autoFocus={!chapter.name}
+                      onCancel={cancelEdit}
+                      onBlur={() => {
+                        if (!chapter.name) {
+                          cancelEdit()
+                        }
+                      }}>
+                      <h1 className="text-gray-700">{chapterDisplayName}</h1>
                     </InlineInput>
                   </div>
                   <div className="relative h-4 w-6">

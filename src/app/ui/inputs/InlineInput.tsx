@@ -15,6 +15,7 @@ export default function InlineInput({
   label,
   onSave,
   onCancel,
+  onBlur,
   autoFocus = false,
   hideEditIcon = false,
   editing,
@@ -77,6 +78,12 @@ export default function InlineInput({
                   onClick={(e) => {
                     e.stopPropagation()
                   }}
+                  onKeyDown={async (e) => {
+                    if (e.key === 'Enter') {
+                      await onSave(getInputValue())
+                    }
+                  }}
+                  onBlur={onBlur}
                 />
               </div>
             </ThemeProvider>

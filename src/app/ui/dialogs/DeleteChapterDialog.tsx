@@ -1,5 +1,4 @@
 import {
-  Button,
   DialogActions,
   DialogContent,
   DialogContentText,
@@ -51,13 +50,13 @@ export default function DeleteChapterDialog({
           }}>
           <span>Cancel</span>
         </ThemedButton>
-        <Button
+        <ThemedButton
           color="error"
           variant="contained"
           className="my-4 ml-8"
           onClick={deleteActiveChapter}>
           Permanently Delete
-        </Button>
+        </ThemedButton>
       </DialogActions>
     </BaseDialog>
   )
