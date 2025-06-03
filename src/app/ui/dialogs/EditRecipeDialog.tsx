@@ -39,6 +39,13 @@ export default function EditRecipeDialog({
     )
   }
 
+  function resetRecipe() {
+    setRecipeChapterId('')
+    setNewChapterName('')
+    setRecipeName('')
+    setSaveStatus(null)
+  }
+
   function onRecipeChapterChange(e: ChangeEvent<HTMLInputElement>) {
     const value = e.target.value
     setRecipeChapterId(value)
@@ -179,6 +186,7 @@ export default function EditRecipeDialog({
           className="my-4 ml-8"
           onClick={() => {
             closeEditRecipeDialog()
+            resetRecipe()
           }}>
           <span>Cancel</span>
         </ThemedButton>
@@ -192,6 +200,7 @@ export default function EditRecipeDialog({
 
             if (noChanges()) {
               closeEditRecipeDialog()
+              resetRecipe()
               return
             }
 
@@ -206,7 +215,7 @@ export default function EditRecipeDialog({
               setSaveStatus('saved')
               setTimeout(() => {
                 closeEditRecipeDialog()
-                setSaveStatus(null)
+                resetRecipe()
               }, 500)
             })
           }}>
@@ -215,7 +224,7 @@ export default function EditRecipeDialog({
       </DialogActions>
       <div
         className={
-          'flex-col italic items-center justify-center bg-[#f6e7ba]/80 h-full absolute w-full text-mvc-green' +
+          'flex-col italic items-center justify-center bg-[#f6e7ba]/80 h-full absolute top-0 left-0 w-full text-mvc-green' +
           (saveStatus ? ' flex' : ' hidden')
         }>
         {saveStatus === 'saved' ? 'Saved!' : 'Saving...'}
