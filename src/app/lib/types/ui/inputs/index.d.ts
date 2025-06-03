@@ -1,8 +1,8 @@
 import type { Dispatch, ChangeEvent, PropsWithChildren, SetStateAction } from 'react'
 import type { SxProps } from '@mui/material/styles'
-import { StandardTextFieldProps } from '@mui/material'
+import { StandardTextFieldProps, InputProps } from '@mui/material'
 
-export interface InlineInputProps extends PropsWithChildren {
+export interface InlineInputProps extends InputProps, PropsWithChildren {
   label: string
   onSave: (newLabel: string) => Promise<void>
   onCancel: () => Promise<void> | void

@@ -8,7 +8,7 @@ import ThemedButton from '@/app/ui/buttons/ThemedButton'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteChapterDialog from '@/app/ui/dialogs/DeleteChapterDialog'
 import EditRecipeDialog from '@/app/ui/dialogs/EditRecipeDialog'
-import { addNewChapter } from '@/app/lib/utils/dbHelpers/addNewChapter'
+import { addNewChapter } from '@/app/lib/utils/addNewChapter'
 import { addNewRecipe } from '@/app/lib/utils/dbHelpers/addNewRecipe'
 import { deleteChapter } from '@/app/lib/utils/dbHelpers/deleteChapter'
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd'
@@ -144,7 +144,7 @@ export default function Cookbook() {
                   }}
                 />
               }
-              onClick={() => addNewChapter(user?.id)}>
+              onClick={() => addNewChapter(user, cookbook)}>
               <span className="hidden sm:block">Add&nbsp;</span> Chapter
             </ThemedButton>
             <ThemedButton
