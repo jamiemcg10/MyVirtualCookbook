@@ -85,48 +85,38 @@ export default function CookbookChapter({
           margin: '8px 0',
           '.MuiAccordionSummary-root.Mui-expanded': { margin: 0, minHeight: '38px' }
         }}>
-        <Droppable droppableId={`chapter-${chapter.id}`} key={`chapter-${chapter.id}`}>
-          {(provided, snapshot) => {
-            return (
-              <div ref={provided.innerRef}>
-                <AccordionSummary
-                  sx={{
-                    minHeight: '38px',
-                    flexDirection: 'row-reverse',
-                    '.MuiAccordionSummary-content': { margin: '0', alignItems: 'center' },
-                    '.Mui-expanded': { margin: '6px 0' }
-                  }}
-                  className={clsx(
-                    'items-center rounded-sm',
-                    snapshot.isDraggingOver && 'bg-mvc-green/80'
-                  )}
-                  expandIcon={<ExpandCircleDownIcon />}>
-                  <div className="ml-4 basis-full">
-                    <InlineInput
-                      label={chapter.name || ''}
-                      onSave={saveTitle}
-                      autoFocus={!chapter.name}
-                      onCancel={cancelEdit}
-                      onBlur={() => {
-                        if (!chapter.name) {
-                          cancelEdit()
-                        }
-                      }}>
-                      <h1 className="text-gray-700">{chapterDisplayName}</h1>
-                    </InlineInput>
-                  </div>
-                  <div className="relative h-4 w-6">
-                    <DeleteRoundedIcon
-                      sx={sharedMiniButtonStyles}
-                      onClick={onShowDeleteDialog}
-                      className="text-gray-500 hover:text-red-600 hover:bg-red-600/20 absolute rounded"
-                    />
-                  </div>
-                </AccordionSummary>
-              </div>
-            )
+        <AccordionSummary
+          sx={{
+            minHeight: '38px',
+            flexDirection: 'row-reverse',
+            alignItems: 'center',
+            borderRadius: '0.125rem',
+            '.MuiAccordionSummary-content': { margin: '0', alignItems: 'center' },
+            '.Mui-expanded': { margin: '6px 0' }
           }}
-        </Droppable>
+          expandIcon={<ExpandCircleDownIcon />}>
+          <div className="ml-4 basis-full">
+            <InlineInput
+              label={chapter.name || ''}
+              onSave={saveTitle}
+              autoFocus={!chapter.name}
+              onCancel={cancelEdit}
+              onBlur={() => {
+                if (!chapter.name) {
+                  cancelEdit()
+                }
+              }}>
+              <h1 className="text-gray-700">{chapterDisplayName}</h1>
+            </InlineInput>
+          </div>
+          <div className="relative h-4 w-6">
+            <DeleteRoundedIcon
+              sx={sharedMiniButtonStyles}
+              onClick={onShowDeleteDialog}
+              className="text-gray-500 hover:text-red-600 hover:bg-red-600/20 absolute rounded"
+            />
+          </div>
+        </AccordionSummary>
         <Droppable droppableId={chapter.id} key={chapter.id}>
           {(provided, snapshot) => (
             <div ref={provided.innerRef}>
