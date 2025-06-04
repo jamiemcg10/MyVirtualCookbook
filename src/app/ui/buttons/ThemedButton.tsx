@@ -13,6 +13,7 @@ export default function ThemedButton({
   size = 'medium',
   startIcon = undefined,
   endIcon = undefined,
+  href,
   onClick,
   sx = {}
 }: ThemedButtonProps) {
@@ -27,6 +28,7 @@ export default function ThemedButton({
         onClick={onClick}
         startIcon={startIcon}
         endIcon={endIcon}
+        href={href}
         disableRipple
         sx={{
           width: 'max-content',
