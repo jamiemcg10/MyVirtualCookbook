@@ -71,8 +71,8 @@ export default function SearchDialog({
           />
         </div>
       </DialogTitle>
-      <DialogContent sx={{ display: 'flex', flexDirection: 'column' }}>
-        <div className="text-mvc-green overflow-y-scroll">
+      <DialogContent>
+        <div className="text-mvc-green overflow-y-scroll gap-[6px] flex flex-col pb-[2px]">
           {searchValue
             ? filteredRecipes?.length
               ? filteredRecipes?.map((recipe) => {
