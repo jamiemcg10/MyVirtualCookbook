@@ -87,7 +87,7 @@ export default function CookbookChapter({
             return (
               <div
                 className={clsx(
-                  'flex items-center rounded-sm h-[2.375rem] px-4 transition-colors',
+                  'flex items-center rounded-sm h-[2.375rem] px-4 transition-colors cursor-pointer',
                   snapshot.isDraggingOver && !chapterExpanded ? 'bg-mvc-green' : 'bg-white/0'
                 )}
                 onClick={() => setChapterExpanded(!chapterExpanded)}
