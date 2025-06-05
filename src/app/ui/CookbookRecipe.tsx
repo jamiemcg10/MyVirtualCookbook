@@ -47,7 +47,6 @@ export default function CookbookRecipe({ recipe, chapterId, onEdit }: CookbookRe
       className="recipe"
       sx={{
         backgroundColor: '#d2d3d5',
-        overflow: 'hidden',
         borderRadius: '.125em',
         margin: '0',
         '&.Mui-expanded': { margin: '2px 0' }
