@@ -4,12 +4,35 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import MenuItem from '@mui/material/MenuItem'
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import EditRoundedIcon from '@mui/icons-material/EditRounded'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Paper from '@mui/material/Paper'
 import { ClickAwayListener } from '@mui/material'
 import { RecipeMenuProps } from '../lib/types/ui'
 
 export default function RecipeMenu({ onEdit, onDelete }: RecipeMenuProps) {
+  const menuBtnRef = useRef<HTMLButtonElement | null>(null)
+
+  function calculatePosition() {
+    const cookbookEl = document.getElementById('cookbook')
+    const searchDialogEl = document.getElementById('cookbook')
+    const referenceEl = searchDialogEl || cookbookEl
+
+    if (!menuBtnRef.current || !referenceEl) return
+
+    const placeAbove =
+      referenceEl.getBoundingClientRect().height -
+        menuBtnRef.current.getBoundingClientRect().bottom <=
+      100
+
+    return {
+      position: 'absolute',
+      zIndex: 1,
+      right: 0,
+      overflow: 'hidden',
+      ...(placeAbove && { bottom: menuBtnRef.current?.clientHeight })
+    }
+  }
+
   const [open, setOpen] = useState(false)
 
   return (
@@ -18,6 +41,7 @@ export default function RecipeMenu({ onEdit, onDelete }: RecipeMenuProps) {
         <IconButton
           size="small"
           className="invisible group-hover:visible [@media(hover:none)]:visible"
+          ref={menuBtnRef}
           onClick={(e) => {
             e.stopPropagation()
             setOpen(!open)
@@ -25,8 +49,13 @@ export default function RecipeMenu({ onEdit, onDelete }: RecipeMenuProps) {
           <MoreHorizIcon fontSize="small" />
         </IconButton>
         {open ? (
-          <Paper sx={{ position: 'absolute', zIndex: 1, right: 0 }}>
+          <Paper sx={calculatePosition()}>
             <MenuItem
+              sx={{
+                '&:hover': {
+                  backgroundColor: '#ddd'
+                }
+              }}
               onClick={(e) => {
                 e.stopPropagation()
                 setOpen(false)
@@ -39,7 +68,13 @@ export default function RecipeMenu({ onEdit, onDelete }: RecipeMenuProps) {
               </ListItemIcon>
               Edit
             </MenuItem>
-            <MenuItem onClick={async () => await onDelete()}>
+            <MenuItem
+              sx={{
+                '&:hover': {
+                  backgroundColor: '#ddd'
+                }
+              }}
+              onClick={async () => await onDelete()}>
               <ListItemIcon>
                 <DeleteRoundedIcon fontSize="small" />
               </ListItemIcon>

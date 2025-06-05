@@ -124,7 +124,7 @@ export default function Cookbook() {
   }, [user, cookbook])
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden" id="cookbook">
       {cookbook ? (
         <>
           <div

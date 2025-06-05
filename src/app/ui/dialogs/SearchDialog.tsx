@@ -47,55 +47,57 @@ export default function SearchDialog({
   }, [cookbook])
 
   return (
-    <BaseDialog
-      show={showSearchDialog}
-      closeFn={() => {
-        setSearchValue('')
-        setFilteredRecipes(undefined)
-        setShowSearchDialog(false)
-      }}
-      fullHeight>
-      <DialogTitle>
-        <div>
-          <ThemedTextField
-            placeholder="Search..."
-            autoFocus
-            onInput={onSearch}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start" sx={{ color: 'var(--mvc-green)' }}>
-                  <SearchIcon />
-                </InputAdornment>
-              )
-            }}
-          />
-        </div>
-      </DialogTitle>
-      <DialogContent>
-        <div className="text-mvc-green overflow-y-scroll gap-[6px] flex flex-col pb-[2px]">
-          {searchValue
-            ? filteredRecipes?.length
-              ? filteredRecipes?.map((recipe) => {
-                  return (
-                    <CookbookRecipe
-                      chapterId={recipe.chapterId}
-                      recipe={recipe}
-                      onEdit={() =>
-                        showEditRecipeDialog({
-                          chapterId: recipe.chapterId,
-                          name: recipe.name,
-                          link: recipe.link,
-                          recipeId: recipe.id
-                        })
-                      }
-                      key={recipe.id}
-                    />
-                  )
-                })
-              : 'No recipes found'
-            : 'Start typing to search'}
-        </div>
-      </DialogContent>
-    </BaseDialog>
+    <div id="search-dialog">
+      <BaseDialog
+        show={showSearchDialog}
+        closeFn={() => {
+          setSearchValue('')
+          setFilteredRecipes(undefined)
+          setShowSearchDialog(false)
+        }}
+        fullHeight>
+        <DialogTitle>
+          <div>
+            <ThemedTextField
+              placeholder="Search..."
+              autoFocus
+              onInput={onSearch}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start" sx={{ color: 'var(--mvc-green)' }}>
+                    <SearchIcon />
+                  </InputAdornment>
+                )
+              }}
+            />
+          </div>
+        </DialogTitle>
+        <DialogContent>
+          <div className="text-mvc-green overflow-y-scroll gap-[6px] flex flex-col pb-[2px]">
+            {searchValue
+              ? filteredRecipes?.length
+                ? filteredRecipes?.map((recipe) => {
+                    return (
+                      <CookbookRecipe
+                        chapterId={recipe.chapterId}
+                        recipe={recipe}
+                        onEdit={() =>
+                          showEditRecipeDialog({
+                            chapterId: recipe.chapterId,
+                            name: recipe.name,
+                            link: recipe.link,
+                            recipeId: recipe.id
+                          })
+                        }
+                        key={recipe.id}
+                      />
+                    )
+                  })
+                : 'No recipes found'
+              : 'Start typing to search'}
+          </div>
+        </DialogContent>
+      </BaseDialog>
+    </div>
   )
 }
