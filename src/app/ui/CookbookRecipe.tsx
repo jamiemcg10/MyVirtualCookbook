@@ -42,20 +42,21 @@ export default function CookbookRecipe({ recipe, chapterId, onEdit }: CookbookRe
   const { user } = useContext(SessionContext)
 
   const { name, link, notes } = recipe
-
   return (
     <Accordion
       className="recipe"
       sx={{
-        backgroundColor: '#cfcfcfb9',
-        margin: '6px 0',
-        '.MuiAccordionSummary-root.Mui-expanded': { margin: 0, minHeight: '36px' }
+        backgroundColor: '#d2d3d5',
+        overflow: 'hidden',
+        borderRadius: '.125em',
+        margin: '0',
+        '&.Mui-expanded': { margin: '2px 0' }
       }}>
       <AccordionSummary
         sx={{
           minHeight: '36px',
           '.MuiAccordionSummary-content': { margin: '0' },
-          '.Mui-expanded': { margin: '6px 0' }
+          '.Mui-expanded': { margin: '0px 0px' }
         }}
         className="group"
         expandIcon={<ExpandMoreIcon className="text-mvc-green" />}>

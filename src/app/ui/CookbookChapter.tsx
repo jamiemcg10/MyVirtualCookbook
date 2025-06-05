@@ -1,6 +1,3 @@
-import Accordion from '@mui/material/Accordion'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown'
 import CookbookRecipe from './CookbookRecipe'
 import { RecipeWithNotes } from '../lib/types'
@@ -14,6 +11,7 @@ import { sharedMiniButtonStyles } from '../lib/styles/sharedMiniButtonStyles'
 import { CookbookChapterProps } from '../lib/types/ui'
 import { Droppable, Draggable } from '@hello-pangea/dnd'
 import clsx from 'clsx'
+import Collapse from '@mui/material/Collapse'
 
 export default function CookbookChapter({
   chapter,
@@ -74,61 +72,75 @@ export default function CookbookChapter({
   const { user, cookbook } = useContext(SessionContext)
 
   const [chapterDisplayName, setChapterDisplayName] = useState(chapter.name)
+  const [chapterExpanded, setChapterExpanded] = useState(false)
 
   const recipes = mapRecipes(chapter.recipes || [])
 
   return (
-    <div className="rounded-md">
-      <Accordion
-        sx={{
-          backgroundColor: '#ffffffdd',
-          margin: '8px 0',
-          '.MuiAccordionSummary-root.Mui-expanded': { margin: 0, minHeight: '38px' }
-        }}>
-        <AccordionSummary
-          sx={{
-            minHeight: '38px',
-            flexDirection: 'row-reverse',
-            alignItems: 'center',
-            borderRadius: '0.125rem',
-            '.MuiAccordionSummary-content': { margin: '0', alignItems: 'center' },
-            '.Mui-expanded': { margin: '6px 0' }
+    <Collapse in={chapterExpanded} collapsedSize="2.375rem">
+      <div className="rounded-md bg-[white]/[.867] overflow-hidden">
+        <Droppable
+          droppableId={`chapter-${chapter.id}`}
+          key={`chapter-${chapter.id}`}
+          isDropDisabled={chapterExpanded}>
+          {(provided, snapshot) => {
+            return (
+              <div
+                className={clsx(
+                  'flex items-center rounded-sm h-[2.375rem] px-4 transition-colors cursor-pointer',
+                  snapshot.isDraggingOver && !chapterExpanded ? 'bg-mvc-green' : 'bg-white/0'
+                )}
+                onClick={() => setChapterExpanded(!chapterExpanded)}
+                ref={provided.innerRef}
+                {...provided.droppableProps}>
+                <ExpandCircleDownIcon
+                  sx={{
+                    color: 'gray',
+                    rotate: chapterExpanded ? '180deg' : '0deg',
+                    transition: 'rotate 250ms'
+                  }}
+                />
+                <div className="ml-4 basis-full">
+                  <InlineInput
+                    label={chapter.name || ''}
+                    onSave={saveTitle}
+                    autoFocus={!chapter.name}
+                    onCancel={cancelEdit}
+                    onBlur={() => {
+                      if (!chapter.name) {
+                        cancelEdit()
+                      }
+                    }}>
+                    <h1 className="text-gray-700">{chapterDisplayName}</h1>
+                  </InlineInput>
+                </div>
+                <div className="relative h-4 w-6">
+                  <DeleteRoundedIcon
+                    sx={sharedMiniButtonStyles}
+                    onClick={onShowDeleteDialog}
+                    className="text-gray-500 hover:text-red-600 hover:bg-red-600/20 absolute rounded"
+                  />
+                </div>
+              </div>
+            )
           }}
-          expandIcon={<ExpandCircleDownIcon />}>
-          <div className="ml-4 basis-full">
-            <InlineInput
-              label={chapter.name || ''}
-              onSave={saveTitle}
-              autoFocus={!chapter.name}
-              onCancel={cancelEdit}
-              onBlur={() => {
-                if (!chapter.name) {
-                  cancelEdit()
-                }
-              }}>
-              <h1 className="text-gray-700">{chapterDisplayName}</h1>
-            </InlineInput>
-          </div>
-          <div className="relative h-4 w-6">
-            <DeleteRoundedIcon
-              sx={sharedMiniButtonStyles}
-              onClick={onShowDeleteDialog}
-              className="text-gray-500 hover:text-red-600 hover:bg-red-600/20 absolute rounded"
-            />
-          </div>
-        </AccordionSummary>
+        </Droppable>
         <Droppable droppableId={chapter.id} key={chapter.id}>
           {(provided, snapshot) => (
-            <div ref={provided.innerRef}>
-              <AccordionDetails
-                className={clsx('p-0 pb-2', snapshot.isDraggingOver && 'bg-mvc-green/80')}>
-                {recipes}
-                {provided.placeholder}
-              </AccordionDetails>
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className={clsx(
+                'flex-col p-0 py-2 gap-[6px] mx-4 mb-2 rounded-sm transition-colors',
+                snapshot.isDraggingOver ? 'bg-mvc-green/80' : 'bg-[white]/0',
+                chapterExpanded ? 'flex' : 'hidden'
+              )}>
+              {recipes}
+              {provided.placeholder}
             </div>
           )}
         </Droppable>
-      </Accordion>
-    </div>
+      </div>
+    </Collapse>
   )
 }

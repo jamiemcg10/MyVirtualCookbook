@@ -13,8 +13,9 @@ export default function About() {
             as you need and re-name them whenever you want
           </li>
           <li>
-            You can drag and drop recipes from one chapter to another. It’s your cookbook! You can
-            decide how your recipes will be organized
+            {
+              "You can drag and drop recipes from one chapter to another and drag and drop chapters to reorder them. It’s your cookbook! You can decide how it's organized"
+            }
           </li>
           <li>
             Each recipe has its own notes. You can add notes on what works, what doesn’t work, what
