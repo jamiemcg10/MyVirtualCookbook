@@ -78,7 +78,7 @@ export default function CookbookChapter({
 
   return (
     <Collapse in={chapterExpanded} collapsedSize="2.375rem">
-      <div className="rounded-md bg-[white]/[.867]">
+      <div className="rounded-md bg-[white]/[.867] pb-2">
         <Droppable
           droppableId={`chapter-${chapter.id}`}
           key={`chapter-${chapter.id}`}
