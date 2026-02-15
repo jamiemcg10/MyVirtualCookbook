@@ -9,6 +9,7 @@ import { redirect } from 'next/navigation'
 import { SessionContext } from '../../lib/utils/Session'
 import { FirebaseUser } from '@/app/lib/types'
 import { createUser } from '@/app/lib/utils/dbHelpers/createUser'
+import ThemedButton from '@/app/ui/buttons/ThemedButton'
 
 export default function LoginForm() {
   const [errorText, setErrorText] = useState('')
@@ -52,6 +53,9 @@ export default function LoginForm() {
               )}>
               {errorText}
             </p>
+            <ThemedButton color="mvc-yellow" className="w-full">
+              Demo Mode
+            </ThemedButton>
             <div className="flex flex-col mt-4">
               <GoogleSignInButton setErrorText={setErrorText} />
             </div>
