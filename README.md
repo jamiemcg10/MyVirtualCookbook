@@ -28,3 +28,5 @@ Recipes can be opened by clicking on their titles. When a recipe is expanded, a 
 <br>
 
 This is a Next.js app deployed using Vercel
+
+.env
