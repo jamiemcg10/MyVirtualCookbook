@@ -10,7 +10,7 @@ const config: Config = {
     extend: {
       colors: {
         mvc: {
-          green: '#6aa84f',
+          green: '#4b7a36',
           yellow: '#ffd966',
           gray: '#808080',
           white: '#fff'
