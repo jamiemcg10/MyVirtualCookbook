@@ -8,6 +8,9 @@ import CookbookRecipe from '../CookbookRecipe'
 import { SearchDialogProps } from '@/app/lib/types/ui/dialogs'
 import BaseDialog from './BaseDialog'
 
+const dialogContentSx = { display: 'flex' }
+const inputAdornmentSx = { color: 'var(--mvc-green)' }
+
 export default function SearchDialog({
   showEditRecipeDialog,
   showSearchDialog,
@@ -64,7 +67,7 @@ export default function SearchDialog({
               onInput={onSearch}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start" sx={{ color: 'var(--mvc-green)' }}>
+                  <InputAdornment position="start" sx={inputAdornmentSx}>
                     <SearchIcon />
                   </InputAdornment>
                 )
@@ -72,7 +75,7 @@ export default function SearchDialog({
             />
           </div>
         </DialogTitle>
-        <DialogContent sx={{ display: 'flex' }}>
+        <DialogContent sx={dialogContentSx}>
           <div className="text-mvc-green overflow-y-scroll gap-[6px] flex flex-col pb-[2px] grow">
             {searchValue
               ? filteredRecipes?.length

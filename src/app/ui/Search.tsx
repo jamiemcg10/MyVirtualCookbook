@@ -5,6 +5,12 @@ import { useState } from 'react'
 import { NewRecipe } from '../lib/types'
 import { SearchProps } from '../lib/types/ui'
 
+const searchIconSx = {
+  marginY: '1rem',
+  right: { xs: '2rem', sm: '3rem' },
+  position: 'absolute'
+}
+
 export default function Search({ setEditDialogRecipe, setShowEditRecipeDialog }: SearchProps) {
   const [showDialog, setShowDialog] = useState(false)
 
@@ -14,11 +20,7 @@ export default function Search({ setEditDialogRecipe, setShowEditRecipeDialog }:
         color="mvc-white"
         onClick={() => setShowDialog(true)}
         disabled={showDialog}
-        sx={{
-          marginY: '1rem',
-          right: { xs: '2rem', sm: '3rem' },
-          position: 'absolute'
-        }}>
+        sx={searchIconSx}>
         <SearchIcon />
       </ThemedIconButton>
 

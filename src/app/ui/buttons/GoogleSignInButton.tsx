@@ -6,6 +6,8 @@ import { FirebaseUser } from '@/app/lib/types'
 import ThemedButton from './ThemedButton'
 import Image from 'next/image'
 
+const btnSx = { minWidth: '100%' }
+
 export default function GoogleSignInButton({ setErrorText }: GoogleSignInButtonProps) {
   const signInWithGoogle = () => {
     const provider = new GoogleAuthProvider()
@@ -26,7 +28,7 @@ export default function GoogleSignInButton({ setErrorText }: GoogleSignInButtonP
   }
 
   return (
-    <ThemedButton color="mvc-white" sx={{ minWidth: '100%' }} onClick={signInWithGoogle}>
+    <ThemedButton color="mvc-white" sx={btnSx} onClick={signInWithGoogle}>
       <Image src="/google-logo.png" alt="google logo" width={24} height={24} className="mr-2" />
       Sign in with Google
     </ThemedButton>

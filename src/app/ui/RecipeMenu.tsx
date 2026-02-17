@@ -9,6 +9,11 @@ import Paper from '@mui/material/Paper'
 import { ClickAwayListener } from '@mui/material'
 import { RecipeMenuProps } from '../lib/types/ui'
 
+const menuItemSx = {
+  '&:hover': {
+    backgroundColor: '#ddd'
+  }
+}
 export default function RecipeMenu({ onEdit, onDelete }: RecipeMenuProps) {
   const menuBtnRef = useRef<HTMLButtonElement | null>(null)
 
@@ -51,11 +56,7 @@ export default function RecipeMenu({ onEdit, onDelete }: RecipeMenuProps) {
         {open ? (
           <Paper sx={calculatePosition()}>
             <MenuItem
-              sx={{
-                '&:hover': {
-                  backgroundColor: '#ddd'
-                }
-              }}
+              sx={menuItemSx}
               onClick={(e) => {
                 e.stopPropagation()
                 setOpen(false)
@@ -68,13 +69,7 @@ export default function RecipeMenu({ onEdit, onDelete }: RecipeMenuProps) {
               </ListItemIcon>
               Edit
             </MenuItem>
-            <MenuItem
-              sx={{
-                '&:hover': {
-                  backgroundColor: '#ddd'
-                }
-              }}
-              onClick={async () => await onDelete()}>
+            <MenuItem sx={menuItemSx} onClick={async () => await onDelete()}>
               <ListItemIcon>
                 <DeleteRoundedIcon fontSize="small" />
               </ListItemIcon>

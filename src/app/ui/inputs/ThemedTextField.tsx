@@ -5,6 +5,8 @@ import { theme } from '../.theme/theme'
 import type { ThemedTextFieldProps } from '@/app/lib/types/ui/inputs'
 import { standardStyles, outlinedStyles } from '@/app/lib/styles/themedTextFieldStyles'
 
+const menuItemSx = { fontStyle: 'italic' }
+
 export default function ThemedTextField({
   label,
   size = 'medium',
@@ -37,7 +39,7 @@ export default function ThemedTextField({
       ? optionsMenuItems
       : [
           ...optionsMenuItems,
-          <MenuItem value="add" key="add" sx={{ fontStyle: 'italic' }}>
+          <MenuItem value="add" key="add" sx={menuItemSx}>
             + Add New
           </MenuItem>
         ]

@@ -17,6 +17,8 @@ import { createUser } from '@/app/lib/utils/dbHelpers/createUser'
 import ThemedButton from '@/app/ui/buttons/ThemedButton'
 import { createAnonUser } from '@/app/lib/utils/dbHelpers/createAnonUser'
 
+const demoBtnSx = { width: '100%' }
+
 export default function LoginForm() {
   function handleAnonLogin() {
     signInAnonymously(auth)
@@ -67,7 +69,7 @@ export default function LoginForm() {
               )}>
               {errorText}
             </p>
-            <ThemedButton color="mvc-yellow" sx={{ width: '100%' }} onClick={handleAnonLogin}>
+            <ThemedButton color="mvc-yellow" sx={demoBtnSx} onClick={handleAnonLogin}>
               Demo Mode
             </ThemedButton>
             <div className="flex flex-col mt-4">

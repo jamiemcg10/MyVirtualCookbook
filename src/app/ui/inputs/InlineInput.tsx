@@ -10,6 +10,15 @@ import type { InlineInputProps } from '@/app/lib/types/ui/inputs'
 
 const roboto = Roboto({ weight: '700', subsets: ['latin'] })
 
+const inputSx = {
+  ...roboto.style,
+  color: 'rgb(55, 65, 81)',
+  width: '100%',
+  ':before': {
+    borderBottomColor: 'var(--mvc-yellow) !important'
+  }
+}
+
 export default function InlineInput({
   children,
   label,
@@ -62,14 +71,7 @@ export default function InlineInput({
                 <Input
                   ref={inputElRef}
                   autoFocus={autoFocus}
-                  sx={{
-                    ...roboto.style,
-                    color: 'rgb(55, 65, 81)',
-                    width: '100%',
-                    ':before': {
-                      borderBottomColor: 'var(--mvc-yellow) !important'
-                    }
-                  }}
+                  sx={inputSx}
                   defaultValue={label}
                   color="mvc-green"
                   onInput={(e) => {

@@ -18,6 +18,27 @@ import { redirect } from 'next/navigation'
 import LoadingIcon from '@/app/ui/LoadingIcon'
 import Search from '@/app/ui/Search'
 
+const addIconStyle = {
+  marginRight: -7
+}
+
+const addChapterBtnSx = {
+  margin: '1rem 0 1rem 2rem'
+}
+
+const addRecipeBtnSx = {
+  margin: {
+    xs: '1rem 0 1rem 1rem',
+    sm: '1rem 0 1rem 2rem'
+  }
+}
+
+const bgSx = {
+  background: 'linear-gradient(180deg, #061f35, #061f3580 85%, transparent)',
+  zIndex: 1,
+  height: '80px'
+}
+
 export default function Cookbook() {
   const { user, cookbook } = useContext(SessionContext)
 
@@ -127,36 +148,17 @@ export default function Cookbook() {
     <div className="flex flex-col h-full overflow-hidden" id="cookbook">
       {cookbook ? (
         <>
-          <div
-            style={{
-              background: 'linear-gradient(180deg, #061f35, #061f3580 85%, transparent)',
-              zIndex: 1,
-              height: '80px'
-            }}>
+          <div style={bgSx}>
             <ThemedButton
               color="mvc-green"
-              sx={{
-                margin: '1rem 0 1rem 2rem'
-              }}
-              startIcon={
-                <AddIcon
-                  fontSize="small"
-                  style={{
-                    marginRight: -7
-                  }}
-                />
-              }
+              sx={addChapterBtnSx}
+              startIcon={<AddIcon fontSize="small" style={addIconStyle} />}
               onClick={() => addNewChapter(user, cookbook)}>
               <span className="hidden sm:block">Add&nbsp;</span> Chapter
             </ThemedButton>
             <ThemedButton
               color="mvc-yellow"
-              sx={{
-                margin: {
-                  xs: '1rem 0 1rem 1rem',
-                  sm: '1rem 0 1rem 2rem'
-                }
-              }}
+              sx={addRecipeBtnSx}
               startIcon={
                 <AddIcon
                   fontSize="small"
