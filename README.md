@@ -6,7 +6,7 @@
 
 ### User Accounts
 
-New users must first create an account. You can register using an email address or by linking to your Google account.
+New users can create an account. You can register by linking to your Google account. Alternatively, you can use **demo mode** to see the app's functionality using a temporary, anonymous account. The account will contain some starter data and will be deleted after 30 days of inactivity. Once you log out of demo mode, logging in again will create a different demo account.
 <br>
 
 ### Using the cookbook
