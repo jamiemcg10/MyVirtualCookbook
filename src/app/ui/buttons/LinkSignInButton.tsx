@@ -5,6 +5,8 @@ import ThemedButton from './ThemedButton'
 import { Snackbar } from '@mui/material'
 import { useState } from 'react'
 
+const linkBtnSx = { minWidth: '100%', marginBottom: '0.5rem' }
+
 export default function LinkSignInButton({
   disabled,
   setErrorText,
@@ -36,11 +38,7 @@ export default function LinkSignInButton({
 
   return (
     <>
-      <ThemedButton
-        color="mvc-yellow"
-        disabled={disabled}
-        sx={{ minWidth: '100%', marginBottom: '0.5rem' }}
-        onClick={sendMagicLink}>
+      <ThemedButton color="mvc-yellow" disabled={disabled} sx={linkBtnSx} onClick={sendMagicLink}>
         Send Log in link
       </ThemedButton>
       <Snackbar

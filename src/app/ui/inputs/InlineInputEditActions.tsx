@@ -33,7 +33,7 @@ export default function InlineInputEditActions({
     <>
       <CloseRoundedIcon
         className="text-gray-500 hover:text-[red] hover:bg-mvc-[red]/20 hover:text-base transition-all rounded-sm"
-        sx={{ ...styles }}
+        sx={styles}
         onClick={(e) => {
           e.stopPropagation()
           onCancel()

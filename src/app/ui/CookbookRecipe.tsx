@@ -11,6 +11,19 @@ import RecipeMenu from './RecipeMenu'
 import { CookbookRecipeProps } from '../lib/types/ui'
 import Link from 'next/link'
 
+const accordionSx = {
+  backgroundColor: '#d2d3d5',
+  borderRadius: '.125em',
+  margin: '0',
+  '&.Mui-expanded': { margin: '2px 0' }
+}
+
+const accordionSummarySx = {
+  minHeight: '36px',
+  '.MuiAccordionSummary-content': { margin: '0' },
+  '.Mui-expanded': { margin: '0px 0px' }
+}
+
 export default function CookbookRecipe({ recipe, chapterId, onEdit }: CookbookRecipeProps) {
   async function saveTitle(newTitle: string) {
     if (user && recipe.name !== newTitle) {
@@ -43,20 +56,9 @@ export default function CookbookRecipe({ recipe, chapterId, onEdit }: CookbookRe
 
   const { name, link, notes } = recipe
   return (
-    <Accordion
-      className="recipe"
-      sx={{
-        backgroundColor: '#d2d3d5',
-        borderRadius: '.125em',
-        margin: '0',
-        '&.Mui-expanded': { margin: '2px 0' }
-      }}>
+    <Accordion className="recipe" sx={accordionSx}>
       <AccordionSummary
-        sx={{
-          minHeight: '36px',
-          '.MuiAccordionSummary-content': { margin: '0' },
-          '.Mui-expanded': { margin: '0px 0px' }
-        }}
+        sx={accordionSummarySx}
         className="group"
         expandIcon={<ExpandMoreIcon className="text-mvc-green" />}>
         <div className="flex justify-between items-center w-full">

@@ -2,15 +2,32 @@
 
 import { useContext, useEffect, useState } from 'react'
 import clsx from 'clsx'
-import { isSignInWithEmailLink, signInWithEmailLink, getAdditionalUserInfo } from 'firebase/auth'
+import {
+  isSignInWithEmailLink,
+  signInWithEmailLink,
+  getAdditionalUserInfo,
+  signInAnonymously
+} from 'firebase/auth'
 import GoogleSignInButton from '../../ui/buttons/GoogleSignInButton'
 import { auth } from '../../lib/utils/firebase'
 import { redirect } from 'next/navigation'
 import { SessionContext } from '../../lib/utils/Session'
 import { FirebaseUser } from '@/app/lib/types'
 import { createUser } from '@/app/lib/utils/dbHelpers/createUser'
+import ThemedButton from '@/app/ui/buttons/ThemedButton'
+import { createAnonUser } from '@/app/lib/utils/dbHelpers/createAnonUser'
+
+const demoBtnSx = { width: '100%' }
 
 export default function LoginForm() {
+  function handleAnonLogin() {
+    signInAnonymously(auth)
+      .then((user) => {
+        createAnonUser(user)
+      })
+      .catch((e) => console.error(e))
+  }
+
   const [errorText, setErrorText] = useState('')
   const { user } = useContext(SessionContext)
 
@@ -52,6 +69,9 @@ export default function LoginForm() {
               )}>
               {errorText}
             </p>
+            <ThemedButton color="mvc-yellow" sx={demoBtnSx} onClick={handleAnonLogin}>
+              Demo Mode
+            </ThemedButton>
             <div className="flex flex-col mt-4">
               <GoogleSignInButton setErrorText={setErrorText} />
             </div>

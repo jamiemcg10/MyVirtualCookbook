@@ -6,6 +6,7 @@ export interface User {
   username: string
   pictureUrl?: string
   chapterOrder: string[]
+  isDemo?: boolean
 }
 
 export interface FirebaseUser extends UserCredential, Partial<AdditionalUserInfo> {
