@@ -131,9 +131,8 @@ export default function CookbookChapter({
               ref={provided.innerRef}
               {...provided.droppableProps}
               className={clsx(
-                'flex-col p-0 py-2 gap-[6px] mx-4 mb-2 rounded-sm transition-colors',
-                snapshot.isDraggingOver ? 'bg-mvc-green/80' : 'bg-[white]/0',
-                chapterExpanded ? 'flex' : 'hidden'
+                'flex flex-col p-0 py-2 gap-[6px] mx-4 mb-2 rounded-sm transition-colors',
+                snapshot.isDraggingOver ? 'bg-mvc-green/80' : 'bg-[white]/0'
               )}>
               {recipes}
               {provided.placeholder}
